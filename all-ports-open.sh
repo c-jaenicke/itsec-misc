@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # this script allows all incoming and outgoing traffic
 # flush all rules and reset all chains
 iptables -F

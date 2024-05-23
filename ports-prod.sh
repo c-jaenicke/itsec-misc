@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # script for setting up production settings
 # flush all rules and reset all chains
 iptables -F
