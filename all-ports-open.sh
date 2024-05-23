@@ -2,7 +2,6 @@
 # flush all rules and reset all chains
 iptables -F
 iptables -t nat -F
-iptables -t mangle -F
 iptables -X
 
 # allow all incoming, outgoing and forwarded traffic

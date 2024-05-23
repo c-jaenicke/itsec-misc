@@ -1,33 +1,46 @@
+# script for setting up production settings
 # flush all rules and reset all chains
 iptables -F
 iptables -t nat -F
-iptables -t mangle -F
 iptables -X
 
-# 2. Set default chain policies
-iptables -P INPUT DROP
-iptables -P FORWARD DROP
-iptables -P OUTPUT ACCEPT
+# allow all local traffic, needed for local connection like databases
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
 
-# 4. Allow ALL incoming SSH
-iptables -A INPUT -i eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+# allow ssh traffic on port 22
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 
-# 8. Allow outgoing SSH
-iptables -A OUTPUT -o eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.0.221:80
+iptables -A FORWARD -p tcp -d 192.168.0.221 --dport 80 -j ACCEPT
+iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.221 --dport 80 -j MASQUERADE
 
-# 6. Allow incoming HTTP
-iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+# allow outlook traffic to external mailserver
+## imap
+iptables -A INPUT -p tcp --dport 143 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 143 -j ACCEPT
+iptables -A INPUT -p tcp --dport 993 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 993 -j ACCEPT
+## pop3
+iptables -A INPUT -p tcp --dport 110 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 110 -j ACCEPT
+iptables -A INPUT -p tcp --dport 995 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 995 -j ACCEPT
+## smtp
+iptables -A INPUT -p tcp --dport 587 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 587 -j ACCEPT
 
-# Allow incoming HTTPS
-iptables -A INPUT -i eth0 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -o eth0 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+# allow traffic for teamviewer
+iptables -A INPUT -p tcp --dport 5938 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 5938 -j ACCEPT
 
-# 10. Allow outgoing HTTPS
-iptables -A OUTPUT -o eth0 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i eth0 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -p udp --dport 5938 -j ACCEPT
+iptables -A OUTPUT -p udp --sport 5938 -j ACCEPT
+
+# allow traffic for delfship
+#iptables -A INPUT -p tcp --dport PORT -j ACCEPT
+#iptables -A OUTPUT -p tcp --sport PORT -j ACCEPT
 
 # 12. Ping from inside to outside
 iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
@@ -37,21 +50,8 @@ iptables -A INPUT -p icmp --icmp-type echo-reply -j ACCEPT
 iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
 
-# 14. Allow loopback access
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A OUTPUT -o lo -j ACCEPT
-
-# 15. Allow packets from internal network to reach external network.
-# if eth1 is connected to external network (internet)
-# if eth0 is connected to internal network (192.168.1.x)
-iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT
-
-# 16. Allow outbound DNS
-iptables -A OUTPUT -p udp -o eth0 --dport 53 -j ACCEPT
-iptables -A INPUT -p udp -i eth0 --sport 53 -j ACCEPT
-
-# 25. Log dropped packets
-iptables -N LOGGING
-iptables -A INPUT -j LOGGING
-iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
-iptables -A LOGGING -j DROP
+# drop  traffic that doesnt match incoming or forwarding rules, allow all outgoing
+iptables -P INPUT DROP
+# forward has to be ACCEPT, to allow forwarding to webserver
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
