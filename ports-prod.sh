@@ -12,6 +12,11 @@ iptables -A OUTPUT -o lo -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 
+# allow pinging
+iptables -A INPUT -p icmp -j  ACCEPT
+iptables -A OUTPUT -p icmp -j ACCEPT
+
+# forward incoming traffic on port 80, http, to webserver port 80 and back
 iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.0.221:80
 iptables -A FORWARD -p tcp -d 192.168.0.221 --dport 80 -j ACCEPT
 iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.221 --dport 80 -j MASQUERADE
@@ -42,16 +47,7 @@ iptables -A OUTPUT -p udp --sport 5938 -j ACCEPT
 #iptables -A INPUT -p tcp --dport PORT -j ACCEPT
 #iptables -A OUTPUT -p tcp --sport PORT -j ACCEPT
 
-# 12. Ping from inside to outside
-iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
-iptables -A INPUT -p icmp --icmp-type echo-reply -j ACCEPT
-
-# 13. Ping from outside to inside
-iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
-iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
-
 # drop  traffic that doesnt match incoming or forwarding rules, allow all outgoing
 iptables -P INPUT DROP
-# forward has to be ACCEPT, to allow forwarding to webserver
-iptables -P FORWARD ACCEPT
+iptables -P FORWARD ACCEPT # forward has to be ACCEPT, to allow forwarding to webserver
 iptables -P OUTPUT ACCEPT
