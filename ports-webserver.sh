@@ -18,7 +18,7 @@ iptables -A INPUT -p icmp -j  ACCEPT
 iptables -A OUTPUT -p icmp -j ACCEPT
 
 # allow incoming http traffic from firewall and allow all outgoing http traffic
-iptables --append INPUT --protocol tcp --src 192.168.0.220 --dport 80 --jump ACCEPT
+iptables -A INPUT -p tcp --src 192.168.0.220 --dport 80 --jump ACCEPT
 iptables -A OUTPUT -p tcp --sport 80 -j ACCEPT
 
 # drop  traffic that doesnt match incoming or forwarding rules, allow all outgoing
