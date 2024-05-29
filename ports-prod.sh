@@ -62,7 +62,7 @@ iptables -A OUTPUT -p tcp --sport 5938 -j ACCEPT
 iptables -A INPUT -p udp --dport 5938 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 5938 -j ACCEPT
 
-# drop  traffic that doesnt match incoming or forwarding rules, allow all outgoing
+# drop  traffic that doesnt match incoming or outgoing rules, allow all forwarding
 iptables -P INPUT DROP
 iptables -P FORWARD ACCEPT # forward has to be ACCEPT, to allow forwarding to webserver
-iptables -P OUTPUT ACCEPT
+iptables -P OUTPUT DROP
