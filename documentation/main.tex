@@ -1,0 +1,354 @@
+\documentclass[
+    a4paper,
+    pagesize,
+	pdftex,
+    12pt,
+]{scrartcl}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[unicode=true]{hyperref}
+\usepackage[draft=false,babel,tracking=true,kerning=true,spacing=true]{microtype}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true}
+
+\graphicspath{{./images/}}
+
+\pagestyle{fancy}
+\lhead{A. Tippe, C. N. Jänicke, I. Bingöl, P. Rahmani}
+\rhead{\includegraphics[height=10mm]{S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.6pt}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \includegraphics[height=25mm]{S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg} \\
+        \vspace{1.0cm}
+
+        Dokumentation der Projektarbeit
+    
+        \vspace{1.5cm}   
+
+        \textbf{Projektarbeit im Modul Informationssicherheit}
+
+        \vspace{1.5cm}
+
+        vorgelegt von \\
+        \textbf{Adrian Tippe 584501} \\
+        \textbf{Christoph Nicklas Jänicke 584533} \\
+        \textbf{Ilkaan Bingöl 584398} \\
+        \textbf{Parham Rahmani 580200} \\
+
+        \vspace{1.5cm}    
+        Berlin, \today\\
+    \end{center}
+\end{titlepage}
+
+\pagenumbering{gobble}
+
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+
+\pagenumbering{arabic}
+
+\section{Einführung}
+Im Rahmen  des  Kurses Informationssicherheit,  im Sommersemester 2024, sollte in einer Projektarbeit eine Firewall aufgebaut,  konfiguriert  und getestet werden. \\
+In  diesem Dokument wird der Informationsverbund sowie die Konfiguration  der  einzelnen Komponenten  beschrieben.
+
+\subsection{Skripts und Anwendungen}
+Alle genutzten Skripts und die Python-Anwendung auf dem Webserver wurden eigens erstellt und sind in den öffentlichen GitHub-Repositories \\
+\url{https://github.com/c-jaenicke/itsec-misc} und 
+\url{https://github.com/parhamrahmani/Implementation_Webserver_GP3}
+zu finden.
+
+\newpage
+\section{Aufbau des Informationsverbunds und Informationsfluss}
+Folgende Kapitel beschreiben den Aufbau des Informationsverbundes  sowie den Informationsfluss innerhalb.
+
+\subsection{Informationsverbund}
+Folgendes Diagramm zeigt den Informationsverbund:
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=10cm]{aufbau.png}
+	\caption{Aufbau des Informationsverbunds}
+	\label{fig:boat1}
+\end{figure}
+\\
+Der Laptop dient als Client, um auf den Webserver zuzugreifen und als Client für  Pentests. \\
+Die Firewall, ein RPi 4, setzt eine Firewall und ein  Intrusion Detection System (IDS) um. Dieses soll den Webserver schützen und den Datenverkehr  kontrollieren. \\
+Der Webserver, ein RPi 3b, stellt eine eigens programmierte Python-Anwendung mit einem NGINX-Webserver um. \\
+Der Switch, ein  NETGEAR ProSAFE GS105GE mit 5 RJ45 Ports, verbindet alle Geräte im Informationsverbund.  Zu den  gezeigten Komponenten können noch zusätzlich  2 weitere  Clients  angeschlossen werden.
+
+\newpage
+\subsection{Informationsfluss}
+Folgendes Diagramm stellt den Informationsfluss im Verbund dar:
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=10cm]{Informationsfluss.png}
+	\caption{Aufbau des Informationsverbunds}
+	\label{fig:boat2}
+\end{figure}
+\\
+Beginnend beim Client wird eine Anfrage an die Firewall gesendet, diese leitete die Anfrage, mittels einer Forwading-Regel, nachdem diese gefiltert und überprüft wurde, an den Webserver weiter. Dieser bearbeitet die Anfrage und führt ggf. eine Datenbankabfrage durch. Die Antwort wird anschließend wieder an die Firewall gesendet, welche diese an den Client weiterleitet. \\ \\
+Der Switch wird in dem Informationsfluss nicht behandelt, da dieser lediglich die physische Verbindung der Komponenten realisiert und keine sonstige Funktion oder Filter umsetzt.
+
+\newpage
+\section{Konfiguration der Server}
+Folgende Abschnitte beschreiben die Konfiguration des Firewall-Servers und des Webservers.
+
+\subsection{Firewall-Server}
+Der Server der Firewall nutzt als Betriebssystem die 64 Bit Variante des Raspberry Pi OS, welches auf Debian 12 Bookworm basiert. \\ \\
+Es wurde keine vorinstallierte  Software deinstalliert. \\
+Es wurden folgende Pakete zusätzlich installiert:
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table1}
+		\begin{tabular}{l|l }
+			\textbf{Name} & \textbf{Begründung} \\
+			\hline
+			iptables & Firewall, Alternative zur Vorinstallierten Firewall nftables \\
+			nvim & Texteditor zum bearbeiten von Konfigurationsdateien \\
+			zsh & Shell mit besserer Auto-Complete-Funktion \\
+			tmux & Terminal Multiplexer zum einfachen Verwalten über SSH \\
+			suricata & Intrusion Detection System \\
+		\end{tabular}
+		\caption{Zusätzlich installiere Software auf dem Firewall-Server}
+	\end{center}
+\end{table}
+\\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhindern, siehe \nameref{config-firewall-fw} \ref{config-firewall-fw} für die Konfiguration von iptables für den Firewall-Server. \\
+SSH wurde aktiviert, es wurden keine weiteren Maßnahmen eingeleitet um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
+Der suricata-Dienst wurde aktiviert und wird automatisch beim Boot gestartet, siehe \nameref{config-ids} \ref{config-ids} für die Konfiguration des IDS. \\ \\
+Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.220| zugewiesen, siehe \nameref{static-ip} \ref{static-ip}.
+
+\newpage
+\subsection{Webserver}
+Der Webserver nutzt als Betriebssystem die 64 Bit Variante des Raspberry Pi OS, welches auf Debian 12 Bookworm basiert. \\ \\ 
+Es wurde keine vorinstallierte Software deinstalliert.\\
+Folgende Software wurde zusätzlich installiert: 
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table2}
+		\begin{tabular}{l|l }
+			\textbf{Name} & \textbf{Begründung} \\
+			\hline
+			iptables & Firewall, Alternative zur Vorinstallierten Firewall nftables \\
+			nvim & Texteditor zum bearbeiten von Konfigurationsdateien \\
+			zsh & Shell mit besserer Auto-Complete-Funktion \\
+			tmux & Terminal Multiplexer zum einfachen Verwalten über SSH \\
+			python3-pip,\\ python3-venv, \\ python3-flask,\\ python3-flask-cors, \\ python3-pymysql & Als Abhängigkeiten der Python-Anwendung \\
+			mariadb-server & Datenbank für die Python-Anwendung \\
+			nginx & Als Webserver für die Python-Anwendung \\
+		\end{tabular}
+		\caption{Zusätzlich installiere Software auf dem Webserver}
+	\end{center}
+\end{table}
+\\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhinden, siehe \nameref{config-firewall-ws} \ref{config-firewall-ws} für die Konfiguration von iptables auf dem Webserver. \\
+SSH wurde aktiviert, es wurden keine weiteren Maßnahmen eingeleitet um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
+Der nginx-Dienst und mariadb-Dienst wurde aktiviert und wird beim Start automatisch gestartet. \\
+Die Python-Anwendung wird automatisch beim Start durch einen Cron-Job gestartet, siehe \nameref{cron-job} \ref{cron-job}. \\ \\
+Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.221| zugewiesen, siehe \nameref{static-ip} \ref{static-ip}.
+
+\subsubsection{Python-Anwendung}
+Auf dem Webserver wird eine eigens programmierte Python-Anwendung betrieben. \\ \\
+Diese bietet ein einfaches HTML Login Form, sowie einen einfachen Chat in dem Nachrichten veröffentlicht werden können. \\ \\
+Die Anwendung wurde absichtlich so unsicher wie möglich entwickelt um die geplanten Attacken im Pentest zu  ermöglichen.
+
+\subsubsection{Nginx}
+Um die Python-Anwendung auf Port 80 mittels NGINX zur  Verfügung zu stellen wurde die Datei  \lstinline[breaklines]|myflaskapp| im Ordner \lstinline[breaklines]|/etc/nginx/sites-available/| mit  folgendem Inhalt angelegt:
+\lstinputlisting[breaklines]{./skripte/setup_nginx.sh}
+Für diese Datei wurde anschließend ein Link mittels 
+\lstinline[breaklines]|ln -s /etc/nginx/sites-available/myflaskapp /etc/nginx/sites-enabled|  erstellt. \\ \\
+Es wurden keine weiteren Maßnahmen unternommen um NGINX zu härten.
+
+\subsubsection{MariaDB}
+Die Datenbank wurde mit folgenden Skript initialisiert:
+\lstinputlisting[breaklines]{./skripte/setup_db.sh}
+Es wird ein neue Datenbank mit dem Namen \lstinline[breaklines]|mydb| angelegt. Zusätzlich wird ein neuer Nutzer \lstinline[breaklines]|admin| angelegt. Anschließend wird die Tabelle \lstinline[breaklines]|credentials| angelegt, in welcher die Daten später gespeichert werden. In diese wird ein Testnutzer hineingeschrieben. Dem Nutzer \lstinline[breaklines]|admin| werden zuletzt alle Rechte für die neue Datenbank zugeteilt. \\ \\
+Es wurden keine weiteren spezifischen Konfigurationen durchgeführt um MariaDB zu schützen.
+
+\newpage
+\section{Konfiguration der Firewall}
+Folgende Abschnitte zeigen und erläutern die Konfiguration der einzelnen Firewalls.
+
+\subsection{Firewall-Server}\label{config-firewall-fw}
+Im folgenden werden die Anforderungen und die Konfiguration von iptables auf dem Firewall-Server erläutert.
+
+\subsubsection{Anforderungen}
+Folgende Anforderungen wurden aus dem Aufgabenblatt 1 identifiziert und werden zusätzlich für die Administration und den normalen Betrieb benötigt:
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table3}
+		\begin{tabular}{l|l |l }
+			\textbf{Port} & \textbf{Protokoll} & \textbf{Dienst} \\
+			\hline
+			22 & TCP & SSH \\
+			53 & TCP & DNS \\
+			53 & UDP & DNS \\
+			123 & UDP & NTP \\
+			80 & TCP & HTTP \\
+			443 & TCP & HTTPS \\
+			143 & TCP & Outlook IMAP \\
+			993 & TCP & Outlook IMAP \\
+			110 & TCP & Outlook POP3 \\
+			995 & TCP & Outlook POP3 \\
+			587 & TCP & Outlook SMTP \\
+			5938 & TCP & TeamViewer \\
+			5938 & UDP & Teamviewer \\
+		\end{tabular}
+		\caption{Benötigte Ports auf dem Firewall-Server}
+	\end{center}
+\end{table}
+\\
+Bei den Freigegeben Ports wurden die Richtlinien und Anforderungen der jeweiligen Hersteller \cite{ashaiyengar-2023}, \cite{teamviewer-2024} beachtet. \\ \\
+Port 22 wird für SSH genutzt um den Server remote zu administrieren. \\
+Die Ports 53 und 123, entsprechend DNS und NTP, werden für den regulären Betrieb des Servers benötigt. NTP wird benötigt um die korrekte Zeit zu haben und das Logging und Auswerten zu vereinfachen. \\
+Ports 80 und 443 werden für den HTTP-Verkehr genutzt, um vom Server aus Internetseiten aufzurufen und weitere Pakete zu installieren. \\
+Da sich kein lokaler E-Mail- oder Exchange-Server im Verbund auf Arbeitsblatt 1 befindet, wird davon ausgegangen das es einen externen Server gibt. Die Ports 143 und 993, 110 und 995 sowie 587 ermöglichen verschiedene Wege der Anmeldung auf diesem Server. \\
+TeamViewer benötigt den Port 5938 um den Zugang zu ermöglichen.
+
+\subsubsection{Skripte}
+Nach den Vorgaben aus Aufgabenblatt 1 und den identifizierten Anforderungen ergeben sich folgende Skripte. Alle Skripte müssen mit  Root Rechten ausgeführt werden.\\
+Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\ \\ 
+Bei allen folgenden Skripts werden anfangs alle bestehenden Regeln gelöscht, um Konflikte mit den neuen Regeln zu verhindern. \\ \\
+Folgender Skript schließt alle Ports der Firewall.
+\lstinputlisting[breaklines]{./skripte/all-ports-closed.sh}
+Folgender Skript öffnet die Firewall komplett und erlaubt jede Art von Datenverkehr.
+\lstinputlisting[breaklines]{./skripte/all-ports-open.sh}
+Folgender  Skript setzt die Anforderungen für die Umgebung um und ermöglicht das Forwarding auf den Webserver. Zusätzlich  wird  Datenverkehr auf dem  loopback-Interface erlaubt. \\
+Dieser Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe \nameref{cron-job} \ref{cron-job}.
+\lstinputlisting[breaklines]{./skripte/ports-prod.sh}
+
+\subsection{Webserver}\label{config-firewall-ws}
+Im folgenden werden die Anforderungen der Firewall des Webservers beschrieben und der Skript der diese umsetzt gezeigt.
+
+\subsubsection{Anforderungen}
+Folgende Ports wurden als relevant identifiziert um dem Webserver zu administrieren und die Python-Anwendung bereitzustellen:
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table4}
+		\begin{tabular}{l|l |l }
+			\textbf{Port} & \textbf{Protokoll} & \textbf{Dienst} \\
+			\hline
+			22 & TCP & SSH \\
+			80 & TCP & HTTP \\
+		\end{tabular}
+		\caption{Benötigte Ports auf dem Webserver}
+	\end{center}
+\end{table}
+
+\subsubsection{Skript}
+Folgender  Skript setzt die iptables Regeln auf dem Webserver. Der  Skript muss mit Root Rechten ausgeführt  werden. \\
+Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\
+Der Skript wird direkt am Boot mittels eines Cron-Jobs ausgeführt, siehe \nameref{cron-job} \ref{cron-job}.
+\lstinputlisting[breaklines]{./skripte/ports-webserver.sh}
+Zuerst werden  alle bestehenden Regeln gelöscht, um Konflikte vorzubeugen. \\
+Der Skript ermöglicht den Managementzugang mittels SSH sowie Pings auf und vom  Server. \\
+Der HTTP-Verkehr wird auf die IP-Adresse \lstinline[breaklines]|192.168.0.220|, die Firewall, beschränkt. Anderen Clients ist es also nicht möglich den Webserver direkt anzufragen. \\
+Besonders relevant ist es den Verkehr auf dem Loopback-Interface zuzulassen, da die Python-Anwendung dies benötigt um auf die Datenbank zuzugreifen.
+
+\newpage
+\section{Konfiguration des Intrusion Detection Systems}\label{config-ids}
+Es wurde sich für das Intrusion Detection System (IDS) Suricata entschieden, da bereits Vorerfahrung bestanden. \\ \\
+Bei der Installation wurde der Anleitung des Herstellers \cite{suricata-quickstart} befolgt. \\
+In der Konfigurationsdatei \lstinline[breaklines]|/etc/suricata/suricata.yaml| wurde das zu überwachende Interface auf \lstinline[breaklines]|eth0| gestellt. Es ergeben sich folgende Capture Settings:
+\begin{lstlisting}[breaklines]
+af-packet:
+	- interface: eth0
+	  cluster-id: 99
+	  cluster-type: cluster_flow
+	  defrag: yes
+	  use-mmap: yes
+	  tpacket-v3: yes
+\end{lstlisting}
+Darüber hinaus wurden die aktuellen Regeln heruntergeladen, installiert und aktiviert \cite{suricata-rulemanagement}, mittels \lstinline[breaklines]|sudo suricata-update|. \\
+Um diese zu aktivieren wurde gemäß der Anleitung des Herstellers der Pfad der Regeln, in der Datei \lstinline[breaklines]|/etc/suricata/suricata.yaml| geändert auf \\ \lstinline[breaklines]|default-rule-path: /var/lib/suricata/rules|. \\ \\
+Weitere Konfiguration wurden nicht durchgeführt. \\ \\
+Das IDS wurde anschließend getestet. Dafür wurde der Befehl \\
+\lstinline[breaklines]|curl http://testmynids.org/uid/index.html| \\
+ausgeführt. Dadurch wurde eine statische HTML-Datei aufgerufen mit dem Inhalt \\
+\lstinline[breaklines]|uid=0(root) gid=0(root) groups=0(root)| \\
+Dieser String stellt eine mögliche Ausgabe des \lstinline[breaklines]|id| Befehls dar, welcher genutzt werden kann um den derzeitigen Nutzer und die Gruppen des Nutzers zu erhalten. \\
+Das IDS sollte hier ausschlagen, da die Ausgabe bedeuten würde, das jemand remote den \lstinline[breaklines]|id| Befehl als root ausgeführt hat, was bedeuten würde das jemand vollen Zugriff auf das System hat. \\
+Ob das IDS dies erkannt hat wurde mit dem Befehl \\
+\lstinline[breaklines]|sudo tail /var/log/suricata/fast.log| \\ 
+überprüft. Die \lstinline[breaklines]|fast.log| Datei enthält die Warnungen des IDS. \\
+Die letzte Zeile der Datei war \lstinline[breaklines]|[1:2100498:7] GPL ATTACK_RESPONSE id check returned root [**] [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} <ip> -> 192.168.0.220:<port>|. Dies zeigt das der Datenverkehr als potenzieller Datenabfluss erkannt wurde.
+
+\newpage
+\section{Pentest und Bewertung der Sicherheit}
+Folgende Kapitel befassen sich mit der Bewertung der Sicherheit und den Ergebnissen der Pentests.
+
+\subsection{Bewertung der Firewallregeln}
+Die gesetzten Regeln der Firewall werden als ''gut'' bewertet. Ausschlaggebend für diese Bewertung sind folgende Punkte:
+\begin{enumerate}
+	\item + Es werden nur die absolut notwendigen eingehenden Verbindungen zugelassen.
+	\item + Es werden nur die absolut notwendigen ausgehenden Verbindungen zugelassen.
+	\item - Es gibt keine Regelung welche Protokolle für die Authentifizierung mit dem Exchange- oder E-Mail-Server zulässig sind. Es können hier also mehr Ports offen sein als nötig.
+	\item - Pings von und zur Firewall sind zulässig, die Firewall kann dadurch schneller bei Netzwerkscans identifiziert werden.
+	\item + Es wird nur der HTTP-Verkehr an den Webserver weitergeleitet.
+	\item + Der Webserver akzeptiert HTTP-Verkehr nur von der Firewall.
+	\item - Port 22 kann von jeder IP-Adresse angefragt werden.
+	\item - Verkehr für Port 22 wird zugelassen, es besteht kein Limit für Versuche eine Verbindung aufzubauen.
+\end{enumerate}
+
+\subsection{SQL Injection}
+
+\subsection{Cross-Site Scripting}
+
+\subsection{Datenverkehr verschleiern}
+
+\subsection{MITM}
+
+\newpage
+\section{Anhang}
+
+\subsection{Netzwerk}
+Im folgenden wird das Netzwerk sowie die darin enthaltenen IP-Adressen dargelegt.
+\begin{itemize}
+	\item Basis-IP: 192.168.0.0
+	\item Netzmaske: 255.255.255.0 (CIDR: 24)
+	\item Erste IP-Adresse: 192.168.0.1
+	\item Letzte IP-Adresse: 192.168.0.254
+	\item Bestehende Clients:
+		\subitem Firewall: 192.168.0.220
+		\subitem Webserver: 192.168.0.221
+		\subitem Client: 192.168.0.100
+\end{itemize}
+
+\subsection{Hinzufügen eines Cron-Jobs}\label{cron-job}
+Um einen Cron-Job anzulegen wurden folgende Schritte durchgeführt.
+\begin{enumerate}
+	\item Der jeweils relevante Firewall-Skript wurde ausführbar gemacht: \\ ''\lstinline[breaklines]|$ sudo chmod +x <name des Skripts>|''.
+	\item Das Interface zum bearbeiten der Crontabs wurde geöffnet: \\ ''\lstinline[breaklines]|sudo crontab -e|''.
+	\item Am Ende wurde die Zeile ''\lstinline[breaklines]|@reboot sudo bash <pfad zum Skript>|'' eingefügt.
+\end{enumerate}
+
+\subsection{Setzen einer statischen IP-Adresse}\label{static-ip}
+Um eine statische IP-Adresse zu setzen wurden folgende Schritte durchgeführt.
+\begin{enumerate}
+	\item Die Datei \lstinline[breaklines]|/etc/network/interfaces| wurde mit einem Texteditor geöffnet.
+	\item Die bestehenden Einträge wurden auskommentiert.
+	\item Folgender Text wurde am Ende eingefügt:
+	\begin{lstlisting}[breaklines]
+auto eth0
+iface eth0 inet static
+	address <statische ip-adresse hier>
+	netmask 255.255.255.0
+	gateway 192.168.0.220 # ip adresse der firewall
+	\end{lstlisting}
+	\item Die Datei wurde gespeichert und das System neugestartet.
+\end{enumerate}
+
+% Referenzen bitte in references.bib einfügen
+\newpage
+\bibliographystyle{ieeetr}
+\bibliography{references}
+\end{document}

@@ -1,0 +1,19 @@
+\begin{thebibliography}{1}
+
+\bibitem{ashaiyengar-2023}
+AshaIyengar, ``{Network ports for clients and mail flow in Exchange},'' 2 2023.
+
+\bibitem{teamviewer-2024}
+TeamViewer, ``{Ports used by TeamViewer},'' 4 2024.
+
+\bibitem{iptables-manpage}
+H.~Eychenne, ``iptables(8) - linux man page.''
+
+\bibitem{suricata-quickstart}
+``{2. Quickstart guide — Suricata 8.0.0-dev documentation}.''
+
+\bibitem{suricata-rulemanagement}
+``{9.1. Rule Management with Suricata-Update — Suricata 8.0.0-dev
+  documentation}.''
+
+\end{thebibliography}
