@@ -40,7 +40,7 @@ iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168
 iptables -A FORWARD -p tcp -d 192.168.0.221 --dport 80 -j ACCEPT
 iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.221 --dport 80 -j MASQUERADE
 
-# allow outlook traffic to external mailserver, since no existing mail server in 
+# allow outlook traffic to external mailserver, since no existing mail server in system, protocols to access online server
 ## imap
 iptables -A INPUT -p tcp --dport 143 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 143 -j ACCEPT
