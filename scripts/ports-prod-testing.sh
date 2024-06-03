@@ -9,30 +9,30 @@ iptables -X
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
-# allow ssh traffic on port 22
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
+# allow ssh traffic on port 22, limit to packages that are either new or belong to an established connection
+iptables -A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISH -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 22 -m conntrack --ctstate ESTABLISHED -j ACCEPT
 
-# allow dns traffic on port 53, both tcp and udp
+# allow dns traffic on port 53, both tcp and udp, to be able to query dns servers
 iptables -A INPUT -p tcp --dport 53 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 53 -j ACCEPT
 iptables -A INPUT -p udp --dport 53 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 53 -j ACCEPT
 
-# allow ntp traffic on port 123
+# allow ntp traffic on port 123, used for time synchronization 
 iptables -A INPUT -p udp --dport 123 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 123 -j ACCEPT
 
-# allow pinging
+# allow pinging, used for testing
 iptables -A INPUT -p icmp -j  ACCEPT
 iptables -A OUTPUT -p icmp -j ACCEPT
 
-# allow http on port 80
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+# allow http on port 80, for access to internet sites and services
+iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 80 -j ACCEPT
 
-# allow https on port 443
-iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+# allow https on port 443, requiered to access websites and services
+iptables -A INPUT -p tcp --dport 443 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 443 -j ACCEPT
 
 # forward incoming traffic on port 80, http, to webserver port 80 and back
@@ -40,7 +40,7 @@ iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168
 iptables -A FORWARD -p tcp -d 192.168.0.221 --dport 80 -j ACCEPT
 iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.221 --dport 80 -j MASQUERADE
 
-# allow outlook traffic to external mailserver
+# allow outlook traffic to external mailserver, since no existing mail server in 
 ## imap
 iptables -A INPUT -p tcp --dport 143 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 143 -j ACCEPT
