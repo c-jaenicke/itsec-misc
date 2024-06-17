@@ -28,8 +28,8 @@ iptables -A INPUT -p icmp -j  ACCEPT
 iptables -A OUTPUT -p icmp -j ACCEPT
 
 # allow http on port 80
-iptables -A INPUT -p tcp --sport 80 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 80 -j ACCEPT
 
 # allow https on port 443
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT
