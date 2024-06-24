@@ -13,36 +13,42 @@ Warning--entry type for "suricata-rulemanagement" isn't style-file defined
 --line 19 of file references.bib
 Warning--entry type for "iptables-manpage" isn't style-file defined
 --line 24 of file references.bib
-You've used 5 entries,
+Warning--entry type for "ipv4forward-kernel" isn't style-file defined
+--line 29 of file references.bib
+Warning--entry type for "nmap-manual" isn't style-file defined
+--line 37 of file references.bib
+Warning--entry type for "ettercap-manual" isn't style-file defined
+--line 41 of file references.bib
+You've used 8 entries,
             1876 wiz_defined-function locations,
-            492 strings with 3845 characters,
-and the built_in function-call counts, 570 in all, are:
-= -- 42
-> -- 14
+            500 strings with 4033 characters,
+and the built_in function-call counts, 881 in all, are:
+= -- 66
+> -- 20
 < -- 0
-+ -- 8
-- -- 3
-* -- 21
-:= -- 74
-add.period$ -- 2
-call.type$ -- 5
-change.case$ -- 5
++ -- 12
+- -- 4
+* -- 31
+:= -- 105
+add.period$ -- 3
+call.type$ -- 8
+change.case$ -- 8
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 20
-empty$ -- 91
-format.name$ -- 3
-if$ -- 146
+cite$ -- 8
+duplicate$ -- 32
+empty$ -- 145
+format.name$ -- 4
+if$ -- 231
 int.to.chr$ -- 0
-int.to.str$ -- 5
+int.to.str$ -- 8
 missing$ -- 0
-newline$ -- 18
-num.names$ -- 3
-pop$ -- 31
+newline$ -- 27
+num.names$ -- 4
+pop$ -- 50
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 32
+skip$ -- 52
 stack$ -- 0
 substring$ -- 0
 swap$ -- 0
@@ -51,7 +57,7 @@ text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 3
-width$ -- 6
-write$ -- 32
-(There were 5 warnings)
+while$ -- 4
+width$ -- 9
+write$ -- 49
+(There were 8 warnings)

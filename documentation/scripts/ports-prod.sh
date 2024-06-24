@@ -13,11 +13,11 @@ iptables -A OUTPUT -o lo -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 
-# allow dns traffic on port 53, both tcp and udp
-iptables -A INPUT -p tcp --sport 53 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
-iptables -A INPUT -p udp --sport 53 -j ACCEPT
-iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+# allow dns traffic on port 54, both tcp and udp
+iptables -A INPUT -p tcp --dport 53 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 53 -j ACCEPT
+iptables -A INPUT -p udp --dport 53 -j ACCEPT
+iptables -A OUTPUT -p udp --sport 53 -j ACCEPT
 
 # allow ntp traffic on port 123
 iptables -A INPUT -p udp --dport 123 -j ACCEPT
@@ -62,7 +62,11 @@ iptables -A OUTPUT -p tcp --sport 5938 -j ACCEPT
 iptables -A INPUT -p udp --dport 5938 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 5938 -j ACCEPT
 
-# drop  traffic that doesnt match incoming or outgoing rules, allow all forwarding
+# allow traffic for delfship
+iptables -A INPUT -p tcp --dport 8081 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 8081 -j ACCEPT
+
+# drop  traffic that doesnt match incoming or forwarding rules, allow all outgoing
 iptables -P INPUT DROP
 iptables -P FORWARD ACCEPT # forward has to be ACCEPT, to allow forwarding to webserver
-iptables -P OUTPUT DROP
+iptables -P OUTPUT ACCEPT
