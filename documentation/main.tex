@@ -337,7 +337,7 @@ Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein An
     \label{fig:sql-login-error-response}
 \end{figure}
 
-\noindent Mit diesem Wissen wurde eine angepasste Injection erstellt:
+\noindent Mit diesem Wissen wurde eine angepasste Injection erstellt.
 \begin{lstlisting}[breaklines]
 ' union select 1,'itsec','attack'; -- '
 \end{lstlisting}
@@ -357,7 +357,7 @@ Diese Eingabe als Benutzername, kombiniert mit \lstinline|attack| als Passwort, 
     \label{fig:sql-injection-login-success}
 \end{figure}
 
-\noindent Um die Möglichkeiten der SQL Injection weiter zu demonstrieren, wurde eine alternative Injection entwickelt, um alle Benutzerdaten zu extrahieren:
+\noindent Um die Möglichkeiten der SQL Injection weiter zu demonstrieren, wurde eine alternative Injection entwickelt, um alle Benutzerdaten zu extrahieren.
 \begin{lstlisting}[breaklines]
 ' union select 1, group_concat(concat_ws('|', user, password) separator ', '), 'attack' from credentials -- '
 \end{lstlisting}
