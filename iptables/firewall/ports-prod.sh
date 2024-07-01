@@ -28,12 +28,12 @@ iptables -A INPUT -p icmp -j  ACCEPT
 iptables -A OUTPUT -p icmp -j ACCEPT
 
 # allow http on port 80
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 80 -j ACCEPT
+iptables -A INPUT -p tcp --sport 80 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
 
 # allow https on port 443
-iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 443 -j ACCEPT
+iptables -A INPUT -p tcp --sport 443 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 443 -j ACCEPT
 
 # forward incoming traffic on port 80, http, to webserver port 80 and back
 iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.0.221:80
