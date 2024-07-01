@@ -31,9 +31,9 @@
     \begin{center}
         \includegraphics[height=25mm]{S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg} \\
         \vspace{1.0cm}
-        Dokumentation der Projektarbeit
+        Dokumentation der Projektarbeit \\
         \vspace{1.5cm}   
-        \textbf{Projektarbeit im Modul Informationssicherheit}
+        \textbf{Projektarbeit im Modul Informationssicherheit} \\
         \vspace{1.5cm}
         vorgelegt von \\
         \textbf{Adrian Tippe 584501} \\
@@ -55,11 +55,10 @@
 
 \section{Einführung}
 Im Rahmen  des  Kurses Informationssicherheit,  im Sommersemester 2024, sollte in einer Projektarbeit eine Firewall aufgebaut,  konfiguriert  und getestet werden. \\
-In  diesem Dokument wird die Konfiguration  der  einzelnen Komponenten sowie der Penetrationstest dieser beschrieben.
+In  diesem Dokument wird die Konfiguration  der  einzelnen Komponenten sowie der Penetrationstest dieser Firewall beschrieben.
 
 \subsection{Skripts und Anwendungen}
-Alle genutzten Skripts und die Python-Anwendung auf dem Webserver wurden eigens erstellt und sind in den öffentlichen GitHub-Repositories  \\
-\url{https://github.com/c-jaenicke/itsec-misc} und  \url{https://github.com/parhamrahmani/Implementation_Webserver_GP3} zu finden.
+Alle genutzten Skripts sowie die Python-Anwendung auf dem Webserver wurden eigens erstellt und sind in den öffentlichen GitHub-Repositories \url{https://github.com/c-jaenicke/itsec-misc} und \url{https://github.com/parhamrahmani/Implementation_Webserver_GP3} zu finden.
 
 \newpage
 \section{Aufbau des Informationsverbunds und Informationsfluss}
@@ -74,13 +73,12 @@ Folgendes Diagramm zeigt den Informationsverbund:
 	\label{fig:boat1}
 \end{figure}
 \\
+Der Laptop dient als Client, um auf den Webserver zuzugreifen und als Client für  Penetrationstests.  \\ \\
+Die Firewall, ein RPi 4, setzt eine Firewall und ein  Intrusion Detection System (IDS) um. Dieses soll den Webserver schützen und den Datenverkehr  kontrollieren.  \\ \\
+Der Webserver, ein RPi 3b, stellt eine eigens programmierte Python-Anwendung mit einem NGINX-Webserver um. \\ \\
+Der Switch verbindet alle Geräte im Informationsverbund.  Zu den  gezeigten Komponenten können noch zusätzlich  2 weitere  Clients  angeschlossen werden. \\ \\
 Der Server der Firewall wird in den kommenden Kapiteln als Firewall bezeichnet. Der Server des Webservers wird als Webserver bezeichnet. \\ \\
-Der Laptop dient als Client, um auf den Webserver zuzugreifen und als Client für  Penetrationstests.  \\
-Die Firewall, ein RPi 4, setzt eine Firewall und ein  Intrusion Detection System (IDS) um. Dieses soll den Webserver schützen und den Datenverkehr  kontrollieren.  \\
-Der Webserver, ein RPi 3b, stellt eine eigens programmierte Python-Anwendung mit einem NGINX-Webserver um. \\
-Der Switch, ein  NETGEAR ProSAFE GS105GE mit 5 RJ45 Ports, verbindet alle Geräte im Informationsverbund.  Zu den  gezeigten Komponenten können noch zusätzlich  2 weitere  Clients  angeschlossen werden.
 
-\newpage
 \subsection{Informationsfluss}
 Folgendes Diagramm stellt den Informationsfluss im Verbund dar:
 \begin{figure}[!ht]
@@ -90,7 +88,8 @@ Folgendes Diagramm stellt den Informationsfluss im Verbund dar:
 	\label{fig:boat2}
 \end{figure}
 \\
-Beginnend beim Client wird eine Anfrage an die Firewall gesendet, diese leitete die Anfrage, mittels einer Forwading-Regel, nachdem diese gefiltert und überprüft wurde, an den Webserver weiter. Dieser bearbeitet die Anfrage und führt ggf. eine Datenbankabfrage durch. Die Antwort wird anschließend wieder an die Firewall gesendet, welche diese an den Client weiterleitet. 
+Beginnend beim Client wird eine Anfrage an die Firewall gesendet, diese leitete die Anfrage, mittels einer Forwading-Regel, nachdem diese gefiltert und überprüft wurde, an den Webserver weiter. Dieser bearbeitet die Anfrage und führt ggf. eine Datenbankabfrage durch. Die Antwort wird anschließend wieder an die Firewall gesendet, welche diese an den Client weiterleitet. \\
+Es findet keine direkte Kommunikation zwischen dem Client und dem Webserver statt. Der Datenverkehr läuft immer über die Firewall
 \\ \\
 Der Switch wird in dem Informationsfluss nicht behandelt, da dieser lediglich die physische Verbindung der Komponenten realisiert und keine sonstige Funktion oder Filter umsetzt.
 
@@ -111,21 +110,27 @@ Es wurden folgende Pakete zusätzlich installiert:
 			\textbf{Name} & \textbf{Begründung} \\
 			\hline
 			iptables & Firewall, Alternative zur Vorinstallierten Firewall nftables \\
+			suricata & Intrusion Detection System \\
 			nvim & Texteditor zum bearbeiten von Konfigurationsdateien \\
 			zsh & Shell mit besserer Auto-Complete-Funktion \\
 			tmux & Terminal Multiplexer zum einfachen Verwalten über SSH \\
-			suricata & Intrusion Detection System \\
 		\end{tabular}
-		\caption{Zusätzlich installiere Software auf dem Firewall-Server}
+		\caption{Zusätzlich installiere Software auf der Firewall}
 	\end{center}
 \end{table}
 \\
-Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhindern, siehe \nameref{config-firewall-fw} \ref{config-firewall-fw} für die Konfiguration von iptables für den Firewall-Server. \\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhindern, siehe Kapitel \ref{config-firewall-fw} für die Konfiguration von iptables für den Firewall-Server. \\
 SSH wurde aktiviert, es wurden keine weiteren Maßnahmen eingeleitet um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
-Der Suricata-Dienst wurde aktiviert und wird automatisch beim Boot gestartet, siehe \nameref{config-ids} \ref{config-ids} für die Konfiguration des Intrusion Detection Systems (IDS). \\ \\
-Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.220| zugewiesen, siehe \nameref{static-ip} \ref{static-ip}.
+Der Suricata-Dienst wurde aktiviert und wird automatisch beim Boot gestartet, siehe Kapitel \ref{config-ids} für die Konfiguration des Intrusion Detection Systems (IDS). \\ \\
+Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.220| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration der Firewall:
 
-\newpage
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=10cm]{interface-firewall.png}
+	\caption{Interface der Firewall}
+	\label{fig:interface-firewall}
+\end{figure}
+
 \subsection{Webserver}
 Der Webserver nutzt als Betriebssystem die 64 Bit Variante des Raspberry Pi OS, welches auf Debian 12 Bookworm basiert. \\ \\ 
 Es wurde keine vorinstallierte Software deinstalliert.\\
@@ -148,11 +153,17 @@ Folgende Software wurde zusätzlich installiert:
 	\end{center}
 \end{table}
 \\
-Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhinden, siehe \nameref{config-firewall-ws} \ref{config-firewall-ws} für die Konfiguration von iptables auf dem Webserver. \\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhinden, siehe Kapitel \ref{config-firewall-ws} für die Konfiguration von iptables auf dem Webserver. \\
 SSH wurde aktiviert, es wurden keine weiteren Maßnahmen eingeleitet um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
 Der nginx-Dienst und mariadb-Dienst wurde aktiviert und wird beim Start automatisch gestartet. \\
-Die Python-Anwendung wird automatisch beim Start durch einen Cron-Job gestartet, siehe \nameref{cron-job} \ref{cron-job}. \\ \\
-Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.221| zugewiesen, siehe \nameref{static-ip} \ref{static-ip}.
+Die Python-Anwendung wird automatisch beim Start durch einen Cron-Job gestartet, siehe Kapitel \ref{cron-job}. \\ \\
+Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.221| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration des Webservers:
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=10cm]{interface-webserver.png}
+	\caption{Interface des Webservers}
+	\label{fig:interface-webserver}
+\end{figure}
 
 \subsubsection{Python-Anwendung}
 Auf dem Webserver wird eine eigens programmierte Python-Anwendung betrieben. \\ \\
@@ -173,18 +184,18 @@ Es wird ein neue Datenbank mit dem Namen \lstinline[breaklines]|mydb| angelegt. 
 Es wurden keine weiteren spezifischen Konfigurationen durchgeführt um MariaDB zu schützen.
 
 \newpage
-\section{Konfiguration der Firewall}
-Folgende Abschnitte zeigen und erläutern die Konfiguration der einzelnen iptable-Paketfilter.
+\section{Konfiguration von iptables}
+Folgende Abschnitte zeigen und erläutern die Konfiguration der einzelnen iptables-Paketfilter.
 
 \subsection{Firewall}\label{config-firewall-fw}
-Im folgenden werden die Anforderungen und die Konfiguration von iptables auf dem Firewall-Server erläutert.
+Im folgenden werden die Anforderungen und die Konfiguration von iptables auf der Firewall erläutert.
 
 \subsubsection{Anforderungen}
 Folgende Anforderungen wurden aus dem Aufgabenblatt 1 identifiziert und werden zusätzlich für die Administration und den normalen Betrieb benötigt:
 \begin{table}[h!]
 	\begin{center}
 		\label{tab:table3}
-		\begin{tabular}{l|l |l }
+		\begin{tabular}{ r | l | l }
 			\textbf{Port} & \textbf{Protokoll} & \textbf{Dienst} \\
 			\hline
 			22 & TCP & SSH \\
@@ -199,34 +210,37 @@ Folgende Anforderungen wurden aus dem Aufgabenblatt 1 identifiziert und werden z
 			995 & TCP & Outlook POP3 \\
 			587 & TCP & Outlook SMTP \\
 			5938 & TCP & TeamViewer \\
-			5938 & UDP & Teamviewer \\
+			5938 & UDP & TeamViewer \\
+			8081 & TCP & TeamViewer \\
 		\end{tabular}
 		\caption{Benötigte Ports auf der Firewall}
 	\end{center}
 \end{table}
 \\
 Bei den Freigegeben Ports wurden die Richtlinien und Anforderungen der jeweiligen Hersteller \cite{ashaiyengar-2023}, \cite{teamviewer-2024} beachtet. \\ \\
-Port 22 wird für SSH genutzt um den Server remote zu administrieren. \\
+Port 22 wird für SSH genutzt um den Server zu administrieren. \\
 Die Ports 53 und 123, entsprechend DNS und NTP, werden für den regulären Betrieb des Servers benötigt. NTP wird benötigt um die korrekte Zeit zu haben und das Logging und Auswerten zu vereinfachen. \\
 Ports 80 und 443 werden für den HTTP-Verkehr genutzt, damit verbundene Clients, wie Mitarbeiter, Zugang zum Internet erhalten. \\
 Da sich kein lokaler E-Mail- oder Exchange-Server im Verbund auf Arbeitsblatt 1 befindet, wird davon ausgegangen das es einen externen Server gibt. Die Ports 143 und 993, 110 und 995 sowie 587 ermöglichen verschiedene Wege der Anmeldung auf diesem Server. \\
-TeamViewer benötigt den Port 5938 um den Zugang zu ermöglichen.
+TeamViewer benötigt den Port 5938 um den Zugang zu ermöglichen. \\
+Der Lizenzserver von Delftship benötigt den Port 8081 \cite{delftship}.
 
 \subsubsection{Skripte}
-Nach den Vorgaben aus Aufgabenblatt 1 und den identifizierten Anforderungen ergeben sich folgende Skripte. Alle Skripte müssen mit  Root Rechten ausgeführt werden.\\
-Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\ \\ 
+Nach den Vorgaben aus Aufgabenblatt 1 und den identifizierten Anforderungen ergeben sich die folgende Skripte für iptables. Alle Skripte müssen mit  Root Rechten ausgeführt werden.  Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\ \\ 
 Bei allen folgenden Skripten werden anfangs alle bestehenden Regeln gelöscht, um Konflikte mit den neuen Regeln zu verhindern. \\ \\
-Folgender Skript schließt alle Ports der Firewall.
+Folgender Skript schließt alle Ports der Firewall:
 \lstinputlisting[breaklines]{./scripts/all-ports-closed.sh}
-Folgender Skript öffnet die Firewall komplett und erlaubt jede Art von Datenverkehr.
+Folgender Skript öffnet die Firewall komplett und erlaubt jede Art von Datenverkehr:
 \lstinputlisting[breaklines]{./scripts/all-ports-open.sh}
 Folgender  Skript setzt die Anforderungen für die Umgebung um und ermöglicht das Forwarding auf den Webserver. Zusätzlich  wird  Datenverkehr auf dem  loopback-Interface erlaubt. \\
-Dieser Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe \nameref{cron-job} \ref{cron-job}.
+Dieser Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe Kapitel \ref{cron-job}.
 \lstinputlisting[breaklines]{./scripts/ports-prod.sh}
-Um das Forwarding von IPv4 Paketen zu ermöglichen musste der Kernel-Parameter \lstinline[breaklines]|net.ipv4.ip_forward| auf 1, statt 0, gesetzt werden. \cite{ipv4forward-kernel}
+Zusätzlich zu den Ports wird das ICMP-Protokoll zugelassen, um Pings für Diagnosezwecke zu gestatten.
+\\ \\
+Um das Forwarding von IPv4 Paketen zu ermöglichen musste der Kernel-Parameter \lstinline[breaklines]|net.ipv4.ip_forward| auf 1, statt 0, gesetzt werden \cite{ipv4forward-kernel}. 
 
 \subsection{Webserver}\label{config-firewall-ws}
-Im folgenden werden die Anforderungen der Firewall des Webservers beschrieben und der Skript der diese umsetzt gezeigt.
+Im folgenden werden die Anforderungen an die iptables-Regeln auf dem Webservers beschrieben und der Skript der diese umsetzt gezeigt.
 
 \subsubsection{Anforderungen}
 Folgende Ports wurden als relevant identifiziert um dem Webserver zu administrieren und die Python-Anwendung bereitzustellen:
@@ -244,9 +258,9 @@ Folgende Ports wurden als relevant identifiziert um dem Webserver zu administrie
 \end{table}
 
 \subsubsection{Skript}
-Folgender  Skript setzt die iptables Regeln auf dem Webserver. Der  Skript muss mit Root Rechten ausgeführt  werden. \\
+Folgender  Skript setzt die iptables Regeln auf dem Webserver. Der  Skript muss mit Root Rechten ausgeführt  werden.
 Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\
-Der Skript wird direkt am Boot mittels eines Cron-Jobs ausgeführt, siehe \nameref{cron-job} \ref{cron-job}.
+Der Skript wird direkt am Boot mittels eines Cron-Jobs ausgeführt, siehe Kapitel \ref{cron-job}.
 \lstinputlisting[breaklines]{./scripts/ports-webserver.sh}
 Zuerst werden  alle bestehenden Regeln gelöscht, um Konflikte vorzubeugen. \\
 Der Skript ermöglicht den Managementzugang mittels SSH sowie Pings auf und vom  Server. \\
@@ -267,7 +281,7 @@ af-packet:
 	  use-mmap: yes
 	  tpacket-v3: yes
 \end{lstlisting}
-Darüber hinaus wurden die aktuellen Regeln heruntergeladen, installiert und aktiviert \cite{suricata-rulemanagement}, mittels \lstinline[breaklines]|sudo suricata-update|. \\
+Darüber hinaus wurden die aktuellen Regeln,  mittels \lstinline[breaklines]|sudo suricata-update|, heruntergeladen, installiert und aktiviert \cite{suricata-rulemanagement}. \\
 Um diese zu aktivieren wurde gemäß der Anleitung des Herstellers der Pfad der Regeln, in der Datei \lstinline[breaklines]|/etc/suricata/suricata.yaml| geändert auf \\ \lstinline[breaklines]|default-rule-path: /var/lib/suricata/rules|. \\ \\
 Weitere Konfiguration wurden nicht durchgeführt. \\ \\
 Das IDS wurde anschließend getestet. Dafür wurde der Befehl
@@ -283,7 +297,7 @@ Die letzte Zeile der Datei war \lstinline[breaklines]|[1:2100498:7] GPL ATTACK_R
 
 \newpage
 \section{Penetrationstest des Informationsverbunds}
-Folgende Kapitel befassen sich mit der Bewertung der Sicherheit und den Ergebnissen der Pentests.
+Folgende Kapitel befassen sich mit den im Penetrationstest durchgeführten Angriffen und den Aufgaben der IT-Forensik.
 
 \subsection{NMAP}
 Sowohl der Webserver als auch die Firewall wurden mit dem Befehl  \lstinline[breaklines]|sudo nmap -sS -sC -O -p- <ip des ziels>| mittels NMAP gescanned. 
@@ -323,7 +337,7 @@ Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein An
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{sql-login-error-message.png}
+    \includegraphics[width=15cm]{sql-login-error-message.png}
     \caption{Fehlermeldung beim Login in der Webanwendung}
     \label{fig:sql-login-error-message}
 \end{figure}
@@ -332,7 +346,7 @@ Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein An
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{sql-login-error-response.png}
+    \includegraphics[width=15cm]{sql-login-error-response.png}
     \caption{Response der Webanwendung}
     \label{fig:sql-login-error-response}
 \end{figure}
@@ -345,14 +359,14 @@ Diese Eingabe als Benutzername, kombiniert mit \lstinline|attack| als Passwort, 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{sql-injection-login-attempt.png}
+    \includegraphics[width=15cm]{sql-injection-login-attempt.png}
     \caption{Login mit SQL Injection}
     \label{fig:sql-injection-login-attempt}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{sql-injection-login-success.png}
+    \includegraphics[width=15cm]{sql-injection-login-success.png}
     \caption{Erfolgreiche Anmeldung mit SQL Injection}
     \label{fig:sql-injection-login-success}
 \end{figure}
@@ -365,7 +379,7 @@ Diese Injection wird ebenfalls als Benutzername eingegeben, während \lstinline|
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{sql-injection-data-extraction.png}
+    \includegraphics[width=14cm]{sql-injection-data-extraction.png}
     \caption{Extraktion aller Benutzerdaten mit SQL Injection}
     \label{fig:sql-injection-data-extraction}
 \end{figure}
@@ -382,7 +396,7 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=15cm]{xss-script-injection-fail.png}
+    \includegraphics[width=8cm]{xss-script-injection-fail.png}
     \caption{Fehlgeschlagene Ausführung des JavaScript-Codes}
     \label{fig:xss-script-injection-fail}
 \end{figure}
@@ -393,7 +407,7 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{xss-script-injection-html.png}
+    \includegraphics[width=12cm]{xss-script-injection-html.png}
     \caption{HTML-Quelltext mit grau hinterlegtem JavaScript-Code}
     \label{fig:xss-script-injection-html}
 \end{figure}
@@ -405,9 +419,15 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{xss-img-tag-injection-success.png}
+    \includegraphics[width=14cm]{xss-img-tag-injection-success.png}
     \caption{Erfolgreiche XSS-Ausführung mit img-Tag}
     \label{fig:xss-img-tag-injection-success}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=14cm]{xss-img-tag-injection-success-2.png}
+	\caption{Erfolgreiche XSS-Ausführung mit img-Tag, Zoom auf das Alert-Fenster}
+	\label{fig:xss-img-tag-injection-success-2}
 \end{figure}
 
 \noindent Wie in der Abbildung zu sehen ist, war diese Methode erfolgreich und löste wie erwartet ein Alert-Fenster aus.
@@ -425,12 +445,19 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=17cm]{xss-keylogger-network-traffic.png}
+    \includegraphics[width=15cm]{xss-keylogger-network-traffic.png}
     \caption{Netzwerkverkehr des XSS-Keyloggers}
     \label{fig:xss-keylogger-network-traffic}
 \end{figure}
 
-\noindent Dann wurde eine Phishing-Seite imitiert, die eine legitime Website nachahmt, um Benutzerdaten zu stehlen:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=17cm]{xss-keylogger-network-traffic-2.png}
+	\caption{Netzwerkverkehr des XSS-Keyloggers, Zoom auf den Netzwerkverkehr}
+	\label{fig:xss-keylogger-network-traffic-2}
+\end{figure}
+
+\noindent Dann wurde eine Phishing-Seite imitiert, die eine legitime Website nachahmt, mit dem Ziel Benutzerdaten zu stehlen:
 \begin{lstlisting}[breaklines]
 <img src="" onerror="(function(){
   document.body.innerHTML = `
@@ -465,6 +492,9 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 \FloatBarrier
 
 \subsection{ARP Spoofing}
+Beim ARP-SPoofing wird das ARP-Protkoll genutzt um den Datenverkehr nicht zum eigentlichen Ziel, sondern zum Angreifer, zu schicken. Das ARP-Protokoll ist dafür zuständig IP-Adresse, welche an sich dynamisch sind, einer statischen MAC-Adresse zuzuordnen. Diese Zuordnung passiert im LAN, im Local Area Network. \\
+Beim ARP-Spoofing weisen wir die IP des Ziels, der MAC-Adresse des Angreifers zu. Alle Pakete die an die IP des Ziels gesendet werden, werden also an den Angreifer gesendet. Der Angreifer kann die Paket an das eigentliche Ziel weiterleiten, wodurch der Datenverkehr ununterbrochen funktioniert \cite{what-is-arp-spoofing}. \\ \\
+In unserem Fall ist am sinnvollsten sich zwischen der Firewall und dem Webserver zu platzieren, und dort den Verkehr mitzuschneiden, da man dort alle Pakete erhält. \\ \\
 Für das ARP-Spoofing wurde die CLI Version des Tools \lstinline[breaklines]|ettercap| genutzt. Das Tool wurde mit dem Befehl \lstinline[breaklines]|sudo ettercap -T -M arp /192.168.0.220// /192.168.0.221//| aufgerufen \cite{ettercap-manual}:
 \begin{enumerate}
 	\item \lstinline[breaklines]|-T|: Nutze die einfache Textausgabe
@@ -510,7 +540,8 @@ Es war uns möglich eine Anmeldung auf dem Webserver zu lesen und das Passwort d
 \end{figure} 
 
 \subsubsection{IDS gegen ARP-Spoofing}
-Das eingesetzte IDS, Suricata, bietet keinen Schutz gegen und ist nicht in der Lage ARP-Spoofing zu erkennen.
+Das eingesetzte IDS, Suricata, bietet keinen Schutz gegen und ist nicht in der Lage ARP-Spoofing zu erkennen. \\ \\
+IDS arbeiten auf der OSI Schicht 3, der Netzwerkschicht \cite{layer-ids}. Das ARP-Protokoll
 
 \newpage
 \section{Anhang}
@@ -551,19 +582,6 @@ iface eth0 inet static
 	\end{lstlisting}
 	\item Die Datei wurde gespeichert und das System neugestartet.
 \end{enumerate}
-Folgende Inhalte hat die \lstinline[breaklines]|/etc/network/interfaces|-Datei auf dem jeweiligen System: \newpage
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=10cm]{interface-firewall.png}
-	\caption{Interface der Firewall}
-	\label{fig:interface-firewall}
-\end{figure}
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=10cm]{interface-webserver.png}
-	\caption{Interface des Webservers}
-	\label{fig:interface-webserver}
-\end{figure}
 
 % Referenzen bitte in references.bib einfügen
 \newpage

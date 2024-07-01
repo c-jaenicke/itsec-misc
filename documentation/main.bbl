@@ -1,29 +1,62 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{ashaiyengar-2023}
-AshaIyengar, ``{Network ports for clients and mail flow in Exchange},'' 2 2023.
+AshaIyengar, ``{Network ports for clients and mail flow in Exchange}.''
+  \url{https://learn.microsoft.com/en-us/exchange/plan-and-deploy/deployment-ref/network-ports?view=exchserver-2019#network-ports-required-for-clients-and-services},
+  2 2023.
+\newblock Aufgerufen am: 12.05.2024.
 
 \bibitem{teamviewer-2024}
-TeamViewer, ``{Ports used by TeamViewer},'' 4 2024.
+TeamViewer, ``{Ports used by TeamViewer}.''
+  \url{https://www.teamviewer.com/en-us/global/support/knowledge-base/teamviewer-classic/troubleshooting/ports-used-by-teamviewer/},
+  4 2024.
+\newblock Aufgerufen am: 12.05.2024.
+
+\bibitem{delftship}
+``Delftship - activation.'' \url{https://www.delftship.net/activation/}.
+\newblock Aufgerufen am: 15.06.2024.
 
 \bibitem{iptables-manpage}
 H.~Eychenne, ``iptables(8) - linux man page.''
+  \url{https://linux.die.net/man/8/iptables}.
+\newblock Aufgerufen am: 12.05.2024.
 
 \bibitem{ipv4forward-kernel}
 L.~Reynolds, ``Linux ip forwarding - how to disable/enable using
-  net.ipv4.ip-forward,'' 12 2023.
+  net.ipv4.ip-forward.''
+  \url{https://linuxconfig.org/how-to-turn-on-off-ip-forwarding-in-linux}, 12
+  2023.
+\newblock Aufgerufen am: 12.05.2024.
 
 \bibitem{suricata-quickstart}
 ``{2. Quickstart guide — Suricata 8.0.0-dev documentation}.''
+  \url{https://docs.suricata.io/en/latest/quickstart.html#}.
+\newblock Aufgerufen am: 12.05.2024.
 
 \bibitem{suricata-rulemanagement}
 ``{9.1. Rule Management with Suricata-Update — Suricata 8.0.0-dev
   documentation}.''
+  \url{https://docs.suricata.io/en/latest/rule-management/suricata-update.html}.
+\newblock Aufgerufen am: 12.05.2024.
 
 \bibitem{nmap-manual}
 ``Nmap-referenz-handbuch (man page).''
+  \url{https://nmap.org/man/de/index.html}.
+\newblock Aufgerufen am: 15.06.2024.
+
+\bibitem{what-is-arp-spoofing}
+B.~Lenaerts-Bergmans, ``Address resolution protocol (arp) spoofing: What it is
+  and how to prevent an arp attack.''
+  \url{https://www.crowdstrike.com/cybersecurity-101/spoofing-attacks/arp-spoofing/},
+  5 2022.
+\newblock Aufgerufen am: 01.07.2024.
 
 \bibitem{ettercap-manual}
-``ettercap - kali linux tools.''
+``ettercap - kali linux tools.'' \url{https://www.kali.org/tools/ettercap/}.
+\newblock Aufgerufen am: 15.06.2024.
+
+\bibitem{layer-ids}
+HIPAAVault, ``Ids and ips.''
+  \url{https://www.hipaavault.com/managed-services/ids-and-ips/}.
 
 \end{thebibliography}
