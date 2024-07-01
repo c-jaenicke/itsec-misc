@@ -42,18 +42,18 @@ iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.221 --dport 80 -j MASQUERADE
 
 # allow outlook traffic to external mailserver
 ## imap
-iptables -A INPUT -p tcp --dport 143 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 143 -j ACCEPT
-iptables -A INPUT -p tcp --dport 993 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 993 -j ACCEPT
+iptables -A INPUT -p tcp --sport 143 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 143 -j ACCEPT
+iptables -A INPUT -p tcp --sport 993 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 993 -j ACCEPT
 ## pop3
-iptables -A INPUT -p tcp --dport 110 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 110 -j ACCEPT
-iptables -A INPUT -p tcp --dport 995 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 995 -j ACCEPT
+iptables -A INPUT -p tcp --sport 110 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 110 -j ACCEPT
+iptables -A INPUT -p tcp --sport 995 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 995 -j ACCEPT
 ## smtp
-iptables -A INPUT -p tcp --dport 587 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 587 -j ACCEPT
+iptables -A INPUT -p tcp --sport 587 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 587 -j ACCEPT
 
 # allow traffic for teamviewer
 iptables -A INPUT -p tcp --dport 5938 -j ACCEPT
@@ -63,8 +63,8 @@ iptables -A INPUT -p udp --dport 5938 -j ACCEPT
 iptables -A OUTPUT -p udp --sport 5938 -j ACCEPT
 
 # allow traffic for delfship
-iptables -A INPUT -p tcp --dport 8081 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 8081 -j ACCEPT
+iptables -A INPUT -p tcp --sport 8081 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 8081 -j ACCEPT
 
 # drop  traffic that doesnt match incoming or forwarding rules, allow all outgoing
 iptables -P INPUT DROP
