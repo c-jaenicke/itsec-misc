@@ -505,43 +505,44 @@ Für das ARP-Spoofing wurde die CLI Version des Tools \lstinline[breaklines]|ett
 Folgende Screenshots zeigen die ARP-Tabellen der einzelnen Geräte, sowie die MAC-Adresse der Kali-Maschine: \\ \\
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=10cm]{arp-firewall.png}
+	\includegraphics[width=14cm]{arp-firewall.png}
 	\caption{ARP-Tabelle der Firewall}
 	\label{fig:arp-firewall}
 \end{figure}
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=10cm]{arp-webserver.png}
+	\includegraphics[width=14cm]{arp-webserver.png}
 	\caption{ARP-Tabelle des Webservers}
 	\label{fig:arp-webserver}
 \end{figure}
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=10cm]{arp-mac-kali.png}
+	\includegraphics[width=14cm]{arp-mac-kali.png}
 	\caption{MAC-Adresse der Kali-Maschine}
 	\label{fig:arp-mac-kali}
 \end{figure} 
 \\ \\
 Man kann sehen das die IP-Adresse der Firewall und des Webservers jeweils in den jeweiligen Screenshots die MAC-Adresse der Kali-Maschine haben. Dies bedeutet das Pakete welche von der Firewall aus zum Webserver gesendet werden, an die Kali-Maschine gesendet werden, das Gleiche gilt auch für Pakete die vom Webserver an die Firewall gesendet werden.
 \\ \\
-Es war uns möglich eine Anmeldung auf dem Webserver zu lesen und das Passwort des Benutzers zu erhalten:
+Es war möglich eine Anmeldung auf dem Webserver zu lesen und das Passwort des Benutzers zu erhalten:
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=10cm]{arp-shark-packete.png}
+	\includegraphics[width=17cm]{arp-shark-packete.png}
 	\caption{Wireshark Traffic einer Anmeldung}
 	\label{fig:arp-shark-packete.png}
 \end{figure}
 \\ \\
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=10cm]{arp-shark-packet-5.png}
+	\includegraphics[width=13cm]{arp-shark-packet-5.png}
 	\caption{Inhalt des 5. Pakets mit dem Passwort des Benutzers}
 	\label{fig:arp-shark-packet-5}
 \end{figure} 
 
 \subsubsection{IDS gegen ARP-Spoofing}
 Das eingesetzte IDS, Suricata, bietet keinen Schutz gegen und ist nicht in der Lage ARP-Spoofing zu erkennen. \\ \\
-IDS arbeiten auf der OSI Schicht 3, der Netzwerkschicht \cite{layer-ids}. Das ARP-Protokoll
+IDS arbeiten auf der OSI Schicht 3, der Netzwerkschicht \cite{layer-ids}. Das ARP-Protokoll arbeiter auf der Ebene 2, der Sicherungsschicht \cite{layer-arp},\\ \\
+Um das ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwachen und kontrollieren, ob IP-Adressen doppelt vergeben werden. Diese Funktion bietet Suricata nicht.
 
 \newpage
 \section{Anhang}

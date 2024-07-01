@@ -59,4 +59,9 @@ B.~Lenaerts-Bergmans, ``Address resolution protocol (arp) spoofing: What it is
 HIPAAVault, ``Ids and ips.''
   \url{https://www.hipaavault.com/managed-services/ids-and-ips/}.
 
+\bibitem{layer-arp}
+M.~Zydyk, ``Address resolution protocol (arp).''
+  \url{https://www.techtarget.com/searchnetworking/definition/Address-Resolution-Protocol-ARP},
+  12 2023.
+
 \end{thebibliography}
