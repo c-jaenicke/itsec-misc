@@ -616,6 +616,156 @@ Um das ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwach
 
 TODO HIER NOCH MACHEN
 
+\subsection{Aufgabe 1}
+Darstellung forensisches Vorgehen, Datensammlung, Datenanalyse, Grenzen der Analyse
+\\ \\
+\textbf{Welche Methodik der Forensik würden Sie zum Sichern des RAMS nutzen?}
+\\ \\
+\textbf{Worauf mussten Sie bei dieser Sicherungsmethodik besonders achten?}
+\\ \\
+\textbf{Welches Volatility-Profil sollte für das Image verwendet werden}
+Das Plugin \lstinline[breaklines]|imageinfo| empfiehlt die Profile WinXPSP2x86 und WinXPSP3x86.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=18cm]{vol-imageinfo.png}
+	\caption{Volatility: Imageinfo}
+	\label{fig:vol-imageinfo}
+\end{figure} 
+\textbf{Welche Prozesse waren zum Zeitpunkt der Sicherung aktiv?}
+Folgender Screenshot zeigt den Output des Plugins \lstinline[breaklines]|pslist|, welches laufende Prozesse zeigt:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=18cm]{vol-prozesse.png}
+	\caption{Volatility: Laufende Prozesse}
+	\label{fig:vol-prozesse}
+\end{figure} 
+\textbf{Gibt es versteckte Prozesse?}
+Nein, das Plugin \lstinline[breaklines]|psscan|, welches auch versteckte und geschlossene Prozesse zeigen kann, zeigt keine zusätzliche Prozesse an.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=18cm]{vol-prozesse-verstekt.png}
+	\caption{Volatility: Versteckte Prozesse}
+	\label{fig:vol-prozesse-verstekt.png}
+\end{figure} 
+\textbf{Welche Netzwerkverbindungen bestehen bzw. bestanden? Ist etwas auffällig?}
+Die Plugins \lstinline[breaklines]|connscan| und \lstinline[breaklines]|sockscan| zeigen die existierenden Verbindungen. Auffällig ist, das eine Verbindung zu einer IP-Adresse \lstinline[breaklines]|172.16.98.1| existiert welche sich im lokalen Netzwerkbereich \lstinline[breaklines]|172.16.0.0.| befindet.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=18cm]{vol-verbindungen.png}
+	\caption{Volatility: bestehende Verbindungen}
+	\label{fig:vol-verbindungen.png}
+\end{figure} 
+\textbf{Welche Prozesse haben welche Verbindung gestartet?}
+Folgende Prozesse haben eine Verbindung auf dem jeweiligen Port gestartet:
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:process-port}
+		\begin{tabular}{l|l |l }
+			\textbf{PID} & \textbf{Prozess} & \textbf{Port} \\
+			\hline
+			1956 & explorer.exe & 1026 zu 6666 \\
+			\hline
+			688 & lsass.exe & 500 \\
+			4 & System &  445\\
+			964 & svchost.exe & 1029 \\
+			1616 & alg.exe & 1025 \\
+			1148 & svchost.exe & 1900 \\
+			964 & svchost.exe & 123 \\
+			688 & lsass.exe & 4500 \\
+			688 & lsass.exe &  0 \\
+			1956 & explorer.exe & 1026 \\
+			916 & svchost.exe &  135\\
+			4 & System &  445\\
+		\end{tabular}
+		\caption{Volatility: Prozesse hinter den Verbindungen}
+	\end{center}
+\end{table}
+\textbf{Untersuchen Sie die Eingaben in der command line. Welche Kommandos wurden ausgeführt? Fällt Ihnen etwas auf?}
+Auffällig ist, das der Befehl \lstinline[breaklines]|sc query malware| ausgeführt wurde. Mit dem Befehl \lstinline[breaklines]|sc| kann man Services starten, stoppen und überprüfen. In diesem Fall wurde überprüft ob der Service mit dem Namen \lstinline[breaklines]|malware| läuft. Dies wurde scheinbar als Administrator ausgeführt.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=18cm]{vol-cmd-history.png}
+	\caption{Volatility: Eingaben in der Kommandozeile}
+	\label{fig:vol-cmd-history}
+\end{figure} 
+\textbf{Welche verdächtigen Services sind derzeit aktiv?}
+Es wurden 2 verdächtige Services identifiziert.
+\\ \\
+Zum einen der Service mit dem Namen \lstinline[breaklines]|malware|:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=13cm]{vol-sus-service1.png}
+	\caption{Volatility: }
+	\label{fig:vol-sus-service1}
+\end{figure} 
+Und der Service mit den Namen \lstinline[breaklines]|Null|:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=13cm]{vol-sus-service2.png}
+	\caption{Volatility: Verdächtiger Service 2}
+	\label{fig:vol-sus-service2.png}
+\end{figure} 
+
+\subsection{Aufgabe 2}
+Vor-Ort-Unterstützung Analyse
+\\ \\
+\textbf{Bestimmen Sie alle Netzwerkteilnehmer (MAC, IPv4), die in den Netzwerkausschnitten auftauchen. Broadcast-Adressen können Sie ausschließen. Tipp: Betrachten Sie auch das Protokoll LLDP.}
+\\ \\
+\textbf{Bestimmen Sie, welche Protokolle verwendet werden.}
+
+\subsubsection{Phase 1}
+Erstes infiziertes System (attack1.pcapng)
+\\ \\
+\textbf{Bei welchem System handelt es sich um das infizierte System und wieso ist dieses
+	System verdächtig? Beachten Sie die Baseline (normal.pcapng), die Protokolle TCP und
+	UDP sowie die verwendeten Ports.}
+\\ \\
+\textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu
+	verbinden?}
+
+\subsection{Phase 2}
+Lateral Movement – Offline Modus (attack2.pcapng)
+\\ \\
+\textbf{Welche Auffälligkeiten sehen Sie, in diesem Mitschnitt? Welches Protokoll wird häufig
+	verwendet?}
+\\ \\
+\textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
+
+\subsubsection{Phase 3}
+Kritische Systemziele bestimmen (attack3.pcapng)
+\\ \\
+\textbf{Über welchen Port versucht das infizierte System Kontakt aufnehmen?}
+
+\subsubsection{Phase 4}
+Rohe Gewalt (attack4.pcapng)
+\\ \\
+\textbf{Schauen Sie sich die einzelnen Verbindungsversuche näher an. Welches Protokoll wird
+	neu verwendet?}
+\\ \\
+\textbf{Wurde die Verbindung erfolgreich hergestellt? Notieren Sie ggf. den Zeitstempel.}
+
+\subsubsection{Phase 5}
+Feinarbeit (attack5.pcapng)
+\\ \\
+\textbf{Schauen Sie sich die einzelnen TCP-Sessions an.
+	(Filter: tcp.stream == <n>)
+	Sie suchen die Session, bei welcher die Teilnehmer 10.3.5.3 und 10.3.5.5miteinander
+	kommunizieren.}
+\\ \\
+\textbf{Gegeben sind folgende Richtlinien:
+	Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich
+	Der Techniker Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende
+	Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900)}
+\\ \\
+\textbf{Gegen welche Richtlinie wird verstoßen?}
+
+\subsubsection{Phase 6}
+Abschlussbetrachtung
+\\ \\
+\textbf{Tragen Sie die einzelnen Vorgänge kurz zusammen und welche Informationen Sie daraus
+	ziehen konnten?}
+
+
 \newpage
 \section{Anhang}
 
