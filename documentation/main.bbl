@@ -28,6 +28,15 @@ L.~Reynolds, ``Linux ip forwarding - how to disable/enable using
   2023.
 \newblock Aufgerufen am: 12.05.2024.
 
+\bibitem{ping-manpage}
+``ping(8) - linux man page.'' \url{https://linux.die.net/man/8/ping}.
+\newblock Aufgerufen am: 21.07.2024.
+
+\bibitem{nmap-manual}
+``Nmap-referenz-handbuch (man page).''
+  \url{https://nmap.org/man/de/index.html}.
+\newblock Aufgerufen am: 15.06.2024.
+
 \bibitem{suricata-quickstart}
 ``{2. Quickstart guide — Suricata 8.0.0-dev documentation}.''
   \url{https://docs.suricata.io/en/latest/quickstart.html#}.
@@ -38,11 +47,6 @@ L.~Reynolds, ``Linux ip forwarding - how to disable/enable using
   documentation}.''
   \url{https://docs.suricata.io/en/latest/rule-management/suricata-update.html}.
 \newblock Aufgerufen am: 12.05.2024.
-
-\bibitem{nmap-manual}
-``Nmap-referenz-handbuch (man page).''
-  \url{https://nmap.org/man/de/index.html}.
-\newblock Aufgerufen am: 15.06.2024.
 
 \bibitem{what-is-arp-spoofing}
 B.~Lenaerts-Bergmans, ``Address resolution protocol (arp) spoofing: What it is

