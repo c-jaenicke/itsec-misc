@@ -188,7 +188,22 @@ Folgende Parameter wurden genutzt \cite{ping-manpage}:
 	\item \lstinline[breaklines]|-c 5|: Sende insgesamt 5 Pakete. 5 Pakete wurden als ausreichend beurteilt um die Funktion der Firewall zu zeigen. 
 \end{enumerate}
 
-TODO hier Screenshots für alles offen, alles zu und production
+Die folgende Abbildung zeit das Ergebnis des Pings, wenn alle Ports offen sind:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{ping-all-open.png}
+	\caption{Ergebnis den Pings bei allen Ports offen}
+	\label{fig:ping-all-open}
+\end{figure}
+
+Die nächste Abbildung zeigt das Ergebnis des Pings mit allen Ports geschlossen und der production Regeln:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{ping-all-closed.png}
+	\caption{Ergebnis den Pings bei geschlossen Ports und production Setup}
+	\label{fig:ping-all-closed}
+\end{figure}
+Man kann sehen das keiner der Pings erfolgreich war. Das liegt daran das bei beiden Regelsätzen das ICMP-Protokoll, welches für Pings genutzt wird, blockiert wird.
 
 \subsubsection{NMAP Scan}
 Sowohl der Webserver als auch die Firewall wurden mit dem Befehl  \lstinline[breaklines]|sudo nmap -sS -sC -O -p- <ip des ziels>| mittels NMAP gescanned. 
@@ -224,8 +239,40 @@ Zudem war Suricata in der Lage den NMAP-Scan, den Script-Scan, zu entdecken und 
 \end{figure}
 
 \subsubsection{DOS Angriff}
+Zusätzlich wurde ein Denial Of Service (DoS) Angriff auf die Firewall durchgeführt, hierfür wurde das Tool hping3 eingesetzt, mit folgenden Paramtern \cite{hping-kalitools}:
+\begin{enumerate}
+	\item \lstinline[breaklines]|-S|: Setze die SYN-Flag bei TCP Paketen, um eine legitime Anfrage über TCP zu simulieren
+	\item \lstinline[breaklines]|--flood|: Sende Pakete so schnell wie möglich
+	\item \lstinline[breaklines]|-V|: Genauerer Output
+	\item \lstinline[breaklines]|-p 80|: Sende die Pakete an Port 80 des Ziel
+	\item \lstinline[breaklines]|192.168.0.220|: IP-Adresse des Ziels
+\end{enumerate}
 
-TODO HIER NOCH MACHEN
+Der folgende Screenshot zeigt das Ausführen von hping3 im Terminal:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{dos-hping3.png}
+	\caption{Screenshot von der Ausführung von hping3}
+	\label{fig:dos-hpgin3}
+\end{figure}
+
+Die folgende Abbildung zeit die Auslastung der Firewall wie sie in htop dargestellt wird:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{dos-htop.png}
+	\caption{Screenshot von der Auslastung der Firewall während des DoS Angriffs}
+	\label{fig:dos-htop}
+\end{figure}
+htop ist ein Tool welches die derzeitige Auslastung der Hardware eines Systems grafisch darstellt. Man kann sehen, dass die CPU zu fast 100\% ausgelastet ist. Die Firewall ist nicht mehr in der Lage auf andere Anfragen zu antworten, andere Prozesse werden deutlich verlangsamt. \\
+Der Webserver war auch nicht mehr über die Firewall erreichbar.
+\\ \\
+Suricata hat zudem bei der Durchführung des DoS Angriffs ausgeschlagen und die fehlerhafte TCP Übertragung gemeldet:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=17cm]{suricata-spam-dos.png}
+	\caption{Einzelne Zeile der Logs von Suricata während des DoS Angriffs}
+	\label{fig:dos-suricata}
+\end{figure}
 
 \newpage
 \section{Aufgabenlatt 2}

@@ -1,5 +1,5 @@
-1. DOS angriff durchführen
-2. Ping zeigen das firewall open erreichbar is
-3. icmp enfernen
+1. ABGESCHLOSSEN DOS angriff durchführen
+2. ABGESCHLOSSEN  zeigen das firewall open erreichbar is
+3. ABGESCHLOSSEN enfernen
 4. ipables output enfernen, stattdessen esablished nutzen
 5. ABGESCHLOSSEN: bei struktur aufgaben einfügen 

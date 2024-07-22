@@ -29,36 +29,38 @@ Warning--entry type for "layer-ids" isn't style-file defined
 --line 72 of file references.bib
 Warning--entry type for "layer-arp" isn't style-file defined
 --line 78 of file references.bib
-You've used 13 entries,
+Warning--entry type for "hping-kalitools" isn't style-file defined
+--line 86 of file references.bib
+You've used 14 entries,
             1876 wiz_defined-function locations,
-            531 strings with 5355 characters,
-and the built_in function-call counts, 1628 in all, are:
-= -- 162
-> -- 34
+            535 strings with 5441 characters,
+and the built_in function-call counts, 1740 in all, are:
+= -- 174
+> -- 35
 < -- 0
-+ -- 20
++ -- 21
 - -- 7
-* -- 63
-:= -- 213
-add.period$ -- 24
-call.type$ -- 13
-change.case$ -- 13
+* -- 66
+:= -- 224
+add.period$ -- 26
+call.type$ -- 14
+change.case$ -- 14
 chr.to.int$ -- 0
-cite$ -- 13
-duplicate$ -- 52
-empty$ -- 235
+cite$ -- 14
+duplicate$ -- 56
+empty$ -- 253
 format.name$ -- 7
-if$ -- 430
+if$ -- 462
 int.to.chr$ -- 0
-int.to.str$ -- 13
+int.to.str$ -- 14
 missing$ -- 0
-newline$ -- 53
+newline$ -- 57
 num.names$ -- 7
-pop$ -- 90
+pop$ -- 98
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 42
+skip$ -- 45
 stack$ -- 0
 substring$ -- 0
 swap$ -- 0
@@ -68,6 +70,6 @@ top$ -- 0
 type$ -- 0
 warning$ -- 0
 while$ -- 7
-width$ -- 15
-write$ -- 114
-(There were 13 warnings)
+width$ -- 16
+write$ -- 122
+(There were 14 warnings)

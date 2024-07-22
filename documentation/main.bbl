@@ -37,6 +37,10 @@ L.~Reynolds, ``Linux ip forwarding - how to disable/enable using
   \url{https://nmap.org/man/de/index.html}.
 \newblock Aufgerufen am: 15.06.2024.
 
+\bibitem{hping-kalitools}
+``Hping3.'' \url{https://www.kali.org/tools/hping3/}.
+\newblock Aufgerufen am: 22.07.2024.
+
 \bibitem{suricata-quickstart}
 ``{2. Quickstart guide — Suricata 8.0.0-dev documentation}.''
   \url{https://docs.suricata.io/en/latest/quickstart.html#}.
