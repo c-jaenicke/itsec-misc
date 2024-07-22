@@ -21,6 +21,11 @@ H.~Eychenne, ``iptables(8) - linux man page.''
   \url{https://linux.die.net/man/8/iptables}.
 \newblock Aufgerufen am: 12.05.2024.
 
+\bibitem{allowlist}
+T.~Redaktion~ComputerWeekly.de, ``Allowlist (whitelist).''
+  \url{https://www.computerweekly.com/de/definition/Whitelist}, 2022.
+\newblock Aufgerufen am: 22.07.2024.
+
 \bibitem{ipv4forward-kernel}
 L.~Reynolds, ``Linux ip forwarding - how to disable/enable using
   net.ipv4.ip-forward.''

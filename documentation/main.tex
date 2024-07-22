@@ -146,7 +146,9 @@ Folgender Skript öffnet die Firewall komplett und erlaubt jede Art von Datenver
 Folgender  Skript setzt die Anforderungen für die Umgebung um und ermöglicht das Forwarding auf den Webserver. Zusätzlich  wird  Datenverkehr auf dem  loopback-Interface erlaubt. \\
 Dieser Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe Kapitel \ref{cron-job}.
 \lstinputlisting[breaklines]{./scripts/ports-prod.sh}
-Zusätzlich zu den Ports wird das ICMP-Protokoll zugelassen, um Pings für Diagnosezwecke zu gestatten.
+Es wird davon ausgegangen das sich weitere Clients hinter der Firewall befinden, welche auf das Internet und E-Mail-Server zugreifen wollen, die Firewall also nicht nur den Webserver schützt.
+\\ \\
+Wir haben uns für einen restriktiven Allowlist-Ansatz \cite{allowlist} für ausgehende Pakete entschieden. Bei welchem alle ausgehenden Pakete standardmäßig fallen gelassen werden, und nur bestimmte Ports ausgehende Daten verschicken können. Dadurch wird gegen das ungewollte oder unbewusste Senden von Daten geschützt.
 \\ \\
 Um das Forwarding von IPv4 Paketen zu ermöglichen musste der Kernel-Parameter \lstinline[breaklines]|net.ipv4.ip_forward| auf 1, statt 0, gesetzt werden \cite{ipv4forward-kernel}. 
 

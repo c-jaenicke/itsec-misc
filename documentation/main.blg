@@ -31,36 +31,38 @@ Warning--entry type for "layer-arp" isn't style-file defined
 --line 78 of file references.bib
 Warning--entry type for "hping-kalitools" isn't style-file defined
 --line 86 of file references.bib
-You've used 14 entries,
+Warning--entry type for "allowlist" isn't style-file defined
+--line 91 of file references.bib
+You've used 15 entries,
             1876 wiz_defined-function locations,
-            535 strings with 5441 characters,
-and the built_in function-call counts, 1740 in all, are:
-= -- 174
-> -- 35
+            539 strings with 5570 characters,
+and the built_in function-call counts, 1876 in all, are:
+= -- 188
+> -- 39
 < -- 0
-+ -- 21
-- -- 7
-* -- 66
-:= -- 224
-add.period$ -- 26
-call.type$ -- 14
-change.case$ -- 14
++ -- 23
+- -- 8
+* -- 71
+:= -- 244
+add.period$ -- 28
+call.type$ -- 15
+change.case$ -- 15
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 56
-empty$ -- 253
-format.name$ -- 7
-if$ -- 462
+cite$ -- 15
+duplicate$ -- 60
+empty$ -- 271
+format.name$ -- 8
+if$ -- 497
 int.to.chr$ -- 0
-int.to.str$ -- 14
+int.to.str$ -- 15
 missing$ -- 0
-newline$ -- 57
-num.names$ -- 7
-pop$ -- 98
+newline$ -- 61
+num.names$ -- 8
+pop$ -- 104
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 45
+skip$ -- 48
 stack$ -- 0
 substring$ -- 0
 swap$ -- 0
@@ -69,7 +71,7 @@ text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 7
-width$ -- 16
-write$ -- 122
-(There were 14 warnings)
+while$ -- 8
+width$ -- 17
+write$ -- 132
+(There were 15 warnings)
