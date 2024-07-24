@@ -44,34 +44,31 @@ iptables -A INPUT -m state --state ESTABLISHED -p tcp --sport 443 -j ACCEPT
 iptables -A OUTPUT -m state --state NEW,ESTABLISHED -p tcp --dport 443 -j ACCEPT
 
 # LEITE eingehenden traffic auf Port 80 WEITER zum Webserver und zurueck
-iptables -A FORWARD -p tcp -d 192.168.0.221 --dport 80 -j ACCEPT
+iptables -A FORWARD -p tcp -d 192.168.0.221 --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -p tcp -s 192.168.0.221 --sport 80 -m state --state ESTABLISHED -j ACCEPT
 iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.0.221:80
 iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.221 --dport 80 -j MASQUERADE
 
 # ERLAUBE traffic zu einem externen Outlook Exchange Server
-# Das Verwenden von States ist hier nicht moeglich, das sowohl der Server als auch der Client Pakete
-# senden koennen, wie Benachrichtigungen und E-Mails
 ## ERLAUBE traffic fuer das IMAP Protokoll
-iptables -A INPUT -p tcp --sport 143 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 143 -j ACCEPT
-iptables -A INPUT -p tcp --sport 993 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 993 -j ACCEPT
+iptables -A INPUT -p tcp --sport 143 -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 143 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp --sport 993 -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 993 -m state --state NEW,ESTABLISHED -j ACCEPT
 ## ERLAUBE traffic fuer das POP3 Protokoll
-iptables -A INPUT -p tcp --sport 110 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 110 -j ACCEPT
-iptables -A INPUT -p tcp --sport 995 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 995 -j ACCEPT
+iptables -A INPUT -p tcp --sport 110 -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 110 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp --sport 995 -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 995 -m state --state NEW,ESTABLISHED -j ACCEPT
 ## ERLAUBE traffic fuer das SMTP Protokoll
-iptables -A INPUT -p tcp --sport 587 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 587 -j ACCEPT
+iptables -A INPUT -p tcp --sport 587 -m state --state ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 587 -m state --state NEW,ESTABLISHED -j ACCEPT
 
 # ERLAUBE traffic fuer TeamViewer ueber TCP und UDP
-# ERLAUBE alle Pakete unabhaengig von Status, da dies zu Problem fuehren koennte
-iptables -A INPUT -p tcp --dport 5938 -j ACCEPT
-iptables -A OUTPUT -p tcp --sport 5938 -j ACCEPT
-
-iptables -A INPUT -p udp --dport 5938 -j ACCEPT
-iptables -A OUTPUT -p udp --sport 5938 -j ACCEPT
+iptables -A INPUT -p tcp --dport 5938 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 5938 -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -p udp --dport 5938 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p udp --sport 5938 -m state --state ESTABLISHED -j ACCEPT
 
 # ERLAUBE traffic fuer Delftship Lizenzserver
 # ERLAUBE eingehende Pakete vom Lizenzserver
@@ -83,8 +80,7 @@ iptables -A OUTPUT -m state --state NEW,ESTABLISHED -p tcp --dport 8081 -j ACCEP
 # REGELN FÜR ALLE PAKETE DIE VORHERIGE REGELN NICHT MATCHEN
 # LASSE alle eingehenden Pakete FALLEN
 iptables -P INPUT DROP
-# LEITE Pakete WEITER, muss auf Accept sein um Forwarding generell zu ermoeglichen
-iptables -P FORWARD ACCEPT
+# LEITE keine Pakete WEITER
+iptables -P FORWARD DROP
 # LASSE alle ausgehenden Pakete FALLEN
 iptables -P OUTPUT DROP
-
