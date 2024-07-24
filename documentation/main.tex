@@ -710,62 +710,194 @@ Und der Service mit den Namen \lstinline[breaklines]|Null|:
 Vor-Ort-Unterstützung Analyse
 \\ \\
 \textbf{Bestimmen Sie alle Netzwerkteilnehmer (MAC, IPv4), die in den Netzwerkausschnitten auftauchen. Broadcast-Adressen können Sie ausschließen. Tipp: Betrachten Sie auch das Protokoll LLDP.}
-\\ \\
+
+TODO: alle netzwerkausschnitte betrachten, unten ist nur von normal.pcapng
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{MAC-Adresse} & \textbf{Name} & \textbf{IP-Adresse} \\
+\hline
+00:1b:1b:f7:7c:4f & Siemens\_f7:7c:4f & 10.3.5.5 \\
+00:26:5a:e7:b7:c4 & DLink\_e7:b7:c4 & 10.3.5.1 \\
+01:00:5e:00:00:fc & IPv4mcast\_fc & 224.0.0.252 \\
+01:00:5e:7f:ff:64 & IPv4mcast\_7f:ff:64 & 239.255.255.100 \\
+01:00:5e:7f:ff:fa & IPv4mcast\_7f:ff:fa & 239.255.255.250 \\
+01:80:c2:00:00:0e & LLDP\_Multicast & - \\
+28:63:36:ad:91:96 & Siemens\_ad:91:96 & 10.3.5.12 \\
+28:63:36:ad:91:97 & Siemens\_ad:91:97 & - \\
+28:63:36:ae:70:0b & Siemens\_ae:70:0b & - \\
+f4:8e:38:9f:7c:74 & Dell\_9f:7c:74 & 10.3.5.3 \\
+\hline
+\end{tabular}
+\caption{Netzwerkteilnehmer (normal.pcapng)}
+\label{tab:network_participants_normal}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{MAC-Adresse} & \textbf{Gerät-Typ} & \textbf{Model/Details} & \textbf{IP-Adresse} \\
+\hline
+00:1b:1b:f7:7c:4f & SIEMENS AG SIMATIC & Field PG M5 & 10.3.5.5 \\
+\hline
+28:63:36:ad:91:97 & Siemens SIMATIC S7 & CPU1511-1 PN & - \\
+\hline
+28:63:36:ae:70:0b & Siemens SIMATIC S7 & CPU1512C-1 PN & - \\
+\hline
+f4:8e:38:9f:7c:74 & Dell OptiPlex & 3046 & 10.3.5.3 \\
+\hline
+\end{tabular}
+\caption{LLDP Geräteinformationen}
+\label{tab:lldp_info}
+\end{table}
+
+
 \textbf{Bestimmen Sie, welche Protokolle verwendet werden.}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|}
+\hline
+\textbf{Protokoll} \\
+\hline
+PROFINET Real-Time Protocol \\
+\hline
+PROFINET PTCP \\
+\hline
+Link Layer Discovery Protocol \\
+\hline
+Internet Protocol Version 4 \\
+\hline
+User Datagram Protocol \\
+\hline
+Simple Service Discovery Protocol \\
+\hline
+Link-local Multicast Name Resolution \\
+\hline
+Transmission Control Protocol \\
+\hline
+TPKT - ISO on TCP - RFC1006 \\
+\hline
+ISO 8073/X.224 COTP \\
+\hline
+Internet Group Management Protocol \\
+\hline
+Address Resolution Protocol \\
+\hline
+\end{tabular}
+\caption{Verwendete Protokolle}
+\label{tab:protokolle}
+\end{table}
 
 \subsubsection{Phase 1}
 Erstes infiziertes System (attack1.pcapng)
-\\ \\
-\textbf{Bei welchem System handelt es sich um das infizierte System und wieso ist dieses
-	System verdächtig? Beachten Sie die Baseline (normal.pcapng), die Protokolle TCP und
-	UDP sowie die verwendeten Ports.}
-\\ \\
-\textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu
-	verbinden?}
+
+\textbf{Bei welchem System handelt es sich um das infizierte System und wieso ist dieses System verdächtig? Beachten Sie die Baseline (normal.pcapng), die Protokolle TCP und UDP sowie die verwendeten Ports.}
+
+Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mit der IP-Adresse 10.3.5.5 (MAC: 00:1b:1b:f7:7c:4f). Dieses System zeigt auffälliges Verhalten, das von der Baseline abweicht:
+
+\begin{itemize}
+    \item Es versucht, UDP-Verbindungen zu 234.5.6.7 auf Port 8910 aufzubauen.
+    \item Es initiiert mehrere TCP-Verbindungsversuche zu 23.95.230.107 auf Port 80.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{ws-suspicious-traffic.png}
+    \caption{Auffälliger Netzwerkverkehr des infizierten Systems}
+    \label{fig:suspicious_traffic}
+\end{figure}
+
+\textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu verbinden?}
+
+Der erste Verbindungsversuch zu einem externen Host wurde am 8. Juni 2018 um 13:46:47.788372000 CEST registriert. Dies war ein UDP-Paket (Frame 96 in der Aufzeichnung).
 
 \subsection{Phase 2}
 Lateral Movement – Offline Modus (attack2.pcapng)
-\\ \\
-\textbf{Welche Auffälligkeiten sehen Sie, in diesem Mitschnitt? Welches Protokoll wird häufig
-	verwendet?}
-\\ \\
+
+\textbf{Welche Auffälligkeiten sehen Sie in diesem Mitschnitt? Welches Protokoll wird häufig verwendet?}
+
+In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig dominant. Es macht 53,7\% aller Pakete aus, was auf einen intensiven Netzwerk-Scan hindeutet. TODO: Zusätzlich sind zahlreiche Verbindungsversuche zu verschiedenen Ports zu beobachten.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{ws-arp-scan.png}
+    \caption{Intensiver ARP-Scan des Netzwerks}
+    \label{fig:arp_scan}
+\end{figure}
+
 \textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
+
+Das SIEMENS AG SIMATIC Field PG M5 des Technikers (10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus Phase 1, dass dieses System kompromittiert wurde.
 
 \subsubsection{Phase 3}
 Kritische Systemziele bestimmen (attack3.pcapng)
-\\ \\
-\textbf{Über welchen Port versucht das infizierte System Kontakt aufnehmen?}
+
+\textbf{Über welchen Port versucht das infizierte System Kontakt aufzunehmen?}
+
+Das infizierte System versucht, Verbindungen über Port 102 zu den Systemen 10.3.5.11 und 10.3.5.12 aufzubauen. Port 102 ist bekannt für das S7comm-Protokoll, das in Siemens S7 SPS-Systemen verwendet wird (TODO QUELLE).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{ws-port-102-connections.png}
+    \caption{Verbindungsversuche über Port 102 zu kritischen Systemen}
+    \label{fig:port_102_connections}
+\end{figure}
 
 \subsubsection{Phase 4}
 Rohe Gewalt (attack4.pcapng)
-\\ \\
-\textbf{Schauen Sie sich die einzelnen Verbindungsversuche näher an. Welches Protokoll wird
-	neu verwendet?}
-\\ \\
+
+\textbf{Schauen Sie sich die einzelnen Verbindungsversuche näher an. Welches Protokoll wird neu verwendet?}
+
+In dieser Phase wird das Virtual Network Computing (VNC) Protokoll neu eingesetzt. Dies deutet auf Versuche hin, Fernzugriff auf andere Systeme zu erlangen.
+
 \textbf{Wurde die Verbindung erfolgreich hergestellt? Notieren Sie ggf. den Zeitstempel.}
+
+Eine TCP-Verbindung wurde erfolgreich hergestellt. Der Zeitablauf war wie folgt:
+\begin{itemize}
+    \item SYN-Paket gesendet: 8. Juni 2018, 14:13:36.774417000 CEST
+    \item Letztes Paket der TCP-Verbindung: 8. Juni 2018, 14:13:37.181877000 CEST
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{ws-vnc-connection.png}
+    \caption{Erfolgreiche VNC-Verbindung}
+    \label{fig:vnc_connection}
+\end{figure}
 
 \subsubsection{Phase 5}
 Feinarbeit (attack5.pcapng)
-\\ \\
-\textbf{Schauen Sie sich die einzelnen TCP-Sessions an.
-	(Filter: tcp.stream == <n>)
-	Sie suchen die Session, bei welcher die Teilnehmer 10.3.5.3 und 10.3.5.5miteinander
-	kommunizieren.}
-\\ \\
+
+\textbf{Schauen Sie sich die einzelnen TCP-Sessions an. (Filter: tcp.stream == <n>) Sie suchen die Session, bei welcher die Teilnehmer 10.3.5.3 und 10.3.5.5 miteinander kommunizieren.}
+
+In der relevanten TCP-Session zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzung zu beobachten, in der verschiedene Client-Pointer-Events ausgeführt werden. Dies deutet auf eine aktive Fernsteuerung hin.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{ws-vnc-session.png}
+    \caption{VNC-Sitzung zwischen Techniker-Arbeitsplatz und SCADA-System}
+    \label{fig:vnc_session}
+\end{figure}
+
 \textbf{Gegeben sind folgende Richtlinien:
-	Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich
-	Der Techniker Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende
-	Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900)}
-\\ \\
+Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich.
+Der Techniker-Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900).}
+
 \textbf{Gegen welche Richtlinie wird verstoßen?}
+
+Streng genommen wird gegen keine der genannten Richtlinien verstoßen. Die VNC-Verbindung vom Techniker-Arbeitsplatz zum SCADA-Arbeitsplatz über Port 5900 ist explizit erlaubt. Allerdings könnte man argumentieren, dass die Nutzung dieser Verbindung zur direkten Steuerung der PLCs problematisch sein könnte, da dies eigentlich die exklusive Aufgabe des SCADA-Arbeitsplatzes ist. Die Trennung dieser Verantwortlichkeiten ist in der Praxis schwer zu gewährleisten.
 
 \subsubsection{Phase 6}
 Abschlussbetrachtung
-\\ \\
-\textbf{Tragen Sie die einzelnen Vorgänge kurz zusammen und welche Informationen Sie daraus
-	ziehen konnten?}
 
+\textbf{Tragen Sie die einzelnen Vorgänge kurz zusammen und welche Informationen Sie daraus ziehen konnten?}
 
+TODO
 \newpage
 \section{Anhang}
 
