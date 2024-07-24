@@ -45,6 +45,7 @@ iptables -A OUTPUT -m state --state NEW,ESTABLISHED -p tcp --dport 443 -j ACCEPT
 
 # LEITE eingehenden traffic auf Port 80 WEITER zum Webserver und zurueck
 iptables -A FORWARD -p tcp -d 192.168.0.221 --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -p tcp -s 192.168.0.221 --sport 80 -m state --state ESTABLISHED -j ACCEPT
 iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.0.221:80
 iptables -t nat -A POSTROUTING -p tcp -d 192.168.0.221 --dport 80 -j MASQUERADE
 
