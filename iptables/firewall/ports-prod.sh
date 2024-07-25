@@ -77,7 +77,7 @@ iptables -A INPUT -m state --state ESTABLISHED -p tcp --sport 8081 -j ACCEPT
 iptables -A OUTPUT -m state --state NEW,ESTABLISHED -p tcp --dport 8081 -j ACCEPT
 
 # drop  traffic that doesnt match incoming or forwarding rules, allow all outgoing
-# REGELN FÜR ALLE PAKETE DIE VORHERIGE REGELN NICHT MATCHEN
+# REGELN FUER ALLE PAKETE DIE VORHERIGE REGELN NICHT MATCHEN
 # LASSE alle eingehenden Pakete FALLEN
 iptables -P INPUT DROP
 # LEITE keine Pakete WEITER
