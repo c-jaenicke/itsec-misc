@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.5.30)  25 JUL 2024 15:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.5.30)  25 JUL 2024 16:01
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -2075,14 +2075,19 @@ as been already used, duplicate ignored
                                                   \__shipout_drop_firstpage_...
 l.899 
        <./images/ws-vnc-connection.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 908--913
+Underfull \hbox (badness 10000) in paragraph at lines 908--916
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 908--916
 
  []
 
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 914.
+on input line 916.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -2097,12 +2102,12 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.43}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.914 \newpage
-               <./images/ws-vnc-session.png>]
+l.916 
+       <./images/ws-vnc-session.png>]
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 914.
+on input line 917.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -2117,7 +2122,7 @@ Package fancyhdr Warning: \headheight is too small (18.125pt):
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 955.
+on input line 958.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -2224,7 +2229,7 @@ w-[]for-[]effective-[]digital-[]forensics-[]investigations$[]\T1/cmr/m/n/12 (-2
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 958.
+on input line 961.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -2264,7 +2269,7 @@ re/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/share/texmf-dist/f
 onts/type1/public/cm-super/sfsx1728.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/cm-super/sftt1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sft
 t1200.pfb>
-Output written on main.pdf (48 pages, 5386972 bytes).
+Output written on main.pdf (48 pages, 5387723 bytes).
 PDF statistics:
  988 PDF objects out of 1000 (max. 8388607)
  838 compressed objects within 9 object streams
