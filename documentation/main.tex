@@ -711,87 +711,90 @@ Vor-Ort-Unterstützung Analyse
 \\ \\
 \textbf{Bestimmen Sie alle Netzwerkteilnehmer (MAC, IPv4), die in den Netzwerkausschnitten auftauchen. Broadcast-Adressen können Sie ausschließen. Tipp: Betrachten Sie auch das Protokoll LLDP.}
 
-TODO: alle netzwerkausschnitte betrachten, unten ist nur von normal.pcapng
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{MAC-Adresse} & \textbf{Name} & \textbf{IP-Adresse} \\
-\hline
-00:1b:1b:f7:7c:4f & Siemens\_f7:7c:4f & 10.3.5.5 \\
-00:26:5a:e7:b7:c4 & DLink\_e7:b7:c4 & 10.3.5.1 \\
-01:00:5e:00:00:fc & IPv4mcast\_fc & 224.0.0.252 \\
-01:00:5e:7f:ff:64 & IPv4mcast\_7f:ff:64 & 239.255.255.100 \\
-01:00:5e:7f:ff:fa & IPv4mcast\_7f:ff:fa & 239.255.255.250 \\
-01:80:c2:00:00:0e & LLDP\_Multicast & - \\
-28:63:36:ad:91:96 & Siemens\_ad:91:96 & 10.3.5.12 \\
-28:63:36:ad:91:97 & Siemens\_ad:91:97 & - \\
-28:63:36:ae:70:0b & Siemens\_ae:70:0b & - \\
-f4:8e:38:9f:7c:74 & Dell\_9f:7c:74 & 10.3.5.3 \\
-\hline
-\end{tabular}
-\caption{Netzwerkteilnehmer (normal.pcapng)}
-\label{tab:network_participants_normal}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|p{5cm}|}
+    \hline
+    \textbf{MAC-Adresse} & \textbf{Name} & \textbf{IP-Adresse} & \textbf{Datei} \\
+    \hline
+    00:1b:1b:f7:7c:4f & Siemens\_f7:7c:4f & 10.3.5.5 & Alle \\
+    00:26:5a:e7:b7:c4 & DLink\_e7:b7:c4 & 10.3.5.1 & Alle \\
+    01:00:5e:00:00:fc & IPv4mcast\_fc & 224.0.0.252 & normal.pcapng\newline
+    attack6.pcapng\newline
+    buttonPush.pcapng \\
+    01:00:5e:05:06:07 & IPv4mcast\_05:06:07 & 234.5.6.7 & attack1.pcapng\newline
+    attack6.pcapng \\
+    01:00:5e:7f:ff:64 & IPv4mcast\_7f:ff:64 & 239.255.255.250 & normal.pcapng\newline buttonPush.pcapng \\
+    01:80:c2:00:00:0e & LLDP\_Multicast & - & Alle \\
+    28:63:36:ad:91:96 & Siemens\_ad:91:96 & 10.3.5.12 & Alle \\
+    28:63:36:ad:91:97 & Siemens\_ad:91:97 & - & Alle \\
+    28:63:36:ae:70:0b & Siemens\_ae:70:0b & - & Alle \\
+    f4:8e:38:9f:7c:74 & Dell\_9f:7c:74 & 10.3.5.3 & Alle \\
+    00:10:5a:0d:5a:a7 & 3Com\_0d:5a:a7 & 23.95.230.107\footnotemark[1] & attack1.pcapng \\
+    28:63:36:ae:70:09 & Siemens\_ae:70:09 & 10.3.5.11 & attack2.pcapng\newline
+    attack3.pcapng \\
+    00:1b:1b:f6:8b:bd & Siemens\_f6:8b:bd & 10.3.5.6 & buttonPush.pcapng \\
+    \hline
+    \end{tabular}
+    \caption{Netzwerkteilnehmer}
+    \label{tab:ws-netzwerkteilnehmer}
 \end{table}
 
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{|l|l|l|l|}
-\hline
-\textbf{MAC-Adresse} & \textbf{Gerät-Typ} & \textbf{Model/Details} & \textbf{IP-Adresse} \\
-\hline
-00:1b:1b:f7:7c:4f & SIEMENS AG SIMATIC & Field PG M5 & 10.3.5.5 \\
-\hline
-28:63:36:ad:91:97 & Siemens SIMATIC S7 & CPU1511-1 PN & - \\
-\hline
-28:63:36:ae:70:0b & Siemens SIMATIC S7 & CPU1512C-1 PN & - \\
-\hline
-f4:8e:38:9f:7c:74 & Dell OptiPlex & 3046 & 10.3.5.3 \\
-\hline
-\end{tabular}
-\caption{LLDP Geräteinformationen}
-\label{tab:lldp_info}
+\footnotetext[1]{Diese IP-Adresse gehört nicht unbedingt zu einem 3Com-Gerät. Sie zeigt lediglich an, dass Pakete mit dieser Zieladresse durch das 3Com-Gerät geroutet wurden. Das 3Com-Gerät fungiert in diesem Fall wahrscheinlich als Router oder Gateway im Netzwerk.}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{MAC-Adresse} & \textbf{Geräte-Typ} & \textbf{Model/Details} \\
+    \hline
+    00:1b:1b:f7:7c:4f & SIEMENS AG SIMATIC Field PG & M5 + engineering \\
+    28:63:36:ad:91:97 & Siemens SIMATIC S7 & CPU1511-1 PN, FW: V2.0.1 \\
+    28:63:36:ae:70:0b & Siemens SIMATIC S7 & CPU1512C-1 PN, FW: V2.0.1 \\
+    f4:8e:38:9f:7c:74 & Dell OptiPlex & 3046 + HMI \\
+    \hline
+    \end{tabular}
+    \caption{LLDP Informationen}
+    \label{tab:ws-lldp-info}
 \end{table}
 
 
 \textbf{Bestimmen Sie, welche Protokolle verwendet werden.}
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|}
-\hline
-\textbf{Protokoll} \\
-\hline
-PROFINET Real-Time Protocol \\
-\hline
-PROFINET PTCP \\
-\hline
-Link Layer Discovery Protocol \\
-\hline
-Internet Protocol Version 4 \\
-\hline
-User Datagram Protocol \\
-\hline
-Simple Service Discovery Protocol \\
-\hline
-Link-local Multicast Name Resolution \\
-\hline
-Transmission Control Protocol \\
-\hline
-TPKT - ISO on TCP - RFC1006 \\
-\hline
-ISO 8073/X.224 COTP \\
-\hline
-Internet Group Management Protocol \\
-\hline
-Address Resolution Protocol \\
-\hline
-\end{tabular}
-\caption{Verwendete Protokolle}
-\label{tab:protokolle}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{5cm}|}
+    \hline
+    \textbf{Protokoll} & \textbf{Datei} \\
+    \hline
+    Ethernet & Alle \\
+    PROFINET Real-Time Protocol & Alle \\
+    PROFINET PTCP & Alle \\
+    Link Layer Discovery Protocol (LLDP) & Alle \\
+    Address Resolution Protocol (ARP) & Alle \\
+    Internet Protocol Version 4 (IPv4) & Alle \\
+    Internet Group Management Protocol (IGMP) & Alle \\
+    User Datagram Protocol (UDP) & Alle \\
+    Link-local Multicast Name Resolution (LLMNR) & normal.pcapng\newline
+    attack6.pcapng\newline
+    buttonPush.pcapng \\
+    Transmission Control Protocol (TCP) & Alle \\
+    TPKT - ISO on TCP (RFC1006) & Alle \\
+    ISO 8073/X.224 COTP & Alle \\
+    S7 Communication & attack3.pcapng \\
+    Simple Service Discovery Protocol (SSDP) & normal.pcapng\newline
+    buttonPush.pcapng \\
+    Virtual Network Computing (VNC) & attack4.pcapng\newline
+    attack5.pcapng \\
+    \hline
+    \end{tabular}
+    \caption{Verwendte Protokolle}
+    \label{tab:ws-used-protocols}
 \end{table}
+
+
+
 
 \subsubsection{Phase 1}
 Erstes infiziertes System (attack1.pcapng)
@@ -814,14 +817,15 @@ Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mi
 
 \textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu verbinden?}
 
-Der erste Verbindungsversuch zu einem externen Host wurde am 8. Juni 2018 um 13:46:47.788372000 CEST registriert. Dies war ein UDP-Paket (Frame 96 in der Aufzeichnung).
-
+Das System versucht, UDP-Verbindungen zur Adresse 234.5.6.7 auf Port 8910 aufzubauen. Diese IP-Adresse gehört zum reservierten Bereich für Multicast-Adressen (224.0.0.0 bis 239.255.255.255). Obwohl es sich nicht um eine Kommunikation mit einem externen Host handelt, ist dieses Verhalten dennoch auffällig.
+\\ \\
+Am 8. Juni 2018 um 13:46:52.993988000 CEST initiiert das System einen TCP-Verbindungsversuch (SYN-Paket) zu einem tatsächlich externen Host (23.95.230.107) auf Port 80. Dies ist der erste beobachtete Versuch, eine Verbindung außerhalb des lokalen Netzwerks herzustellen.
 \subsection{Phase 2}
 Lateral Movement – Offline Modus (attack2.pcapng)
 
 \textbf{Welche Auffälligkeiten sehen Sie in diesem Mitschnitt? Welches Protokoll wird häufig verwendet?}
 
-In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig dominant. Es macht 53,7\% aller Pakete aus, was auf einen intensiven Netzwerk-Scan hindeutet. TODO: Zusätzlich sind zahlreiche Verbindungsversuche zu verschiedenen Ports zu beobachten.
+In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig dominant. Es macht 53,7\% aller Pakete aus, was auf einen intensiven Netzwerk-Scan hindeutet. Außerdem werden zahlreiche TCP-Verbindungsversuche zu verschiedenen Ports der Systeme 10.3.5.11 und 10.3.5.12 beobachtet.
 
 \begin{figure}[H]
     \centering
@@ -830,9 +834,16 @@ In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig domina
     \label{fig:ws-arp-scan}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{ws-port-scan.png}
+    \caption{TCP-Verbindungsversuche des verdächtigen Systems}
+    \label{fig:ws-arp-scan}
+\end{figure}
+
 \textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
 
-Das SIEMENS AG SIMATIC Field PG M5 des Technikers (10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus Phase 1, dass dieses System kompromittiert wurde.
+Das SIEMENS AG SIMATIC Field PG M5 des Technikers (10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus den vorherigen Phasen, dass dieses System kompromittiert wurde.
 
 \subsubsection{Phase 3}
 Kritische Systemziele bestimmen (attack3.pcapng)
@@ -853,15 +864,13 @@ Rohe Gewalt (attack4.pcapng)
 
 \textbf{Schauen Sie sich die einzelnen Verbindungsversuche näher an. Welches Protokoll wird neu verwendet?}
 
-In dieser Phase wird das Virtual Network Computing (VNC) Protokoll neu eingesetzt. Dies deutet auf Versuche hin, Fernzugriff auf andere Systeme zu erlangen.
-
+In dieser Phase wird das Virtual Network Computing (VNC) Protokoll neu eingesetzt. Dies deutet auf Versuche hin, Fernzugriff auf andere Systeme zu erlangen. Es gibt mehrere Verbindungsversuche vom infizierten System (10.3.5.5) zum Zielsystem (10.3.5.3) über den VNC-Standardport 5900.
+\\ \\
+Der erste Verbindungsversuch (Frame 27) zeigt ein TCP SYN-Paket, das den Beginn eines Verbindungsaufbaus darstellt. Allerdings scheitern diese Versuche, wie in Frame 42 zu sehen ist, wo eine Authentifizierungsfehlermeldung (Authentication failed) auftritt.
+\\ \\
 \textbf{Wurde die Verbindung erfolgreich hergestellt? Notieren Sie ggf. den Zeitstempel.}
 
-Eine TCP-Verbindung wurde erfolgreich hergestellt. Der Zeitablauf war wie folgt:
-\begin{itemize}
-    \item SYN-Paket gesendet: 8. Juni 2018, 14:13:36.774417000 CEST
-    \item Letztes Paket der TCP-Verbindung: 8. Juni 2018, 14:13:37.181877000 CEST
-\end{itemize}
+Eine erfolgreiche TCP-Verbindung wurde hergestellt, beginnend mit Frame 372. Der Verbindungsaufbau erfolgte zwischen dem infizierten System (10.3.5.5) und dem Zielsystem (10.3.5.3) über den VNC-Port 5900. Der initiale Verbindungsversuch (SYN-Paket) wird in Frame 372 gezeigt. Die erfolgreiche Authentifizierung wird in Frame 386 bestätigt, mit dem Zeitstempel 8. Juni 2018, 14:13:37.179082000 CEST.
 
 \begin{figure}[H]
     \centering
