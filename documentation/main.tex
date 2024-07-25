@@ -88,10 +88,10 @@ Folgendes Diagramm stellt den Informationsfluss im Verbund dar:
 	\label{fig:boat2}
 \end{figure}
 \\
-Beginnend beim Client wird eine Anfrage an die Firewall gesendet, diese leitete die Anfrage, mittels einer Forwading-Regel, nachdem diese gefiltert und überprüft wurde, an den Webserver weiter. Dieser bearbeitet die Anfrage und führt ggf. eine Datenbankabfrage durch. Die Antwort wird anschließend wieder an die Firewall gesendet, welche diese an den Client weiterleitet. \\
-Es findet keine direkte Kommunikation zwischen dem Client und dem Webserver statt. Der Datenverkehr läuft immer über die Firewall
+Ausgehend vom Client wird eine Anfrage an die Firewall gesendet, diese leitet die Anfrage mittels einer Forwarding-Regel gefiltert und geprüft an den Webserver weiter. Dieser verarbeitet die Anfrage und führt gegebenenfalls eine Datenbankabfrage durch. Die Antwort wird dann wieder an die Firewall gesendet, die sie an den Client weiterleitet. \\
+Es findet keine direkte Kommunikation zwischen Client und Webserver statt. Der Datenverkehr erfolgt immer über die Firewall.
 \\ \\
-Der Switch wird in dem Informationsfluss nicht behandelt, da dieser lediglich die physische Verbindung der Komponenten realisiert und keine sonstige Funktion oder Filter umsetzt.
+Der Switch wird im Informationsfluss nicht behandelt, da er nur die physikalische Verbindung der Komponenten realisiert und keine weiteren Funktionen oder Filter implementiert.
 
 \newpage
 \section{Aufgabenblatt 1}
@@ -99,7 +99,7 @@ Der Switch wird in dem Informationsfluss nicht behandelt, da dieser lediglich di
 Folgende Abschnitte zeigen und erläutern die Konfiguration der einzelnen iptables-Paketfilter.
 
 \subsection{Firewall}\label{config-firewall-fw}
-Im folgenden werden die Anforderungen und die Konfiguration von iptables auf der Firewall erläutert.
+Im Folgenden werden die Anforderungen und die Konfiguration von iptables auf der Firewall erläutert.
 
 \subsubsection{Anforderungen}
 Folgende Anforderungen wurden aus dem Aufgabenblatt 1 identifiziert und werden zusätzlich für die Administration und den normalen Betrieb benötigt:
@@ -128,35 +128,35 @@ Folgende Anforderungen wurden aus dem Aufgabenblatt 1 identifiziert und werden z
 	\end{center}
 \end{table}
 \\
-Bei den Freigegeben Ports wurden die Richtlinien und Anforderungen der jeweiligen Hersteller \cite{ashaiyengar-2023}, \cite{teamviewer-2024} beachtet. \\ \\
-Port 22 wird für SSH genutzt um den Server zu administrieren. \\
-Die Ports 53 und 123, entsprechend DNS und NTP, werden für den regulären Betrieb des Servers benötigt. NTP wird benötigt um die korrekte Zeit zu haben und das Logging und Auswerten zu vereinfachen. \\
+Bei den freigegebenen Ports wurden die Richtlinien und Anforderungen der jeweiligen Hersteller \cite{ashaiyengar-2023}, \cite{teamviewer-2024} beachtet. \\ \\
+Port 22 wird für SSH genutzt, um den Server zu administrieren. \\
+Die Ports 53 und 123, entsprechend DNS und NTP, werden für den regulären Betrieb des Servers benötigt. NTP wird für die korrekte Zeiteinstellung benötigt, was das Logging und die Auswertung erleichtert. \\
 Ports 80 und 443 werden für den HTTP-Verkehr genutzt, damit verbundene Clients, wie Mitarbeiter, Zugang zum Internet erhalten. \\
-Da sich kein lokaler E-Mail- oder Exchange-Server im Verbund auf Arbeitsblatt 1 befindet, wird davon ausgegangen das es einen externen Server gibt. Die Ports 143 und 993, 110 und 995 sowie 587 ermöglichen verschiedene Wege der Anmeldung auf diesem Server. \\
-TeamViewer benötigt den Port 5938 um den Zugang zu ermöglichen. \\
+Da sich kein lokaler E-Mail- oder Exchange-Server im Verbund auf Arbeitsblatt 1 befindet, wird davon ausgegangen, dass es einen externen Server gibt. Die Ports 143 und 993, 110 und 995 sowie 587 ermöglichen verschiedene Wege der Anmeldung auf diesem Server. \\
+TeamViewer benötigt den Port 5938, um den Zugang zu ermöglichen. \\
 Der Lizenzserver von Delftship benötigt den Port 8081 \cite{delftship}.
 
 \subsubsection{Skripte}
-Nach den Vorgaben aus Aufgabenblatt 1 und den identifizierten Anforderungen ergeben sich die folgende Skripte für iptables. Alle Skripte müssen mit  Root Rechten ausgeführt werden.  Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\ \\ 
-Bei allen folgenden Skripten werden anfangs alle bestehenden Regeln gelöscht, um Konflikte mit den neuen Regeln zu verhindern. \\ \\
-Folgender Skript schließt alle Ports der Firewall:
+Nach den Vorgaben aus Aufgabenblatt 1 und den identifizierten Anforderungen ergeben sich die folgende Skripte für iptables. Alle Skripte müssen mit Root-Rechten ausgeführt werden. Die iptables-Regeln wurden gemäß der iptables-Manpage \cite{iptables-manpage} angelegt. \\ \\ 
+Bei allen folgenden Skripten werden zu Beginn alle bestehenden Regeln gelöscht, um Konflikte mit den neuen Regeln zu verhindern. \\ \\
+Folgendes Skript schließt alle Ports der Firewall:
 \lstinputlisting[breaklines]{./scripts/all-ports-closed.sh}
-Folgender Skript öffnet die Firewall komplett und erlaubt jede Art von Datenverkehr:
+Folgendes Skript öffnet die Firewall komplett und erlaubt jede Art von Datenverkehr:
 \lstinputlisting[breaklines]{./scripts/all-ports-open.sh}
-Folgender  Skript setzt die Anforderungen für die Umgebung um und ermöglicht das Forwarding auf den Webserver. Zusätzlich  wird  Datenverkehr auf dem  loopback-Interface erlaubt. \\
-Dieser Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe Kapitel \ref{cron-job}.
+Folgendes Skript setzt die Anforderungen für die Umgebung um und ermöglicht das Forwarding auf den Webserver. Zusätzlich  wird  Datenverkehr auf dem Loopback-Interface erlaubt. \\
+Dieses Skript wird durch einen Cron-Job direkt nach dem Boot ausgeführt, siehe Kapitel \ref{cron-job}.
 \lstinputlisting[breaklines]{./scripts/ports-prod.sh}
-Es wird davon ausgegangen das sich weitere Clients hinter der Firewall befinden, welche auf das Internet und E-Mail-Server zugreifen wollen, die Firewall also nicht nur den Webserver schützt.
+Es wird davon ausgegangen, dass sich weitere Clients hinter der Firewall befinden, welche auf das Internet und E-Mail-Server zugreifen wollen, die Firewall also nicht nur den Webserver schützt.
 \\ \\
-Wir haben uns für einen restriktiven Allowlist-Ansatz \cite{allowlist} für ausgehende Pakete entschieden. Bei welchem alle ausgehenden Pakete standardmäßig fallen gelassen werden, und nur bestimmte Ports ausgehende Daten verschicken können. Dadurch wird gegen das ungewollte oder unbewusste Senden von Daten geschützt.
+Wir haben uns für einen restriktiven Allowlist-Ansatz \cite{allowlist} für ausgehende Pakete entschieden, bei dem alle ausgehenden Pakete standardmäßig verworfen werden und nur bestimmte Ports ausgehende Daten verschicken können. Dadurch wird gegen das ungewollte oder unbewusste Senden von Daten geschützt.
 \\ \\
-Um das Forwarding von IPv4 Paketen zu ermöglichen musste der Kernel-Parameter \lstinline[breaklines]|net.ipv4.ip_forward| auf 1, statt 0, gesetzt werden \cite{ipv4forward-kernel}. 
+Um das Forwarding von IPv4 Paketen zu ermöglichen, musste der Kernel-Parameter \lstinline[breaklines]|net.ipv4.ip_forward| auf 1, statt 0, gesetzt werden \cite{ipv4forward-kernel}. 
 
 \subsection{Webserver}\label{config-firewall-ws}
-Im folgenden werden die Anforderungen an die iptables-Regeln auf dem Webservers beschrieben und der Skript der diese umsetzt gezeigt.
+Im Folgenden werden die Anforderungen an die iptables-Regeln auf dem Webserver beschrieben und das Skript, das diese umsetzt, gezeigt.
 
 \subsubsection{Anforderungen}
-Folgende Ports wurden als relevant identifiziert um dem Webserver zu administrieren und die Python-Anwendung bereitzustellen:
+Folgende Ports wurden als relevant identifiziert, um den Webserver zu administrieren und die Python-Anwendung bereitzustellen:
 \begin{table}[h!]
 	\begin{center}
 		\label{tab:table4}
@@ -171,26 +171,26 @@ Folgende Ports wurden als relevant identifiziert um dem Webserver zu administrie
 \end{table}
 
 \subsubsection{Skript}
-Folgender  Skript setzt die iptables Regeln auf dem Webserver. Der  Skript muss mit Root Rechten ausgeführt  werden.
-Iptables Regeln wurden gemäß der iptables man page \cite{iptables-manpage} angelegt. \\
-Der Skript wird direkt am Boot mittels eines Cron-Jobs ausgeführt, siehe Kapitel \ref{cron-job}.
+Folgendes Skript setzt die iptables-Regeln auf dem Webserver. Das Skript muss mit Root-Rechten ausgeführt werden.
+Die iptables-Regeln wurden gemäß der iptables-Manpage \cite{iptables-manpage} angelegt. \\
+Das Skript wird direkt nach dem Boot mittels eines Cron-Jobs ausgeführt, siehe Kapitel \ref{cron-job}.
 \lstinputlisting[breaklines]{./scripts/ports-webserver.sh}
 Zuerst werden  alle bestehenden Regeln gelöscht, um Konflikte vorzubeugen. \\
-Der Skript ermöglicht den Managementzugang mittels SSH sowie Pings auf und vom  Server. \\
-Der HTTP-Verkehr wird auf die IP-Adresse \lstinline[breaklines]|192.168.0.220|, die Firewall, beschränkt. Anderen Clients ist es also nicht möglich den Webserver direkt anzufragen. \\
-Besonders relevant ist es den Verkehr auf dem Loopback-Interface zuzulassen, da die Python-Anwendung dies benötigt um auf die Datenbank zuzugreifen.
+Das Skript ermöglicht den Managementzugang mittels SSH sowie Pings auf und vom Server. \\
+Der HTTP-Verkehr wird auf die IP-Adresse \lstinline[breaklines]|192.168.0.220|, die Firewall, beschränkt. Anderen Clients ist es also nicht möglich, den Webserver direkt anzufragen. \\
+Besonders relevant ist es, den Verkehr auf dem Loopback-Interface zuzulassen, da die Python-Anwendung dies benötigt, um auf die Datenbank zuzugreifen.
 
-\subsection{Test der iptables Regeln}
+\subsection{Test der iptables-Regeln}
 
 \subsubsection{Ping}
-Im folgenden wurde ein einfacher Ping, mit dem Befehl \lstinline[breaklines]|ping -4 -c 5 192.168.0.220|.
+Im Folgenden wurde ein einfacher Ping mit dem Befehl \lstinline[breaklines]|ping -4 -c 5 192.168.0.220| durchgeführt.
 Folgende Parameter wurden genutzt \cite{ping-manpage}:
 \begin{enumerate}
-	\item \lstinline[breaklines]|-4|: Benutze ausschließlich IPv4, da die Server nur eine IPv4 Adresse und keine IPv6 Adressen haben.
-	\item \lstinline[breaklines]|-c 5|: Sende insgesamt 5 Pakete. 5 Pakete wurden als ausreichend beurteilt um die Funktion der Firewall zu zeigen. 
+	\item \lstinline[breaklines]|-4|: Benutze ausschließlich IPv4, da die Server nur eine IPv4-Adresse und keine IPv6-Adressen haben.
+	\item \lstinline[breaklines]|-c 5|: Sende insgesamt 5 Pakete. 5 Pakete wurden als ausreichend beurteilt, um die Funktion der Firewall zu zeigen. 
 \end{enumerate}
 
-Die folgende Abbildung zeit das Ergebnis des Pings, wenn alle Ports offen sind:
+Die folgende Abbildung zeigt das Ergebnis des Pings, wenn alle Ports offen sind:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{ping-all-open.png}
@@ -198,50 +198,50 @@ Die folgende Abbildung zeit das Ergebnis des Pings, wenn alle Ports offen sind:
 	\label{fig:ping-all-open}
 \end{figure}
 
-Die nächste Abbildung zeigt das Ergebnis des Pings mit allen Ports geschlossen und der production Regeln:
+Die nächste Abbildung zeigt das Ergebnis des Pings mit allen Ports geschlossen und den Production-Regeln:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{ping-all-closed.png}
-	\caption{Ergebnis den Pings bei geschlossen Ports und production Setup}
+	\caption{Ergebnis den Pings bei geschlossen Ports und Production-Setup}
 	\label{fig:ping-all-closed}
 \end{figure}
-Man kann sehen das keiner der Pings erfolgreich war. Das liegt daran das bei beiden Regelsätzen das ICMP-Protokoll, welches für Pings genutzt wird, blockiert wird.
+Man kann sehen, dass keiner der Pings erfolgreich war. Das liegt daran, dass bei beiden Regelsätzen das ICMP-Protokoll, welches für Pings genutzt wird, blockiert wird.
 
-\subsubsection{NMAP Scan}
-Sowohl der Webserver als auch die Firewall wurden mit dem Befehl  \lstinline[breaklines]|sudo nmap -sS -sC -O -p- <ip des ziels>| mittels NMAP gescanned. 
+\subsubsection{Nmap Scan}
+Sowohl der Webserver als auch die Firewall wurden mit dem Befehl  \lstinline[breaklines]|sudo nmap -sS -sC -O -p- <ip des ziels>| mittels Nmap gescannt. 
 Folgende Parameter wurden genutzt \cite{nmap-manual}:
 \begin{enumerate}
-	\item \lstinline[breaklines]|-sS|: Führe einen ''SYN Scan'' bzw. ''Stealth Scan'' durch. Damit wurden die offenen TCP-Ports gescanned. 
+	\item \lstinline[breaklines]|-sS|: Führe einen ''SYN Scan'' bzw. ''Stealth Scan'' durch. Damit wurden die offenen TCP-Ports gescannt. 
 	\item \lstinline[breaklines]|-sC|: Führe einen ''Script Scan'' durch. Hierbei werden verschiedene Scripte eingesetzt um mehr Informationen über verschiedene Ports und Dienste zu erhalten.
 	\item \lstinline[breaklines]|-O|: Versuche das Betriebssystem des Ziels zu erhalten.
 	\item \lstinline[breaklines]|-p-|: Scanne alle Ports von 1 bis 65535.
 \end{enumerate} 
-Folgende Ergebnisse ergab der NMAP-Scan der Firewall und des Webservers: \\ \\
+Folgende Ergebnisse ergab der Nmap-Scan der Firewall und des Webservers: \\ \\
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=15cm]{nmap-scan-firewall.png}
-	\caption{Ergebnis NMAP-Scan Firewall}
+	\caption{Ergebnis Nmap-Scan Firewall}
 	\label{fig:nmapfirewall}
 \end{figure} 
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=15cm]{nmap-scan-webserver.png}
-	\caption{Ergebnis NMAP-Scan Webserver}
+	\caption{Ergebnis Nmap-Scan Webserver}
 	\label{fig:nmapwebserver}
 \end{figure}
 \\ \\
-Hervorzuheben ist, dass der Scan der Webservers nur den Port 22, SSH, gefunden hat, nicht den Port 80 für den NGINX-Server. Die Regel, das Port 80 auf dem Webserver nur auf Anfragen von der IP-Adresse der Firewall annimmt funktioniert dementsprechend.
+Hervorzuheben ist, dass der Scan des Webservers nur den Port 22 (SSH) gefunden hat, nicht aber den Port 80 für den NGINX-Server. Die Regel, dass Port 80 auf dem Webserver nur Anfragen von der IP-Adresse der Firewall annimmt, funktioniert dementsprechend.
 \\ \\
-Zudem war Suricata in der Lage den NMAP-Scan, den Script-Scan, zu entdecken und zu melden.
+Zudem war Suricata in der Lage den Nmap-Scan, den Script-Scan, zu entdecken und zu melden.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=17cm]{suricata-detection-nmap-scan.png}
-	\caption{Logs von Suricata bei der Durchführung des NMAP-Scans}
+	\caption{Logs von Suricata bei der Durchführung des Nmap-Scans}
 	\label{fig:nmapsuricata}
 \end{figure}
 
-\subsubsection{DOS Angriff}
-Zusätzlich wurde ein Denial Of Service (DoS) Angriff auf die Firewall durchgeführt, hierfür wurde das Tool hping3 eingesetzt, mit folgenden Paramtern \cite{hping-kalitools}:
+\subsubsection{DoS-Angriff}
+Zusätzlich wurde ein Denial-of-Service (DoS)-Angriff auf die Firewall durchgeführt. Hierfür wurde das Tool hping3 mit folgenden Parametern eingesetzt \cite{hping-kalitools}:
 \begin{enumerate}
 	\item \lstinline[breaklines]|-S|: Setze die SYN-Flag bei TCP Paketen, um eine legitime Anfrage über TCP zu simulieren
 	\item \lstinline[breaklines]|--flood|: Sende Pakete so schnell wie möglich
@@ -258,32 +258,32 @@ Der folgende Screenshot zeigt das Ausführen von hping3 im Terminal:
 	\label{fig:dos-hpgin3}
 \end{figure}
 
-Die folgende Abbildung zeit die Auslastung der Firewall wie sie in htop dargestellt wird:
+Die folgende Abbildung zeigt die Auslastung der Firewall, wie sie in htop dargestellt wird:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{dos-htop.png}
-	\caption{Screenshot von der Auslastung der Firewall während des DoS Angriffs}
+	\caption{Screenshot von der Auslastung der Firewall während des DoS-Angriffs}
 	\label{fig:dos-htop}
 \end{figure}
-htop ist ein Tool welches die derzeitige Auslastung der Hardware eines Systems grafisch darstellt. Man kann sehen, dass die CPU zu fast 100\% ausgelastet ist. Die Firewall ist nicht mehr in der Lage auf andere Anfragen zu antworten, andere Prozesse werden deutlich verlangsamt. \\
-Der Webserver war auch nicht mehr über die Firewall erreichbar.
+htop ist ein Tool, welches die derzeitige Auslastung der Hardware eines Systems grafisch darstellt. Man kann sehen, dass die CPU zu fast 100\% ausgelastet ist. Die Firewall ist nicht mehr in der Lage, auf andere Anfragen zu antworten, und andere Prozesse werden deutlich verlangsamt. \\
+Der Webserver war ebenfalls nicht mehr über die Firewall erreichbar.
 \\ \\
-Suricata hat zudem bei der Durchführung des DoS Angriffs ausgeschlagen und die fehlerhafte TCP Übertragung gemeldet:
+Suricata hat zudem bei der Durchführung des DoS-Angriffs angeschlagen und die fehlerhafte TCP- Übertragung gemeldet:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=17cm]{suricata-spam-dos.png}
-	\caption{Einzelne Zeile der Logs von Suricata während des DoS Angriffs}
+	\caption{Einzelne Zeile der Logs von Suricata während des DoS-Angriffs}
 	\label{fig:dos-suricata}
 \end{figure}
 
 \newpage
-\section{Aufgabenlatt 2}
+\section{Aufgabenblatt 2}
 Folgende Abschnitte beschreiben die Konfiguration der Firewall und des Webservers.
 
 \subsection{Firewall}
-Der Server der Firewall nutzt als Betriebssystem die 64 Bit Variante des Raspberry Pi OS, welches auf Debian 12 Bookworm basiert. 
+Der Server der Firewall nutzt als Betriebssystem die 64-Bit-Variante des Raspberry Pi OS, welches auf Debian 12 (Codename 'Bookworm') basiert.
 \\ \\
-Es wurde keine vorinstallierte  Software deinstalliert. 
+Es wurde keine vorinstallierte Software deinstalliert.
 \\
 Es wurden folgende Pakete zusätzlich installiert:
 \begin{table}[h!]
@@ -292,18 +292,18 @@ Es wurden folgende Pakete zusätzlich installiert:
 		\begin{tabular}{l|l }
 			\textbf{Name} & \textbf{Begründung} \\
 			\hline
-			iptables & Firewall, Alternative zur Vorinstallierten Firewall nftables \\
+			iptables & Firewall, Alternative zur vorinstallierten Firewall nftables \\
 			suricata & Intrusion Detection System \\
-			nvim & Texteditor zum bearbeiten von Konfigurationsdateien \\
+			nvim & Texteditor zum Bearbeiten von Konfigurationsdateien \\
 			zsh & Shell mit besserer Auto-Complete-Funktion \\
-			tmux & Terminal Multiplexer zum einfachen Verwalten über SSH \\
+			tmux & Terminal-Multiplexer zum einfachen Verwalten über SSH \\
 		\end{tabular}
-		\caption{Zusätzlich installiere Software auf der Firewall}
+		\caption{Zusätzlich installierte Software auf der Firewall}
 	\end{center}
 \end{table}
 \\
-Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhindern, siehe Kapitel \ref{config-firewall-fw} für die Konfiguration von iptables für den Firewall-Server. \\
-SSH wurde aktiviert, es wurden keine weiteren Maßnahmen eingeleitet um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert, um Konflikte mit iptables zu verhindern, siehe Kapitel \ref{config-firewall-fw} für die Konfiguration von iptables für den Firewall-Server. \\
+SSH wurde aktiviert. Es wurden keine weiteren Maßnahmen eingeleitet, um die Schnittstelle zu schützen. Es wird die Standardkonfiguration verwendet. \\
 Der Suricata-Dienst wurde aktiviert und wird automatisch beim Boot gestartet, siehe Kapitel \ref{config-ids} für die Konfiguration des Intrusion Detection Systems (IDS). \\ \\
 Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.220| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration der Firewall:
 
@@ -315,7 +315,7 @@ Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.220| 
 \end{figure}
 
 \subsection{Webserver}
-Der Webserver nutzt als Betriebssystem die 64 Bit Variante des Raspberry Pi OS, welches auf Debian 12 Bookworm basiert. \\ \\ 
+Der Webserver nutzt als Betriebssystem die 64-Bit-Variante des Raspberry Pi OS, welches auf Debian 12 (Codename 'Bookworm') basiert.  \\ \\ 
 Es wurde keine vorinstallierte Software deinstalliert.\\
 Folgende Software wurde zusätzlich installiert: 
 \begin{table}[h!]
@@ -324,20 +324,20 @@ Folgende Software wurde zusätzlich installiert:
 		\begin{tabular}{l|l }
 			\textbf{Name} & \textbf{Begründung} \\
 			\hline
-			iptables & Firewall, Alternative zur Vorinstallierten Firewall nftables \\
-			nvim & Texteditor zum bearbeiten von Konfigurationsdateien \\
+			iptables & Firewall, Alternative zur vorinstallierten Firewall nftables \\
+			nvim & Texteditor zum Bearbeiten von Konfigurationsdateien \\
 			zsh & Shell mit besserer Auto-Complete-Funktion \\
-			tmux & Terminal Multiplexer zum einfachen Verwalten über SSH \\
+			tmux & Terminal-Multiplexer zum einfachen Verwalten über SSH \\
 			python3-pip,\\ python3-venv, \\ python3-flask,\\ python3-flask-cors, \\ python3-pymysql & Als Abhängigkeiten der Python-Anwendung \\
 			mariadb-server & Datenbank für die Python-Anwendung \\
 			nginx & Als Webserver für die Python-Anwendung \\
 		\end{tabular}
-		\caption{Zusätzlich installiere Software auf dem Webserver}
+		\caption{Zusätzlich installierte Software auf dem Webserver}
 	\end{center}
 \end{table}
 \\
-Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert um Konflikte mit iptables zu verhinden, siehe Kapitel \ref{config-firewall-ws} für die Konfiguration von iptables auf dem Webserver. \\
-SSH wurde aktiviert, es wurden keine weiteren Maßnahmen eingeleitet um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert, um Konflikte mit iptables zu verhinden, siehe Kapitel \ref{config-firewall-ws} für die Konfiguration von iptables auf dem Webserver. \\
+SSH wurde aktiviert. Es wurden keine weiteren Maßnahmen eingeleitet, um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
 Der nginx-Dienst und mariadb-Dienst wurde aktiviert und wird beim Start automatisch gestartet. \\
 Die Python-Anwendung wird automatisch beim Start durch einen Cron-Job gestartet, siehe Kapitel \ref{cron-job}. \\ \\
 Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.221| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration des Webservers:
@@ -350,24 +350,24 @@ Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.221| 
 
 \subsubsection{Python-Anwendung}
 Auf dem Webserver wird eine eigens programmierte Python-Anwendung betrieben. \\ \\
-Diese bietet ein einfaches HTML Login Formular, sowie einen einfachen Chat in dem Nachrichten veröffentlicht werden können. \\ \\
-Die Anwendung wurde absichtlich so unsicher wie möglich entwickelt um die geplanten Attacken im Pentest zu  ermöglichen.
+Diese bietet ein einfaches HTML-Login-Formular sowie einen einfachen Chat, in dem Nachrichten veröffentlicht werden können. \\ \\
+Die Anwendung wurde absichtlich so unsicher wie möglich entwickelt, um die geplanten Attacken im Pentest zu ermöglichen.
 
 \subsubsection{Nginx}
-Um die Python-Anwendung auf Port 80 mittels NGINX zur  Verfügung zu stellen wurde die Datei \lstinline[breaklines]|myflaskapp| im Ordner \lstinline[breaklines]|/etc/nginx/sites-available/| mit folgendem Inhalt angelegt:
+Um die Python-Anwendung auf Port 80 mittels Nginx zur Verfügung zu stellen, wurde die Datei \lstinline[breaklines]|myflaskapp| im Ordner \lstinline[breaklines]|/etc/nginx/sites-available/| mit folgendem Inhalt angelegt:
 \lstinputlisting[breaklines]{./scripts/setup_nginx.sh}
-Für diese Datei wurde anschließend ein Link mittels 
+Für diese Datei wurde anschließend ein symbolischer Link mittels 
 \lstinline[breaklines]|ln -s /etc/nginx/sites-available/myflaskapp /etc/nginx/sites-enabled| erstellt. \\ \\
-Es wurden keine weiteren Maßnahmen unternommen um NGINX zu härten.
+Es wurden keine weiteren Maßnahmen unternommen, um Nginx zu härten.
 
 \subsubsection{MariaDB}
-Die Datenbank wurde mit folgenden Skript initialisiert:
+Die Datenbank wurde mit folgendem Skript initialisiert:
 \lstinputlisting[breaklines]{./scripts/setup_db.sh}
-Es wird ein neue Datenbank mit dem Namen \lstinline[breaklines]|mydb| angelegt. Zusätzlich wird ein neuer Nutzer \lstinline[breaklines]|admin| angelegt. Anschließend wird die Tabelle \lstinline[breaklines]|credentials| angelegt, in welcher die Daten später gespeichert werden. In diese wird ein Testnutzer hineingeschrieben. Dem Nutzer \lstinline[breaklines]|admin| werden zuletzt alle Rechte für die neue Datenbank zugeteilt. \\ \\
-Es wurden keine weiteren spezifischen Konfigurationen durchgeführt um MariaDB zu schützen.
+Es wird eine neue Datenbank mit dem Namen \lstinline[breaklines]|mydb| angelegt. Zusätzlich wird ein neuer Nutzer \lstinline[breaklines]|admin| erstellt. Anschließend wird die Tabelle \lstinline[breaklines]|credentials| angelegt, in welcher die Daten später gespeichert werden. In diese wird ein Testnutzer eingetragen. Dem Nutzer \lstinline[breaklines]|admin| werden zuletzt alle Rechte für die neue Datenbank zugeteilt. \\ \\
+Es wurden keine weiteren spezifischen Konfigurationen durchgeführt, um MariaDB zu schützen.
 
-\subsection{Angriff auf den Webserver}
-Im folgenden werden die Angriffe auf den Webserver, eine SQL Injection und Cross-Site-Scripting Attacke, beschrieben.
+\subsection{Angriffe auf den Webserver}
+Im Folgenden werden zwei Angriffe auf den Webserver beschrieben: eine SQL-Injection und eine Cross-Site-Scripting-Attacke (XSS).
 
 \subsubsection{SQL Injection}
 Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein Angriff auf das Login-Formular simuliert. Zunächst wurde ein einfacher Test mit dem Benutzernamen \lstinline[breaklines]|';''| und einem beliebigen Passwort durchgeführt. Dies führte zu einem internen Serverfehler (HTTP 500), der wertvolle Informationen über die zugrunde liegende Datenbankabfrage preisgab.
@@ -530,10 +530,10 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \newpage
 \section{Aufgabenblatt 3}
-Im folgenden wird die Konfiguration des Intrusion Detection System (IDS) beschrieben. Es wurde sich für das IDS Suricata entschieden, da bereits Vorerfahrung bestanden.
+Im Folgenden wird die Konfiguration des Intrusion Detection Systems (IDS) beschrieben. Es wurde Suricata als IDS gewählt, da bereits Vorerfahrungen damit bestanden.
 
 \subsection{Konfiguration des Intrusion Detection Systems}\label{config-ids}
-Bei der Installation wurde der Anleitung des Herstellers \cite{suricata-quickstart} befolgt. \\
+Bei der Installation wurde die Anleitung des Herstellers \cite{suricata-quickstart} befolgt. \\
 In der Konfigurationsdatei \lstinline[breaklines]|/etc/suricata/suricata.yaml| wurde das zu überwachende Interface auf \lstinline[breaklines]|eth0| gestellt. Es ergeben sich folgende Capture Settings:
 \begin{lstlisting}[breaklines]
 	af-packet:
@@ -544,24 +544,24 @@ In der Konfigurationsdatei \lstinline[breaklines]|/etc/suricata/suricata.yaml| w
 	use-mmap: yes
 	tpacket-v3: yes
 \end{lstlisting}
-Darüber hinaus wurden die aktuellen Regeln,  mittels \lstinline[breaklines]|sudo suricata-update|, heruntergeladen, installiert und aktiviert \cite{suricata-rulemanagement}. \\
+Darüber hinaus wurden die aktuellen Regeln, mittels \lstinline[breaklines]|sudo suricata-update|, heruntergeladen, installiert und aktiviert \cite{suricata-rulemanagement}. \\
 Um diese zu aktivieren wurde gemäß der Anleitung des Herstellers der Pfad der Regeln, in der Datei \lstinline[breaklines]|/etc/suricata/suricata.yaml| geändert auf \\ \lstinline[breaklines]|default-rule-path: /var/lib/suricata/rules|. \\ \\
-Weitere Konfiguration wurden nicht durchgeführt. \\ \\
+Weitere Konfigurationen wurden nicht durchgeführt. \\ \\
 Das IDS wurde anschließend getestet. Dafür wurde der Befehl
 \lstinline[breaklines]|curl http://testmynids.org/uid/index.html|
 ausgeführt. Dadurch wurde eine statische HTML-Datei aufgerufen mit dem Inhalt 
 \lstinline[breaklines]|uid=0(root) gid=0(root) groups=0(root)| 
 Dieser String stellt eine mögliche Ausgabe des \lstinline[breaklines]|id| Befehls dar, welcher genutzt werden kann um den derzeitigen Nutzer und die Gruppen des Nutzers zu erhalten. \\ \\
-Das IDS sollte hier ausschlagen, da die Ausgabe bedeuten würde, das jemand remote den \lstinline[breaklines]|id| Befehl als root ausgeführt hat, was bedeuten würde das jemand vollen Zugriff auf das System hat. \\ \\
-Ob das IDS dies erkannt hat wurde mit dem Befehl
+Das IDS sollte hier ausschlagen, da die Ausgabe bedeuten würde, dass jemand remote den \lstinline[breaklines]|id| Befehl als root ausgeführt hat, was bedeuten würde, dass jemand vollen Zugriff auf das System hat. \\ \\
+Ob das IDS dies erkannt hat, wurde mit dem Befehl
 \lstinline[breaklines]|sudo tail /var/log/suricata/fast.log| 
 überprüft. Die \lstinline[breaklines]|fast.log| Datei enthält die Warnungen des IDS. 
-Die letzte Zeile der Datei war \lstinline[breaklines]|[1:2100498:7] GPL ATTACK_RESPONSE id check returned root [**] [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} <ip> -> 192.168.0.220:<port>|. Dies zeigt das der Datenverkehr als potenzieller Datenabfluss erkannt wurde.
+Die letzte Zeile der Datei war \lstinline[breaklines]|[1:2100498:7] GPL ATTACK_RESPONSE id check returned root [**] [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} <ip> -> 192.168.0.220:<port>|. Dies zeigt, dass der Datenverkehr als potenzieller Datenabfluss erkannt wurde.
 
-\subsection{ARP Spoofing}
-Beim ARP-SPoofing wird das ARP-Protkoll genutzt um den Datenverkehr nicht zum eigentlichen Ziel, sondern zum Angreifer, zu schicken. Das ARP-Protokoll ist dafür zuständig IP-Adresse, welche an sich dynamisch sind, einer statischen MAC-Adresse zuzuordnen. Diese Zuordnung passiert im LAN, im Local Area Network. \\
-Beim ARP-Spoofing weisen wir die IP des Ziels, der MAC-Adresse des Angreifers zu. Alle Pakete die an die IP des Ziels gesendet werden, werden also an den Angreifer gesendet. Der Angreifer kann die Paket an das eigentliche Ziel weiterleiten, wodurch der Datenverkehr ununterbrochen funktioniert \cite{what-is-arp-spoofing}. \\ \\
-In unserem Fall ist am sinnvollsten sich zwischen der Firewall und dem Webserver zu platzieren, und dort den Verkehr mitzuschneiden, da man dort alle Pakete erhält. \\ \\
+\subsection{ARP-Spoofing}
+Beim ARP-Spoofing wird das ARP-Protokoll genutzt, um den Datenverkehr nicht zum eigentlichen Ziel, sondern zum Angreifer, zu schicken. Das ARP-Protokoll ist dafür zuständig IP-Adressen, welche an sich dynamisch sind, einer statischen MAC-Adresse zuzuordnen. Diese Zuordnung passiert im Local Area Network (LAN). \\
+Beim ARP-Spoofing weisen wir die IP-Adresse des Ziels der MAC-Adresse des Angreifers zu. Alle Pakete, die an die IP-Adresse des Ziels gesendet werden, werden also an den Angreifer gesendet. Der Angreifer kann die Pakete an das eigentliche Ziel weiterleiten, wodurch der Datenverkehr ununterbrochen funktioniert \cite{what-is-arp-spoofing}. \\ \\
+In unserem Fall ist es am sinnvollsten, sich zwischen der Firewall und dem Webserver zu platzieren und dort den Verkehr mitzuschneiden, da man dort alle Pakete erhält. \\ \\
 Für das ARP-Spoofing wurde die CLI Version des Tools \lstinline[breaklines]|ettercap| genutzt. Das Tool wurde mit dem Befehl \lstinline[breaklines]|sudo ettercap -T -M arp /192.168.0.220// /192.168.0.221//| aufgerufen \cite{ettercap-manual}:
 \begin{enumerate}
 	\item \lstinline[breaklines]|-T|: Nutze die einfache Textausgabe
@@ -589,9 +589,9 @@ Folgende Screenshots zeigen die ARP-Tabellen der einzelnen Geräte, sowie die MA
 	\label{fig:arp-mac-kali}
 \end{figure} 
 \\ \\
-Man kann sehen das die IP-Adresse der Firewall und des Webservers jeweils in den jeweiligen Screenshots die MAC-Adresse der Kali-Maschine haben. Dies bedeutet das Pakete welche von der Firewall aus zum Webserver gesendet werden, an die Kali-Maschine gesendet werden, das Gleiche gilt auch für Pakete die vom Webserver an die Firewall gesendet werden.
+Man kann sehen, dass die IP-Adressen der Firewall und des Webservers jeweils in den entsprechenden Screenshots die MAC-Adresse der Kali-Maschine haben. Dies bedeutet, dass Pakete, welche von der Firewall zum Webserver gesendet werden, an die Kali-Maschine gesendet werden. Dasselbe gilt auch für Pakete, die vom Webserver an die Firewall gesendet werden.
 \\ \\
-Es war möglich eine Anmeldung auf dem Webserver zu lesen und das Passwort des Benutzers zu erhalten:
+Es war möglich, eine Anmeldung auf dem Webserver zu lesen und das Passwort des Benutzers zu erhalten:
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=17cm]{arp-shark-packete.png}
@@ -607,9 +607,9 @@ Es war möglich eine Anmeldung auf dem Webserver zu lesen und das Passwort des B
 \end{figure} 
 
 \subsubsection{IDS gegen ARP-Spoofing}
-Das eingesetzte IDS, Suricata, bietet keinen Schutz gegen und ist nicht in der Lage ARP-Spoofing zu erkennen. \\ \\
-IDS arbeiten auf der OSI Schicht 3, der Netzwerkschicht \cite{layer-ids}. Das ARP-Protokoll arbeiter auf der Ebene 2, der Sicherungsschicht \cite{layer-arp},\\ \\
-Um das ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwachen und kontrollieren, ob IP-Adressen doppelt vergeben werden. Diese Funktion bietet Suricata nicht.
+Das eingesetzte IDS, Suricata, bietet keinen Schutz gegen ARP-Spoofing und ist nicht in der Lage, dieses zu erkennen. \\ \\
+IDS arbeiten auf der OSI-Schicht 3, der Netzwerkschicht \cite{layer-ids}. Das ARP-Protokoll arbeitet hingegen auf der Ebene 2, der Sicherungsschicht \cite{layer-arp},\\ \\
+Um ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwachen und kontrollieren, ob IP-Adressen doppelt vergeben werden. Diese Funktion bietet Suricata nicht.
 
 \newpage
 \section{Aufgabenblatt 4}
@@ -720,18 +720,18 @@ Vor-Ort-Unterstützung Analyse
     \hline
     00:1b:1b:f7:7c:4f & Siemens\_f7:7c:4f & 10.3.5.5 & Alle \\
     00:26:5a:e7:b7:c4 & DLink\_e7:b7:c4 & 10.3.5.1 & Alle \\
-    01:00:5e:00:00:fc & IPv4mcast\_fc & 224.0.0.252 & normal.pcapng\newline
+    01:00:5e:00:00:fc & IPv4mcast\_fc & 224.0.0.252\footnotemark[1] & normal.pcapng\newline
     attack6.pcapng\newline
     buttonPush.pcapng \\
-    01:00:5e:05:06:07 & IPv4mcast\_05:06:07 & 234.5.6.7 & attack1.pcapng\newline
+    01:00:5e:05:06:07 & IPv4mcast\_05:06:07 & 234.5.6.7\footnotemark[1] & attack1.pcapng\newline
     attack6.pcapng \\
-    01:00:5e:7f:ff:64 & IPv4mcast\_7f:ff:64 & 239.255.255.250 & normal.pcapng\newline buttonPush.pcapng \\
+    01:00:5e:7f:ff:64 & IPv4mcast\_7f:ff:64 & 239.255.255.250\footnotemark[1] & normal.pcapng\newline buttonPush.pcapng \\
     01:80:c2:00:00:0e & LLDP\_Multicast & - & Alle \\
     28:63:36:ad:91:96 & Siemens\_ad:91:96 & 10.3.5.12 & Alle \\
     28:63:36:ad:91:97 & Siemens\_ad:91:97 & - & Alle \\
     28:63:36:ae:70:0b & Siemens\_ae:70:0b & - & Alle \\
     f4:8e:38:9f:7c:74 & Dell\_9f:7c:74 & 10.3.5.3 & Alle \\
-    00:10:5a:0d:5a:a7 & 3Com\_0d:5a:a7 & 23.95.230.107\footnotemark[1] & attack1.pcapng \\
+    00:10:5a:0d:5a:a7 & 3Com\_0d:5a:a7 & -\footnotemark[2] & attack1.pcapng \\
     28:63:36:ae:70:09 & Siemens\_ae:70:09 & 10.3.5.11 & attack2.pcapng\newline
     attack3.pcapng \\
     00:1b:1b:f6:8b:bd & Siemens\_f6:8b:bd & 10.3.5.6 & buttonPush.pcapng \\
@@ -741,7 +741,8 @@ Vor-Ort-Unterstützung Analyse
     \label{tab:ws-netzwerkteilnehmer}
 \end{table}
 
-\footnotetext[1]{Diese IP-Adresse gehört nicht unbedingt zu einem 3Com-Gerät. Sie zeigt lediglich an, dass Pakete mit dieser Zieladresse durch das 3Com-Gerät geroutet wurden. Das 3Com-Gerät fungiert in diesem Fall wahrscheinlich als Router oder Gateway im Netzwerk.}
+\footnotetext[1]{Diese Multicast-Adressen sind nicht an eine bestimmte Netzwerkkarte gebunden, sondern können von mehreren Geräten im Netzwerk empfangen werden, die der entsprechenden Multicast-Gruppe beigetreten sind. \cite{multicast-ip}}
+\footnotetext[2]{Bei der Paketanalyse wurde die IP-Adresse 23.95.230.107 als Ziel-IP für Pakete beobachtet, die über dieses 3Com-Gerät geroutet wurden. Diese IP-Adresse gehört nicht zum 3Com-Gerät selbst, sondern zeigt an, dass das Gerät als Router oder Gateway für den Verkehr zu dieser externen Adresse fungiert.}
 
 \begin{table}[H]
     \centering
@@ -800,6 +801,8 @@ Folgende Tabelle zeigt die verwendeten Protokolle:
 	\label{fig:diagramm-teilnehmer}
 \end{figure}
 
+Die MAC-Adressen 28:63:36:ad:91:96/97 und 28:63:36:ae:70:09/0b gehören jeweils höchstwahrscheinlich zu einem einzelnen physikalischen Gerät: einer Siemens SIMATIC S7 CPU1511-1 PN (IP: 10.3.5.12) bzw. einer CPU1512C-1 PN (IP: 10.3.5.11). Diese Annahme basiert auf den nur geringfügig unterschiedlichen MAC-Adressen und wird durch die Datenblätter bestätigt, die für beide Modelle zwei Ethernet-Ports mit integriertem Switch ausweisen \cite{siemens-s7-cpu-1511-1-PN, siemens-s7-cpu-1512C-1-PN}. Die duale MAC-Adresskonfiguration pro Gerät entspricht somit der Hardwareausstattung.
+
 \subsubsection{Phase 1}
 Erstes infiziertes System (attack1.pcapng)
 \\ \\
@@ -820,7 +823,7 @@ Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mi
 \end{figure}
 \textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu verbinden?}
 \\
-Das System versucht, UDP-Verbindungen zur Adresse 234.5.6.7 auf Port 8910 aufzubauen. Diese IP-Adresse gehört zum reservierten Bereich für Multicast-Adressen (224.0.0.0 bis 239.255.255.255). Obwohl es sich nicht um eine Kommunikation mit einem externen Host handelt, ist dieses Verhalten dennoch auffällig.
+Am 8. Juni 2018 um 13:46:47.788372000 CEST wurde beobachtet, dass das System versucht, UDP-Verbindungen zur Adresse 234.5.6.7 auf Port 8910 aufzubauen. Diese IP-Adresse gehört zum reservierten Bereich für Multicast-Adressen (224.0.0.0 bis 239.255.255.255) \cite{multicast-ip}. Obwohl es sich nicht um eine Kommunikation mit einem externen Host handelt, ist dieses Verhalten dennoch auffällig. In der normalen Baseline-Aktivität wurde Multicast-Verkehr hauptsächlich im Zusammenhang mit LLMNR (Link-Local Multicast Name Resolution) oder SSDP (Simple Service Discovery Protocol) beobachtet.
 \\ \\
 Am 8. Juni 2018 um 13:46:52.993988000 CEST initiiert das System einen TCP-Verbindungsversuch (SYN-Paket) zu einem tatsächlich externen Host (23.95.230.107) auf Port 80. Dies ist der erste beobachtete Versuch, eine Verbindung außerhalb des lokalen Netzwerks herzustellen.
 
@@ -847,7 +850,7 @@ In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig domina
 
 \textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
 \\
-Das SIEMENS AG SIMATIC Field PG M5 des Technikers (10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus den vorherigen Phasen, dass dieses System kompromittiert wurde.
+Das System des Technikers (SIEMENS AG SIMATIC Field PG M5, IP: 10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus den vorherigen Phasen, dass dieses System kompromittiert wurde.
 
 \subsubsection{Phase 3}
 Kritische Systemziele bestimmen (attack3.pcapng)
@@ -888,7 +891,7 @@ Feinarbeit (attack5.pcapng)
 \\ \\ 
 \textbf{Schauen Sie sich die einzelnen TCP-Sessions an. (Filter: tcp.stream == <n>) Sie suchen die Session, bei welcher die Teilnehmer 10.3.5.3 und 10.3.5.5 miteinander kommunizieren.}
 \\
-In der relevanten TCP-Session zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzung zu beobachten, in der verschiedene Client-Pointer-Events ausgeführt werden. Dies deutet auf eine aktive Fernsteuerung hin.
+In der relevanten TCP-Session (tcp.stream == 1) zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzung zu beobachten, in der verschiedene Client-Pointer-Events ausgeführt werden. Dies deutet auf eine aktive Fernsteuerung hin.
 
 \begin{figure}[H]
     \centering
@@ -898,8 +901,10 @@ In der relevanten TCP-Session zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzun
 \end{figure}
 
 \textbf{Gegeben sind folgende Richtlinien:
-Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich.
-Der Techniker-Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900).\\
+\begin{itemize}
+    \item Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich.
+    \item Der Techniker-Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900).
+\end{itemize}
 Gegen welche Richtlinie wird verstoßen?}
 \\
 Streng genommen wird gegen keine der genannten Richtlinien verstoßen. Die VNC-Verbindung vom Techniker-Arbeitsplatz zum SCADA-Arbeitsplatz über Port 5900 ist explizit erlaubt. Allerdings könnte man argumentieren, dass die Nutzung dieser Verbindung zur direkten Steuerung der PLCs problematisch sein könnte, da dies eigentlich die exklusive Aufgabe des SCADA-Arbeitsplatzes ist. Die Trennung dieser Verantwortlichkeiten ist in der Praxis schwer zu gewährleisten.
@@ -909,10 +914,36 @@ Abschlussbetrachtung
 \\ \\
 \textbf{Tragen Sie die einzelnen Vorgänge kurz zusammen und welche Informationen Sie daraus ziehen konnten?}
 \\
-Der Computer des Technikers wurde infiziert. Die Angreifer konnten sich anschließend mittels VNC-Verbindung auf den Kontrollrechner der PLC  verbinden. \\
-Daraus können wir schließen das der Rechner des Technikers nicht gut genug geschützt war, oder für private Zwecke genutzt wurde. Zudem war das Passwort für die VNC Verbindung schwach genug um erraten zu werden, oder es wurde in Passwort mehrmals verwendet.
+\begin{itemize}
+    \item Infektion des Techniker-Computers
+    \begin{itemize}
+        \item Das SIEMENS AG SIMATIC Field PG M5 (IP: 10.3.5.5) zeigte verdächtiges Verhalten.
+        \item Ungewöhnliche UDP-Verbindungsversuche zu einer Multicast-Adresse wurden beobachtet.
+        \item TCP-Verbindungsversuche zu einem externen Host (23.95.230.107) wurden registriert.
+    \end{itemize}
+    \item Netzwerk-Scanning
+    \begin{itemize}
+        \item Intensiver ARP-Scan des Netzwerks durch das infizierte System.
+        \item Zahlreiche TCP-Verbindungsversuche zu verschiedenen Ports auf anderen Systemen.
+    \end{itemize}
+    \item Zielidentifikation
+    \begin{itemize}
+        \item Fokussierte Verbindungsversuche über Port 102 (S7comm-Protokoll) zu kritischen Systemen (10.3.5.11 und 10.3.5.12).
+    \end{itemize}
+    \item Zugriffserweiterung
+    \begin{itemize}
+        \item Einsatz des VNC-Protokolls für Fernzugriffsversuche.
+        \item Erfolgreiche VNC-Verbindung zum SCADA-Arbeitsplatz (10.3.5.3) hergestellt.
+    \end{itemize}
+    \item Manipulation
+    \begin{itemize}
+        \item Aktive Fernsteuerung des SCADA-Arbeitsplatzes via VNC.
+        \item Potenzielle direkte Einflussnahme auf PLC-Steuerung.
+    \end{itemize}
+\end{itemize}
+Aus diesen Beobachtungen lässt sich schließen, dass der Computer des Technikers nicht ausreichend geschützt war. Möglicherweise wurde er für unerlaubte Zwecke verwendet oder wies Sicherheitslücken auf. Das erfolgreiche Erraten des VNC-Passworts deutet auf schwache oder wiederverwendete Passwörter hin.
 \\ \\
-Mögliche Lösungen wären hier, den Rechner des Technikers besser zu schützen und weiter einzuschränken, so dass dieser nur für die vorgesehene Arbeit genutzt werden kann. Und stärke Passwortrichtlinien einzusetzen. Außerdem sollte der Zugang zum Kontrollrechner mit einer VPN abgesichert werden. 
+Mögliche Lösungen wären hier, den Computer des Technikers besser abzusichern und weiter einzuschränken, so dass er nur für die vorgesehene Arbeit genutzt werden kann. Außerdem sollten stärkere Passwortrichtlinien eingesetzt werden. Darüber hinaus sollte der Zugang zum SCADA-Arbeitsplatz mit einer VPN-Lösung abgesichert werden, um eine zusätzliche Verschlüsselung des lokalen Datenverkehrs und eine weitere Authentifizierungsebene zu gewährleisten. Dies würde insbesondere den VNC-Verkehr zusätzlich schützen und die Zugriffskontrolle verstärken.
 
 \newpage
 \section{Anhang}
