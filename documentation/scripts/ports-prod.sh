@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Script um production Einstellungen umzusetzen
-# alle regeln und chains flushen, zuruecksetzen
+# Skript fuer production Einsatz der Firewall
+# LOESCHE alle existierenden Regeln
 iptables -F
 iptables -t nat -F
 iptables -X
 
-# ERLAUBE lokalen traffic, benoetigt fuer lokale Verbindungen wie datenbanken
+# ERLAUBE traffic  auf lookback interface, benoetigt fuer lokale Verbindungen wie Datenbanken
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
 # ERLAUBE ssh traffic auf Port 22
-# ERLAUBE NEW,ESTABLISHED,RELATED Pakete fuer eingehende Verbindungen, da sonst keine neuen Verbindungen moeglich
+# ERLAUBE NEW,ESTABLISHED,RELATED Pakete fuer eingehende Verbindungen, da sonst keine neuen Verbindungen moeglich 
 iptables -A INPUT -m state --state NEW,ESTABLISHED,RELATED -p tcp --dport 22 -j ACCEPT
 # ERLAUBE ESTABLISHED,RELATED pakete fuer ausgehende Verbindungen, benoetigt fuer ausgehende Pakete fuer Verbindung
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -p tcp --sport 22 -j ACCEPT
@@ -32,13 +32,13 @@ iptables -A INPUT -m state --state ESTABLISHED -p udp --sport 123 -j ACCEPT
 iptables -A OUTPUT -m state --state NEW,ESTABLISHED -p udp --dport 123 -j ACCEPT
 
 # ERLAUBE HTTP traffic auf Port 80
-# ERLAUBE eingehende Pakete die Antwort auf ein Paket sind, zu einer Session gehoeren
+# ERLAUBE eingehende Pakete die Antwort auf ein Paket sind, zu einer Session gehoeren 
 iptables -A INPUT -m state --state ESTABLISHED -p tcp --sport 80 -j ACCEPT
 # ERLAUBE ausgehende Pakete die eine neue Session starten oder Rueckantwort auf ein Paket sind
 iptables -A OUTPUT -m state --state NEW,ESTABLISHED -p tcp --dport 80 -j ACCEPT
 
 # ERLAUBE HTTPS traffic auf Port 443
-# ERLAUBE eingehende Pakete die Antwort auf ein Paket sind, zu einer Session gehoeren
+# ERLAUBE eingehende Pakete die Antwort auf ein Paket sind, zu einer Session gehoeren 
 iptables -A INPUT -m state --state ESTABLISHED -p tcp --sport 443 -j ACCEPT
 # ERLAUBE ausgehende Pakete die eine neue Session starten oder Rueckantwort auf ein Paket sind
 iptables -A OUTPUT -m state --state NEW,ESTABLISHED -p tcp --dport 443 -j ACCEPT

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Script um production Einstellungen umzusetzen
-# alle regeln und chains flushen, zuruecksetzen
+# Skript fuer production Einsatz der Firewall
+# LOESCHE alle existierenden Regeln
 iptables -F
 iptables -t nat -F
 iptables -X
 
-# ERLAUBE lokalen traffic, benoetigt fuer lokale Verbindungen wie datenbanken
+# ERLAUBE traffic  auf lookback interface, benoetigt fuer lokale Verbindungen wie Datenbanken
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 

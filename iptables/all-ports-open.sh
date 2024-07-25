@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# this script allows all incoming and outgoing traffic
-# flush all rules and reset all chains
+# Skript der alle Ports oeffnet
+# LOESCHE alle existierenden Regeln
 iptables -F
 iptables -t nat -F
 iptables -X
 
-# allow all incoming, outgoing and forwarded traffic
+# ERLAUBE ALLE EINGEHENDEN UND AUSGEHENDEN PAKETE
 iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT
-iptables -P FORWARD ACCEPT
