@@ -799,9 +799,9 @@ Vor-Ort-Unterstützung Analyse
 
 \subsubsection{Phase 1}
 Erstes infiziertes System (attack1.pcapng)
-
+\\ \\
 \textbf{Bei welchem System handelt es sich um das infizierte System und wieso ist dieses System verdächtig? Beachten Sie die Baseline (normal.pcapng), die Protokolle TCP und UDP sowie die verwendeten Ports.}
-
+\\ 
 Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mit der IP-Adresse 10.3.5.5 (MAC: 00:1b:1b:f7:7c:4f). Dieses System zeigt auffälliges Verhalten, das von der Baseline abweicht:
 
 \begin{itemize}
@@ -817,15 +817,16 @@ Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mi
 \end{figure}
 
 \textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu verbinden?}
-
+\\
 Das System versucht, UDP-Verbindungen zur Adresse 234.5.6.7 auf Port 8910 aufzubauen. Diese IP-Adresse gehört zum reservierten Bereich für Multicast-Adressen (224.0.0.0 bis 239.255.255.255). Obwohl es sich nicht um eine Kommunikation mit einem externen Host handelt, ist dieses Verhalten dennoch auffällig.
 \\ \\
 Am 8. Juni 2018 um 13:46:52.993988000 CEST initiiert das System einen TCP-Verbindungsversuch (SYN-Paket) zu einem tatsächlich externen Host (23.95.230.107) auf Port 80. Dies ist der erste beobachtete Versuch, eine Verbindung außerhalb des lokalen Netzwerks herzustellen.
+
 \subsubsection{Phase 2}
 Lateral Movement – Offline Modus (attack2.pcapng)
-
+\\ \\
 \textbf{Welche Auffälligkeiten sehen Sie in diesem Mitschnitt? Welches Protokoll wird häufig verwendet?}
-
+\\
 In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig dominant. Es macht 53,7\% aller Pakete aus, was auf einen intensiven Netzwerk-Scan hindeutet. Außerdem werden zahlreiche TCP-Verbindungsversuche zu verschiedenen Ports der Systeme 10.3.5.11 und 10.3.5.12 beobachtet.
 
 \begin{figure}[H]
@@ -842,15 +843,17 @@ In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig domina
     \label{fig:ws-arp-scan}
 \end{figure}
 
-\textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
 
+\\ \\
+\textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
+\\
 Das SIEMENS AG SIMATIC Field PG M5 des Technikers (10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus den vorherigen Phasen, dass dieses System kompromittiert wurde.
 
 \subsubsection{Phase 3}
 Kritische Systemziele bestimmen (attack3.pcapng)
-
+\\ \\
 \textbf{Über welchen Port versucht das infizierte System Kontakt aufzunehmen?}
-
+\\
 Das infizierte System versucht, Verbindungen über Port 102 zu den Systemen 10.3.5.11 und 10.3.5.12 aufzubauen. Port 102 ist bekannt für das S7comm-Protokoll, das in Siemens S7 SPS-Systemen verwendet wird  \cite{port-sps}.
 
 \begin{figure}[H]
@@ -862,15 +865,15 @@ Das infizierte System versucht, Verbindungen über Port 102 zu den Systemen 10.3
 
 \subsubsection{Phase 4}
 Rohe Gewalt (attack4.pcapng)
-
+\\ \\
 \textbf{Schauen Sie sich die einzelnen Verbindungsversuche näher an. Welches Protokoll wird neu verwendet?}
-
+\\
 In dieser Phase wird das Virtual Network Computing (VNC) Protokoll neu eingesetzt. Dies deutet auf Versuche hin, Fernzugriff auf andere Systeme zu erlangen. Es gibt mehrere Verbindungsversuche vom infizierten System (10.3.5.5) zum Zielsystem (10.3.5.3) über den VNC-Standardport 5900.
 \\ \\
 Der erste Verbindungsversuch (Frame 27) zeigt ein TCP SYN-Paket, das den Beginn eines Verbindungsaufbaus darstellt. Allerdings scheitern diese Versuche, wie in Frame 42 zu sehen ist, wo eine Authentifizierungsfehlermeldung (Authentication failed) auftritt.
 \\ \\
 \textbf{Wurde die Verbindung erfolgreich hergestellt? Notieren Sie ggf. den Zeitstempel.}
-
+\\
 Eine erfolgreiche TCP-Verbindung wurde hergestellt, beginnend mit Frame 372. Der Verbindungsaufbau erfolgte zwischen dem infizierten System (10.3.5.5) und dem Zielsystem (10.3.5.3) über den VNC-Port 5900. Der initiale Verbindungsversuch (SYN-Paket) wird in Frame 372 gezeigt. Die erfolgreiche Authentifizierung wird in Frame 386 bestätigt, mit dem Zeitstempel 8. Juni 2018, 14:13:37.179082000 CEST.
 
 \begin{figure}[H]
@@ -882,9 +885,9 @@ Eine erfolgreiche TCP-Verbindung wurde hergestellt, beginnend mit Frame 372. Der
 
 \subsubsection{Phase 5}
 Feinarbeit (attack5.pcapng)
-
+\\ \\ 
 \textbf{Schauen Sie sich die einzelnen TCP-Sessions an. (Filter: tcp.stream == <n>) Sie suchen die Session, bei welcher die Teilnehmer 10.3.5.3 und 10.3.5.5 miteinander kommunizieren.}
-
+\\
 In der relevanten TCP-Session zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzung zu beobachten, in der verschiedene Client-Pointer-Events ausgeführt werden. Dies deutet auf eine aktive Fernsteuerung hin.
 
 \begin{figure}[H]
@@ -897,17 +900,19 @@ In der relevanten TCP-Session zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzun
 \textbf{Gegeben sind folgende Richtlinien:
 Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich.
 Der Techniker-Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900).}
-
+TODO hier antwort noch einfuegen
+\\ \\
 \textbf{Gegen welche Richtlinie wird verstoßen?}
-
+\\
 Streng genommen wird gegen keine der genannten Richtlinien verstoßen. Die VNC-Verbindung vom Techniker-Arbeitsplatz zum SCADA-Arbeitsplatz über Port 5900 ist explizit erlaubt. Allerdings könnte man argumentieren, dass die Nutzung dieser Verbindung zur direkten Steuerung der PLCs problematisch sein könnte, da dies eigentlich die exklusive Aufgabe des SCADA-Arbeitsplatzes ist. Die Trennung dieser Verantwortlichkeiten ist in der Praxis schwer zu gewährleisten.
 
 \subsubsection{Phase 6}
 Abschlussbetrachtung
-
+\\ \\
 \textbf{Tragen Sie die einzelnen Vorgänge kurz zusammen und welche Informationen Sie daraus ziehen konnten?}
-
+\\
 TODO
+
 \newpage
 \section{Anhang}
 

@@ -37,8 +37,8 @@
 \contentsline {subsubsection}{\numberline {6.2.4}Phase 4}{38}{subsubsection.6.2.4}%
 \contentsline {subsubsection}{\numberline {6.2.5}Phase 5}{39}{subsubsection.6.2.5}%
 \contentsline {subsubsection}{\numberline {6.2.6}Phase 6}{40}{subsubsection.6.2.6}%
-\contentsline {section}{\numberline {7}Anhang}{41}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Netzwerk}{41}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Hinzufügen eines Cron-Jobs}{41}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Setzen einer statischen IP-Adresse}{41}{subsection.7.3}%
+\contentsline {section}{\numberline {7}Anhang}{42}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Netzwerk}{42}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Hinzufügen eines Cron-Jobs}{42}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Setzen einer statischen IP-Adresse}{42}{subsection.7.3}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
