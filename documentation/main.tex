@@ -711,8 +711,7 @@ Und der Service mit den Namen \lstinline[breaklines]|Null|:
 Vor-Ort-Unterstützung Analyse
 \\ \\
 \textbf{Bestimmen Sie alle Netzwerkteilnehmer (MAC, IPv4), die in den Netzwerkausschnitten auftauchen. Broadcast-Adressen können Sie ausschließen. Tipp: Betrachten Sie auch das Protokoll LLDP.}
-
-
+\\
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|l|l|p{5cm}|}
@@ -760,9 +759,16 @@ Vor-Ort-Unterstützung Analyse
     \label{tab:ws-lldp-info}
 \end{table}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{diagramm-teilnehmer.png}
+	\caption{Diagramm der Teilnehmer und Protokolle}
+	\label{fig:diagramm-teilnehmer}
+\end{figure}
 
 \textbf{Bestimmen Sie, welche Protokolle verwendet werden.}
-
+\\
+Folgende Tabelle zeigt die verwendeten Protokolle:
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|p{5cm}|}
@@ -794,9 +800,6 @@ Vor-Ort-Unterstützung Analyse
     \label{tab:ws-used-protocols}
 \end{table}
 
-
-
-
 \subsubsection{Phase 1}
 Erstes infiziertes System (attack1.pcapng)
 \\ \\
@@ -815,7 +818,6 @@ Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mi
     \caption{Auffälliger Netzwerkverkehr des infizierten Systems}
     \label{fig:ws-suspicious-traffic}
 \end{figure}
-
 \textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu verbinden?}
 \\
 Das System versucht, UDP-Verbindungen zur Adresse 234.5.6.7 auf Port 8910 aufzubauen. Diese IP-Adresse gehört zum reservierten Bereich für Multicast-Adressen (224.0.0.0 bis 239.255.255.255). Obwohl es sich nicht um eine Kommunikation mit einem externen Host handelt, ist dieses Verhalten dennoch auffällig.
@@ -843,8 +845,6 @@ In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig domina
     \label{fig:ws-arp-scan}
 \end{figure}
 
-
-\\ \\
 \textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
 \\
 Das SIEMENS AG SIMATIC Field PG M5 des Technikers (10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus den vorherigen Phasen, dass dieses System kompromittiert wurde.
@@ -899,10 +899,8 @@ In der relevanten TCP-Session zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzun
 
 \textbf{Gegeben sind folgende Richtlinien:
 Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich.
-Der Techniker-Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900).}
-TODO hier antwort noch einfuegen
-\\ \\
-\textbf{Gegen welche Richtlinie wird verstoßen?}
+Der Techniker-Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900).\\
+Gegen welche Richtlinie wird verstoßen?}
 \\
 Streng genommen wird gegen keine der genannten Richtlinien verstoßen. Die VNC-Verbindung vom Techniker-Arbeitsplatz zum SCADA-Arbeitsplatz über Port 5900 ist explizit erlaubt. Allerdings könnte man argumentieren, dass die Nutzung dieser Verbindung zur direkten Steuerung der PLCs problematisch sein könnte, da dies eigentlich die exklusive Aufgabe des SCADA-Arbeitsplatzes ist. Die Trennung dieser Verantwortlichkeiten ist in der Praxis schwer zu gewährleisten.
 
