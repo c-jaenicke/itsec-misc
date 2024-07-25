@@ -23,7 +23,7 @@ H.~Eychenne, ``iptables(8) - linux man page.''
 
 \bibitem{allowlist}
 T.~Redaktion~ComputerWeekly.de, ``Allowlist (whitelist).''
-  \url{https://www.computerweekly.com/de/definition/Whitelist}, 2022.
+  \url{https://www.computerweekly.com/de/definition/Whitelist}, 6 2022.
 \newblock Aufgerufen am: 22.07.2024.
 
 \bibitem{ipv4forward-kernel}
@@ -76,5 +76,17 @@ HIPAAVault, ``Ids and ips.''
 M.~Zydyk, ``Address resolution protocol (arp).''
   \url{https://www.techtarget.com/searchnetworking/definition/Address-Resolution-Protocol-ARP},
   12 2023.
+
+\bibitem{ram-dump}
+R.~T. Frawley, ``Memory forensics: Effective digital forensics investigations
+  basics.''
+  \url{https://www.adfsolutions.com/adf-blog/memory-forensics-101-the-basics-you-need-to-know-for-effective-digital-forensics-investigations},
+  5 2023.
+\newblock Aufgerufen am: 25.07.2024.
+
+\bibitem{port-sps}
+A.~Träger, ``Simatic s7 in gefahr.''
+  \url{https://www.sps-magazin.de/allgemein/simatic-s7-in-gefahr/}, 3 2013.
+\newblock Aufgerufen am: 25.07.2024.
 
 \end{thebibliography}

@@ -614,14 +614,15 @@ Um das ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwach
 \newpage
 \section{Aufgabenblatt 4}
 
-TODO HIER NOCH MACHEN
-
 \subsection{Aufgabe 1}
 Darstellung forensisches Vorgehen, Datensammlung, Datenanalyse, Grenzen der Analyse
 \\ \\
 \textbf{Welche Methodik der Forensik würden Sie zum Sichern des RAMS nutzen?}
+Hier würde die Methode der Live-Forensik angewendet werden. Es wird ein Abbild des RAMs, des flüchtigen Speichers erstellt und später analysiert. \cite{ram-dump}
 \\ \\
 \textbf{Worauf mussten Sie bei dieser Sicherungsmethodik besonders achten?}
+Das System darf nach der Infizierung und vor der Sicherung der Daten, nicht heruntergefahren oder vom Strom getrennt werden. Da die Daten im RAM sonst verloren gehen. \\ \\
+Zudem muss darauf geachtet werden das die Malware zu dem Zeitpunkt der Sicherung aktiv ist, sich also weiterhin im RAM befindet.
 \\ \\
 \textbf{Welches Volatility-Profil sollte für das Image verwendet werden}
 Das Plugin \lstinline[breaklines]|imageinfo| empfiehlt die Profile WinXPSP2x86 und WinXPSP3x86.
@@ -850,7 +851,7 @@ Kritische Systemziele bestimmen (attack3.pcapng)
 
 \textbf{Über welchen Port versucht das infizierte System Kontakt aufzunehmen?}
 
-Das infizierte System versucht, Verbindungen über Port 102 zu den Systemen 10.3.5.11 und 10.3.5.12 aufzubauen. Port 102 ist bekannt für das S7comm-Protokoll, das in Siemens S7 SPS-Systemen verwendet wird (TODO QUELLE).
+Das infizierte System versucht, Verbindungen über Port 102 zu den Systemen 10.3.5.11 und 10.3.5.12 aufzubauen. Port 102 ist bekannt für das S7comm-Protokoll, das in Siemens S7 SPS-Systemen verwendet wird  \cite{port-sps}.
 
 \begin{figure}[H]
     \centering

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.5.30)  25 JUL 2024 11:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024/Arch Linux) (preloaded format=pdflatex 2024.5.30)  25 JUL 2024 11:33
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1571,35 +1571,40 @@ as been already used, duplicate ignored
 l.614 \newpage
                <./images/arp-mac-kali.png (PNG copy)> <./images/arp-shark-packe
 te.png (PNG copy)>]
-<./images/vol-imageinfo.png, id=561, 910.15031pt x 180.675pt>
+<./images/vol-imageinfo.png, id=562, 910.15031pt x 180.675pt>
 File: ./images/vol-imageinfo.png Graphic file (type png)
 <use ./images/vol-imageinfo.png>
-Package pdftex.def Info: ./images/vol-imageinfo.png  used on input line 630.
+Package pdftex.def Info: ./images/vol-imageinfo.png  used on input line 631.
 (pdftex.def)             Requested size: 512.1496pt x 101.66801pt.
 
-Overfull \hbox (64.01865pt too wide) in paragraph at lines 630--631
+Overfull \hbox (64.01865pt too wide) in paragraph at lines 631--632
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 620--633
+Underfull \hbox (badness 10000) in paragraph at lines 618--634
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 620--633
+Underfull \hbox (badness 10000) in paragraph at lines 618--634
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 620--633
+Underfull \hbox (badness 10000) in paragraph at lines 618--634
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 618--634
 
  []
 
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 634.
+on input line 635.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1614,34 +1619,34 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.29}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.634 ...waren zum Zeitpunkt der Sicherung aktiv?}
+l.635 ...waren zum Zeitpunkt der Sicherung aktiv?}
                                                    <./images/arp-shark-packet-5
 .png (PNG copy)>]
-<./images/vol-prozesse.png, id=568, 885.3075pt x 597.73312pt>
+<./images/vol-prozesse.png, id=570, 885.3075pt x 597.73312pt>
 File: ./images/vol-prozesse.png Graphic file (type png)
 <use ./images/vol-prozesse.png>
-Package pdftex.def Info: ./images/vol-prozesse.png  used on input line 638.
+Package pdftex.def Info: ./images/vol-prozesse.png  used on input line 639.
 (pdftex.def)             Requested size: 512.1496pt x 345.80075pt.
 
-Overfull \hbox (64.01865pt too wide) in paragraph at lines 638--639
+Overfull \hbox (64.01865pt too wide) in paragraph at lines 639--640
  [][] 
  []
 
-<./images/vol-prozesse-verstekt.png, id=569, 885.3075pt x 314.67563pt>
+<./images/vol-prozesse-verstekt.png, id=571, 885.3075pt x 314.67563pt>
 File: ./images/vol-prozesse-verstekt.png Graphic file (type png)
 <use ./images/vol-prozesse-verstekt.png>
 Package pdftex.def Info: ./images/vol-prozesse-verstekt.png  used on input line
- 646.
+ 647.
 (pdftex.def)             Requested size: 512.1496pt x 182.04623pt.
 
-Overfull \hbox (64.01865pt too wide) in paragraph at lines 646--647
+Overfull \hbox (64.01865pt too wide) in paragraph at lines 647--648
  [][] 
  []
 
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 650.
+on input line 651.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1656,33 +1661,33 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.30}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.650 ...en bzw. bestanden? Ist etwas auffällig?}
+l.651 ...en bzw. bestanden? Ist etwas auffällig?}
                                                   
 pdfTeX warning (ext4): destination with the same identifier (name{figure.31}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.650 ...en bzw. bestanden? Ist etwas auffällig?}
+l.651 ...en bzw. bestanden? Ist etwas auffällig?}
                                                    <./images/vol-imageinfo.png 
 (PNG copy)> <./images/vol-prozesse.png (PNG copy)>]
-<./images/vol-verbindungen.png, id=576, 903.375pt x 243.15843pt>
+<./images/vol-verbindungen.png, id=578, 903.375pt x 243.15843pt>
 File: ./images/vol-verbindungen.png Graphic file (type png)
 <use ./images/vol-verbindungen.png>
-Package pdftex.def Info: ./images/vol-verbindungen.png  used on input line 654.
+Package pdftex.def Info: ./images/vol-verbindungen.png  used on input line 655.
 
 (pdftex.def)             Requested size: 512.1496pt x 137.85968pt.
 
-Overfull \hbox (64.01865pt too wide) in paragraph at lines 654--655
+Overfull \hbox (64.01865pt too wide) in paragraph at lines 655--656
  [][] 
  []
 
-<./images/vol-cmd-history.png, id=577, 903.375pt x 666.23906pt>
+<./images/vol-cmd-history.png, id=579, 903.375pt x 666.23906pt>
 File: ./images/vol-cmd-history.png Graphic file (type png)
 <use ./images/vol-cmd-history.png>
-Package pdftex.def Info: ./images/vol-cmd-history.png  used on input line 687.
+Package pdftex.def Info: ./images/vol-cmd-history.png  used on input line 688.
 (pdftex.def)             Requested size: 512.1496pt x 377.727pt.
 
-Overfull \hbox (64.01865pt too wide) in paragraph at lines 687--688
+Overfull \hbox (64.01865pt too wide) in paragraph at lines 688--689
  [][] 
  []
 
@@ -1692,7 +1697,7 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 691.
+on input line 692.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1707,13 +1712,13 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.32}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.691 ...rdächtigen Services sind derzeit aktiv?}
+l.692 ...rdächtigen Services sind derzeit aktiv?}
                                                   
 pdfTeX warning (ext4): destination with the same identifier (name{figure.33}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.691 ...rdächtigen Services sind derzeit aktiv?}
+l.692 ...rdächtigen Services sind derzeit aktiv?}
                                                    <./images/vol-prozesse-verst
 ekt.png (PNG copy)> <./images/vol-verbindungen.png (PNG copy)>]
 Overfull \vbox (29.37682pt too high) has occurred while \output is active []
@@ -1721,7 +1726,7 @@ Overfull \vbox (29.37682pt too high) has occurred while \output is active []
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 691.
+on input line 692.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -1737,46 +1742,46 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.691 ...rdächtigen Services sind derzeit aktiv?}
+l.692 ...rdächtigen Services sind derzeit aktiv?}
                                                   
 pdfTeX warning (ext4): destination with the same identifier (name{figure.34}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.691 ...rdächtigen Services sind derzeit aktiv?}
+l.692 ...rdächtigen Services sind derzeit aktiv?}
                                                    <./images/vol-cmd-history.pn
 g (PNG copy)>]
-<./images/vol-sus-service1.png, id=590, 290.58563pt x 122.70844pt>
+<./images/vol-sus-service1.png, id=592, 290.58563pt x 122.70844pt>
 File: ./images/vol-sus-service1.png Graphic file (type png)
 <use ./images/vol-sus-service1.png>
-Package pdftex.def Info: ./images/vol-sus-service1.png  used on input line 697.
+Package pdftex.def Info: ./images/vol-sus-service1.png  used on input line 698.
 
 (pdftex.def)             Requested size: 369.88582pt x 156.20683pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 691--700
+Underfull \hbox (badness 10000) in paragraph at lines 692--701
 
  []
 
-<./images/vol-sus-service2.png, id=591, 302.63063pt x 120.45pt>
+<./images/vol-sus-service2.png, id=593, 302.63063pt x 120.45pt>
 File: ./images/vol-sus-service2.png Graphic file (type png)
 <use ./images/vol-sus-service2.png>
-Package pdftex.def Info: ./images/vol-sus-service2.png  used on input line 704.
+Package pdftex.def Info: ./images/vol-sus-service2.png  used on input line 705.
 
 (pdftex.def)             Requested size: 369.88582pt x 147.21893pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 710--713
+Underfull \hbox (badness 10000) in paragraph at lines 711--714
 
  []
 
 
-Overfull \hbox (15.80191pt too wide) in paragraph at lines 717--740
+Overfull \hbox (15.80191pt too wide) in paragraph at lines 718--741
  [][] 
  []
 
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 743.
+on input line 744.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1791,28 +1796,28 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.35}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.743 
+l.744 
       
 pdfTeX warning (ext4): destination with the same identifier (name{figure.36}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.743 
+l.744 
        <./images/vol-sus-service1.png (PNG copy)> <./images/vol-sus-service2.pn
 g (PNG copy)>]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 744.
+(Font)              <7> on input line 745.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 744.
+(Font)              <5> on input line 745.
 
-Overfull \hbox (10.04631pt too wide) in paragraph at lines 748--758
+Overfull \hbox (10.04631pt too wide) in paragraph at lines 749--759
  [][] 
  []
 
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 795.
+on input line 796.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1827,24 +1832,24 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.795 
+l.796 
       
 pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.795 
+l.796 
       ]
-<./images/ws-suspicious-traffic.png, id=607, 1559.07469pt x 1135.24126pt>
+<./images/ws-suspicious-traffic.png, id=609, 1559.07469pt x 1135.24126pt>
 File: ./images/ws-suspicious-traffic.png Graphic file (type png)
 <use ./images/ws-suspicious-traffic.png>
 Package pdftex.def Info: ./images/ws-suspicious-traffic.png  used on input line
- 813.
+ 814.
 (pdftex.def)             Requested size: 448.13095pt x 326.30138pt.
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 817.
+on input line 818.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -1860,14 +1865,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.817 
+l.818 
       {/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 820--823
+Underfull \hbox (badness 10000) in paragraph at lines 821--824
 
  []
 
 
-Overfull \hbox (40.78918pt too wide) in paragraph at lines 820--823
+Overfull \hbox (40.78918pt too wide) in paragraph at lines 821--824
 \T1/cmr/m/n/12 (-20) Am 8. Ju-ni 2018 um 13:46:52.993988000 CEST in-iti-iert da
 s Sys-tem einen TCP-Verbindungsversuch
  []
@@ -1875,7 +1880,7 @@ s Sys-tem einen TCP-Verbindungsversuch
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 829.
+on input line 830.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1890,22 +1895,22 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.37}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.829 
+l.830 
        <./images/ws-suspicious-traffic.png>]
-<./images/ws-arp-scan.png, id=621, 1559.07469pt x 1135.24126pt>
+<./images/ws-arp-scan.png, id=623, 1559.07469pt x 1135.24126pt>
 File: ./images/ws-arp-scan.png Graphic file (type png)
 <use ./images/ws-arp-scan.png>
-Package pdftex.def Info: ./images/ws-arp-scan.png  used on input line 832.
+Package pdftex.def Info: ./images/ws-arp-scan.png  used on input line 833.
 (pdftex.def)             Requested size: 448.13095pt x 326.30138pt.
-<./images/ws-port-scan.png, id=622, 1525.95094pt x 1127.71312pt>
+<./images/ws-port-scan.png, id=624, 1525.95094pt x 1127.71312pt>
 File: ./images/ws-port-scan.png Graphic file (type png)
 <use ./images/ws-port-scan.png>
-Package pdftex.def Info: ./images/ws-port-scan.png  used on input line 839.
+Package pdftex.def Info: ./images/ws-port-scan.png  used on input line 840.
 (pdftex.def)             Requested size: 448.13095pt x 331.17543pt.
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 843.
+on input line 844.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -1921,23 +1926,23 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.38}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.843 
+l.844 
        <./images/ws-arp-scan.png>]
-Overfull \hbox (18.75488pt too wide) in paragraph at lines 846--847
+Overfull \hbox (18.75488pt too wide) in paragraph at lines 847--848
 []\T1/cmr/m/n/12 (-20) Das SIE-MENS AG SI-MA-TIC Field PG M5 des Tech-ni-kers (
 10.3.5.5, MAC: 00:1b:1b:f7:7c:4f)
  []
 
-<./images/ws-port-102-connections.png, id=629, 1559.07469pt x 1135.24126pt>
+<./images/ws-port-102-connections.png, id=632, 1559.07469pt x 1135.24126pt>
 File: ./images/ws-port-102-connections.png Graphic file (type png)
 <use ./images/ws-port-102-connections.png>
 Package pdftex.def Info: ./images/ws-port-102-connections.png  used on input li
-ne 857.
+ne 858.
 (pdftex.def)             Requested size: 448.13095pt x 326.30138pt.
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 861.
+on input line 862.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1952,21 +1957,21 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.39}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.861 
+l.862 
        <./images/ws-port-scan.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 867--872
+Underfull \hbox (badness 10000) in paragraph at lines 868--873
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 867--872
+Underfull \hbox (badness 10000) in paragraph at lines 868--873
 
  []
 
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 874.
+on input line 875.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 Package fancyhdr Warning: \headheight is too small (18.125pt): 
@@ -1981,23 +1986,23 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.40}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.874 
+l.875 
        <./images/ws-port-102-connections.png>]
-<./images/ws-vnc-connection.png, id=642, 1559.07469pt x 1135.24126pt>
+<./images/ws-vnc-connection.png, id=646, 1559.07469pt x 1135.24126pt>
 File: ./images/ws-vnc-connection.png Graphic file (type png)
 <use ./images/ws-vnc-connection.png>
-Package pdftex.def Info: ./images/ws-vnc-connection.png  used on input line 877
+Package pdftex.def Info: ./images/ws-vnc-connection.png  used on input line 878
 .
 (pdftex.def)             Requested size: 448.13095pt x 326.30138pt.
-<./images/ws-vnc-session.png, id=643, 1559.07469pt x 1135.24126pt>
+<./images/ws-vnc-session.png, id=647, 1559.07469pt x 1135.24126pt>
 File: ./images/ws-vnc-session.png Graphic file (type png)
 <use ./images/ws-vnc-session.png>
-Package pdftex.def Info: ./images/ws-vnc-session.png  used on input line 891.
+Package pdftex.def Info: ./images/ws-vnc-session.png  used on input line 892.
 (pdftex.def)             Requested size: 448.13095pt x 326.30138pt.
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 895.
+on input line 896.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -2013,12 +2018,12 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.41}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.895 
+l.896 
        <./images/ws-vnc-connection.png>]
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 910.
+on input line 911.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -2034,12 +2039,12 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.42}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.910 \newpage
+l.911 \newpage
                <./images/ws-vnc-session.png>]
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 951.
+on input line 952.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -2081,9 +2086,9 @@ i-te-list).'' []$\T1/cmtt/m/n/12 https : / / www .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 25--28
+Underfull \hbox (badness 3179) in paragraph at lines 25--28
 \T1/cmtt/m/n/12 computerweekly . com / de / definition / Whitelist$[]\T1/cmr/m/
-n/12 (+20) , 2022.  Auf-ge-ru-fen am:
+n/12 (+20) , 6 2022.  Auf-ge-ru-fen am:
  []
 
 
@@ -2123,11 +2128,30 @@ Package fancyhdr Warning: \headheight is too small (18.125pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-14.67778pt}.
 
-[42])
+[42]
+Underfull \hbox (badness 10000) in paragraph at lines 81--86
+[]\T1/cmr/m/n/12 (+20) R. T. Fraw-ley, ``Me-mo-ry fo-ren-sics: Ef-fec-ti-ve di-
+gi-tal fo-ren-sics in-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--86
+\T1/cmr/m/n/12 (+20) ves-ti-ga-ti-ons ba-sics.'' []$\T1/cmtt/m/n/12 https : / /
+ www . adfsolutions . com / adf-[]blog /
+ []
+
+
+Overfull \hbox (170.56401pt too wide) in paragraph at lines 81--86
+\T1/cmtt/m/n/12 memory-[]forensics-[]101-[]the-[]basics-[]you-[]need-[]to-[]kno
+w-[]for-[]effective-[]digital-[]forensics-[]investigations$[]\T1/cmr/m/n/12 (-2
+0) ,
+ []
+
+)
 File: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg Graphic file (type jpg)
 <use ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg>
 Package pdftex.def Info: ./images/S04_HTW_Berlin_Logo_pos_FARBIG_RGB.jpg  used 
-on input line 954.
+on input line 955.
 (pdftex.def)             Requested size: 47.78816pt x 28.45274pt.
 
 
@@ -2151,11 +2175,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 17854 strings out of 476023
- 315451 string characters out of 5791582
+ 17860 strings out of 476023
+ 315519 string characters out of 5791582
  2303187 words of memory out of 5000000
- 39256 multiletter control sequences out of 15000+600000
- 573021 words of font info for 128 fonts, out of 8000000 for 9000
+ 39258 multiletter control sequences out of 15000+600000
+ 573092 words of font info for 129 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  108i,16n,107p,10920b,1981s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/t
@@ -2167,10 +2191,10 @@ re/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/share/texmf-dist/f
 onts/type1/public/cm-super/sfsx1728.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/cm-super/sftt1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sft
 t1200.pfb>
-Output written on main.pdf (46 pages, 5284137 bytes).
+Output written on main.pdf (46 pages, 5285661 bytes).
 PDF statistics:
- 968 PDF objects out of 1000 (max. 8388607)
- 822 compressed objects within 9 object streams
- 380 named destinations out of 1000 (max. 500000)
+ 976 PDF objects out of 1000 (max. 8388607)
+ 830 compressed objects within 9 object streams
+ 382 named destinations out of 1000 (max. 500000)
  34344 words of extra memory for PDF output out of 35830 (max. 10000000)
 

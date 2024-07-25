@@ -33,36 +33,40 @@ Warning--entry type for "hping-kalitools" isn't style-file defined
 --line 86 of file references.bib
 Warning--entry type for "allowlist" isn't style-file defined
 --line 91 of file references.bib
-You've used 15 entries,
+Warning--entry type for "ram-dump" isn't style-file defined
+--line 99 of file references.bib
+Warning--entry type for "port-sps" isn't style-file defined
+--line 108 of file references.bib
+You've used 17 entries,
             1876 wiz_defined-function locations,
-            539 strings with 5570 characters,
-and the built_in function-call counts, 1876 in all, are:
-= -- 188
-> -- 39
+            550 strings with 5937 characters,
+and the built_in function-call counts, 2154 in all, are:
+= -- 216
+> -- 47
 < -- 0
-+ -- 23
-- -- 8
-* -- 71
-:= -- 244
-add.period$ -- 28
-call.type$ -- 15
-change.case$ -- 15
++ -- 27
+- -- 10
+* -- 87
+:= -- 284
+add.period$ -- 32
+call.type$ -- 17
+change.case$ -- 17
 chr.to.int$ -- 0
-cite$ -- 15
-duplicate$ -- 60
-empty$ -- 271
-format.name$ -- 8
-if$ -- 497
+cite$ -- 17
+duplicate$ -- 68
+empty$ -- 307
+format.name$ -- 10
+if$ -- 567
 int.to.chr$ -- 0
-int.to.str$ -- 15
+int.to.str$ -- 17
 missing$ -- 0
-newline$ -- 61
-num.names$ -- 8
-pop$ -- 104
+newline$ -- 69
+num.names$ -- 10
+pop$ -- 116
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 48
+skip$ -- 54
 stack$ -- 0
 substring$ -- 0
 swap$ -- 0
@@ -71,7 +75,7 @@ text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 8
-width$ -- 17
-write$ -- 132
-(There were 15 warnings)
+while$ -- 10
+width$ -- 19
+write$ -- 152
+(There were 17 warnings)
