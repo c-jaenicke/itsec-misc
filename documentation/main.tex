@@ -198,14 +198,14 @@ Die folgende Abbildung zeigt das Ergebnis des Pings, wenn alle Ports offen sind:
 	\label{fig:ping-all-open}
 \end{figure}
 
-Die nächste Abbildung zeigt das Ergebnis des Pings mit allen Ports geschlossen und den Production-Regeln:
+\noindent Die nächste Abbildung zeigt das Ergebnis des Pings mit allen Ports geschlossen und den Production-Regeln:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{ping-all-closed.png}
 	\caption{Ergebnis den Pings bei geschlossen Ports und Production-Setup}
 	\label{fig:ping-all-closed}
 \end{figure}
-Man kann sehen, dass keiner der Pings erfolgreich war. Das liegt daran, dass bei beiden Regelsätzen das ICMP-Protokoll, welches für Pings genutzt wird, blockiert wird.
+\noindent Man kann sehen, dass keiner der Pings erfolgreich war. Das liegt daran, dass bei beiden Regelsätzen das ICMP-Protokoll, welches für Pings genutzt wird, blockiert wird.
 
 \subsubsection{Nmap Scan}
 Sowohl der Webserver als auch die Firewall wurden mit dem Befehl  \lstinline[breaklines]|sudo nmap -sS -sC -O -p- <ip des ziels>| mittels Nmap gescannt. 
@@ -217,21 +217,19 @@ Folgende Parameter wurden genutzt \cite{nmap-manual}:
 	\item \lstinline[breaklines]|-p-|: Scanne alle Ports von 1 bis 65535.
 \end{enumerate} 
 Folgende Ergebnisse ergab der Nmap-Scan der Firewall und des Webservers: \\ \\
-\begin{figure}[!ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=15cm]{nmap-scan-firewall.png}
 	\caption{Ergebnis Nmap-Scan Firewall}
 	\label{fig:nmapfirewall}
 \end{figure} 
-\begin{figure}[!ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=15cm]{nmap-scan-webserver.png}
 	\caption{Ergebnis Nmap-Scan Webserver}
 	\label{fig:nmapwebserver}
 \end{figure}
-\\ \\
-Hervorzuheben ist, dass der Scan des Webservers nur den Port 22 (SSH) gefunden hat, nicht aber den Port 80 für den NGINX-Server. Die Regel, dass Port 80 auf dem Webserver nur Anfragen von der IP-Adresse der Firewall annimmt, funktioniert dementsprechend.
-\\ \\
+\noindent Hervorzuheben ist, dass der Scan des Webservers nur den Port 22 (SSH) gefunden hat, nicht aber den Port 80 für den NGINX-Server. Die Regel, dass Port 80 auf dem Webserver nur Anfragen von der IP-Adresse der Firewall annimmt, funktioniert dementsprechend.
 Zudem war Suricata in der Lage den Nmap-Scan, den Script-Scan, zu entdecken und zu melden.
 \begin{figure}[!ht]
 	\centering
@@ -258,16 +256,15 @@ Der folgende Screenshot zeigt das Ausführen von hping3 im Terminal:
 	\label{fig:dos-hpgin3}
 \end{figure}
 
-Die folgende Abbildung zeigt die Auslastung der Firewall, wie sie in htop dargestellt wird:
+\noindent Die folgende Abbildung zeigt die Auslastung der Firewall, wie sie in htop dargestellt wird:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{dos-htop.png}
 	\caption{Screenshot von der Auslastung der Firewall während des DoS-Angriffs}
 	\label{fig:dos-htop}
 \end{figure}
-htop ist ein Tool, welches die derzeitige Auslastung der Hardware eines Systems grafisch darstellt. Man kann sehen, dass die CPU zu fast 100\% ausgelastet ist. Die Firewall ist nicht mehr in der Lage, auf andere Anfragen zu antworten, und andere Prozesse werden deutlich verlangsamt. \\
+\noindent htop ist ein Tool, welches die derzeitige Auslastung der Hardware eines Systems grafisch darstellt. Man kann sehen, dass die CPU zu fast 100\% ausgelastet ist. Die Firewall ist nicht mehr in der Lage, auf andere Anfragen zu antworten, und andere Prozesse werden deutlich verlangsamt. \\
 Der Webserver war ebenfalls nicht mehr über die Firewall erreichbar.
-\\ \\
 Suricata hat zudem bei der Durchführung des DoS-Angriffs angeschlagen und die fehlerhafte TCP- Übertragung gemeldet:
 \begin{figure}[H]
 	\centering
@@ -570,7 +567,7 @@ Das Plugin \lstinline[breaklines]|imageinfo| empfiehlt die Profile WinXPSP2x86 u
 	\caption{Volatility: Imageinfo}
 	\label{fig:vol-imageinfo}
 \end{figure} 
-\textbf{Welche Prozesse waren zum Zeitpunkt der Sicherung aktiv?}
+\noindent \textbf{Welche Prozesse waren zum Zeitpunkt der Sicherung aktiv?}
 Folgender Screenshot zeigt den Output des Plugins \lstinline[breaklines]|pslist|, welches laufende Prozesse zeigt:
 \begin{figure}[H]
 	\centering
@@ -578,7 +575,7 @@ Folgender Screenshot zeigt den Output des Plugins \lstinline[breaklines]|pslist|
 	\caption{Volatility: Laufende Prozesse}
 	\label{fig:vol-prozesse}
 \end{figure} 
-\textbf{Gibt es versteckte Prozesse?}
+\noindent \textbf{Gibt es versteckte Prozesse?}
 Nein, das Plugin \lstinline[breaklines]|psscan|, welches auch versteckte und geschlossene Prozesse zeigen kann, zeigt keine zusätzliche Prozesse an.
 \begin{figure}[H]
 	\centering
@@ -586,7 +583,7 @@ Nein, das Plugin \lstinline[breaklines]|psscan|, welches auch versteckte und ges
 	\caption{Volatility: Versteckte Prozesse}
 	\label{fig:vol-prozesse-verstekt.png}
 \end{figure} 
-\textbf{Welche Netzwerkverbindungen bestehen bzw. bestanden? Ist etwas auffällig?}
+\noindent \textbf{Welche Netzwerkverbindungen bestehen bzw. bestanden? Ist etwas auffällig?}
 Die Plugins \lstinline[breaklines]|connscan| und \lstinline[breaklines]|sockscan| zeigen die existierenden Verbindungen. Auffällig ist, das eine Verbindung zu einer IP-Adresse \lstinline[breaklines]|172.16.98.1| existiert welche sich im lokalen Netzwerkbereich \lstinline[breaklines]|172.16.0.0.| befindet.
 \begin{figure}[H]
 	\centering
@@ -594,7 +591,7 @@ Die Plugins \lstinline[breaklines]|connscan| und \lstinline[breaklines]|sockscan
 	\caption{Volatility: bestehende Verbindungen}
 	\label{fig:vol-verbindungen.png}
 \end{figure} 
-\textbf{Welche Prozesse haben welche Verbindung gestartet?}
+\noindent \textbf{Welche Prozesse haben welche Verbindung gestartet?}
 Folgende Prozesse haben eine Verbindung auf dem jeweiligen Port gestartet:
 \begin{table}[H]
 	\begin{center}
@@ -619,7 +616,7 @@ Folgende Prozesse haben eine Verbindung auf dem jeweiligen Port gestartet:
 		\caption{Volatility: Prozesse hinter den Verbindungen}
 	\end{center}
 \end{table}
-\textbf{Untersuchen Sie die Eingaben in der command line. Welche Kommandos wurden ausgeführt? Fällt Ihnen etwas auf?}
+\noindent \textbf{Untersuchen Sie die Eingaben in der command line. Welche Kommandos wurden ausgeführt? Fällt Ihnen etwas auf?}
 Auffällig ist, das der Befehl \lstinline[breaklines]|sc query malware| ausgeführt wurde. Mit dem Befehl \lstinline[breaklines]|sc| kann man Services starten, stoppen und überprüfen. In diesem Fall wurde überprüft ob der Service mit dem Namen \lstinline[breaklines]|malware| läuft. Dies wurde scheinbar als Administrator ausgeführt.
 \begin{figure}[H]
 	\centering
@@ -627,7 +624,7 @@ Auffällig ist, das der Befehl \lstinline[breaklines]|sc query malware| ausgefü
 	\caption{Volatility: Eingaben in der Kommandozeile}
 	\label{fig:vol-cmd-history}
 \end{figure} 
-\textbf{Welche verdächtigen Services sind derzeit aktiv?}
+\noindent \textbf{Welche verdächtigen Services sind derzeit aktiv?}
 Es wurden 2 verdächtige Services identifiziert.
 \\ \\
 Zum einen der Service mit dem Namen \lstinline[breaklines]|malware|:
