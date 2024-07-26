@@ -278,7 +278,7 @@ Suricata hat zudem bei der Durchführung des DoS-Angriffs angeschlagen und die f
 
 \newpage
 \section{Aufgabenblatt 2}
-Für detaillierte Informationen zur Konfiguration der Firewall und des Webservers siehe Anhang \ref{firewall-info} und \ref{webserver-info}.
+Für detaillierte Informationen zur Konfiguration der Firewall und des Webservers siehe Kapitel \ref{firewall-info} und \ref{webserver-info}.
 \\ \\
 Im Folgenden wird die Aufsetzung einer Webanwendung mit zugehöriger Datenbank sowie die Durchführung von SQL Injection und Cross-Site Scripting Angriffen beschrieben.
 
@@ -303,8 +303,6 @@ Es wird eine neue Datenbank mit dem Namen \lstinline[breaklines]|mydb| angelegt.
 Es wurden keine weiteren spezifischen Konfigurationen durchgeführt, um MariaDB zu schützen.
 
 \subsection{Durchführung einer SQL Injection Attacke}
-Im Folgenden wird ein SQL-Injection-Angriff auf den Webserver beschrieben.
-\\ \\
 Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein Angriff auf das Login-Formular simuliert. Zunächst wurde ein einfacher Test mit dem Benutzernamen \lstinline[breaklines]|';''| und einem beliebigen Passwort durchgeführt. Dies führte zu einem internen Serverfehler (HTTP 500), der wertvolle Informationen über die zugrunde liegende Datenbankabfrage preisgab.
 
 \begin{figure}[H]
@@ -359,8 +357,6 @@ Diese Injection wird ebenfalls als Benutzername eingegeben, während \lstinline|
 \FloatBarrier
 
 \subsection{Durchführung von Cross-Site Scripting}
-Im Folgenden wird die Durchführung eines Cross-Site-Scripting-Angriffs beschrieben.
-\\ \\
 Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstrieren, wurden verschiedene Methoden der Code-Injektion in das Message Board getestet, das nach erfolgreicher Anmeldung zugänglich ist.
 
 \noindent Zunächst wurde ein einfacher JavaScript-Code injiziert, der eine Alert-Box mit dem Text \lstinline|test| anzeigen sollte:
@@ -552,6 +548,8 @@ Um ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwachen u
 
 \newpage
 \section{Aufgabenblatt 4}
+
+Im Folgenden wird eine zweistufige forensische Analyse durchgeführt: Zunächst wird ein Speicherabbild der zweiEnergie AG mittels Volatility untersucht, gefolgt von einer detaillierten Analyse von Netzwerkmitschnitten aus einem Atomkraftwerk des Unternehmens.
 
 \subsection{Aufgabe 1}
 Darstellung forensisches Vorgehen, Datensammlung, Datenanalyse, Grenzen der Analyse
