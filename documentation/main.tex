@@ -235,7 +235,7 @@ Hervorzuheben ist, dass der Scan des Webservers nur den Port 22 (SSH) gefunden h
 Zudem war Suricata in der Lage den Nmap-Scan, den Script-Scan, zu entdecken und zu melden.
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=17cm]{suricata-detection-nmap-scan.png}
+	\includegraphics[width=\textwidth]{suricata-detection-nmap-scan.png}
 	\caption{Logs von Suricata bei der Durchführung des Nmap-Scans}
 	\label{fig:nmapsuricata}
 \end{figure}
@@ -271,82 +271,18 @@ Der Webserver war ebenfalls nicht mehr über die Firewall erreichbar.
 Suricata hat zudem bei der Durchführung des DoS-Angriffs angeschlagen und die fehlerhafte TCP- Übertragung gemeldet:
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=17cm]{suricata-spam-dos.png}
+	\includegraphics[width=\textwidth]{suricata-spam-dos.png}
 	\caption{Einzelne Zeile der Logs von Suricata während des DoS-Angriffs}
 	\label{fig:dos-suricata}
 \end{figure}
 
 \newpage
 \section{Aufgabenblatt 2}
-Folgende Abschnitte beschreiben die Konfiguration der Firewall und des Webservers.
-
-\subsection{Firewall}
-Der Server der Firewall nutzt als Betriebssystem die 64-Bit-Variante des Raspberry Pi OS, welches auf Debian 12 (Codename 'Bookworm') basiert.
+Für detaillierte Informationen zur Konfiguration der Firewall und des Webservers siehe Anhang \ref{firewall-info} und \ref{webserver-info}.
 \\ \\
-Es wurde keine vorinstallierte Software deinstalliert.
-\\
-Es wurden folgende Pakete zusätzlich installiert:
-\begin{table}[h!]
-	\begin{center}
-		\label{tab:table1}
-		\begin{tabular}{l|l }
-			\textbf{Name} & \textbf{Begründung} \\
-			\hline
-			iptables & Firewall, Alternative zur vorinstallierten Firewall nftables \\
-			suricata & Intrusion Detection System \\
-			nvim & Texteditor zum Bearbeiten von Konfigurationsdateien \\
-			zsh & Shell mit besserer Auto-Complete-Funktion \\
-			tmux & Terminal-Multiplexer zum einfachen Verwalten über SSH \\
-		\end{tabular}
-		\caption{Zusätzlich installierte Software auf der Firewall}
-	\end{center}
-\end{table}
-\\
-Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert, um Konflikte mit iptables zu verhindern, siehe Kapitel \ref{config-firewall-fw} für die Konfiguration von iptables für den Firewall-Server. \\
-SSH wurde aktiviert. Es wurden keine weiteren Maßnahmen eingeleitet, um die Schnittstelle zu schützen. Es wird die Standardkonfiguration verwendet. \\
-Der Suricata-Dienst wurde aktiviert und wird automatisch beim Boot gestartet, siehe Kapitel \ref{config-ids} für die Konfiguration des Intrusion Detection Systems (IDS). \\ \\
-Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.220| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration der Firewall:
+Im Folgenden wird die Aufsetzung einer Webanwendung mit zugehöriger Datenbank sowie die Durchführung von SQL Injection und Cross-Site Scripting Angriffen beschrieben.
 
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=10cm]{interface-firewall.png}
-	\caption{Interface der Firewall}
-	\label{fig:interface-firewall}
-\end{figure}
-
-\subsection{Webserver}
-Der Webserver nutzt als Betriebssystem die 64-Bit-Variante des Raspberry Pi OS, welches auf Debian 12 (Codename 'Bookworm') basiert.  \\ \\ 
-Es wurde keine vorinstallierte Software deinstalliert.\\
-Folgende Software wurde zusätzlich installiert: 
-\begin{table}[h!]
-	\begin{center}
-		\label{tab:table2}
-		\begin{tabular}{l|l }
-			\textbf{Name} & \textbf{Begründung} \\
-			\hline
-			iptables & Firewall, Alternative zur vorinstallierten Firewall nftables \\
-			nvim & Texteditor zum Bearbeiten von Konfigurationsdateien \\
-			zsh & Shell mit besserer Auto-Complete-Funktion \\
-			tmux & Terminal-Multiplexer zum einfachen Verwalten über SSH \\
-			python3-pip,\\ python3-venv, \\ python3-flask,\\ python3-flask-cors, \\ python3-pymysql & Als Abhängigkeiten der Python-Anwendung \\
-			mariadb-server & Datenbank für die Python-Anwendung \\
-			nginx & Als Webserver für die Python-Anwendung \\
-		\end{tabular}
-		\caption{Zusätzlich installierte Software auf dem Webserver}
-	\end{center}
-\end{table}
-\\
-Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert, um Konflikte mit iptables zu verhinden, siehe Kapitel \ref{config-firewall-ws} für die Konfiguration von iptables auf dem Webserver. \\
-SSH wurde aktiviert. Es wurden keine weiteren Maßnahmen eingeleitet, um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
-Der nginx-Dienst und mariadb-Dienst wurde aktiviert und wird beim Start automatisch gestartet. \\
-Die Python-Anwendung wird automatisch beim Start durch einen Cron-Job gestartet, siehe Kapitel \ref{cron-job}. \\ \\
-Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.221| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration des Webservers:
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=10cm]{interface-webserver.png}
-	\caption{Interface des Webservers}
-	\label{fig:interface-webserver}
-\end{figure}
+\subsection{Konfiguration des Webservers und der Datenbank}
 
 \subsubsection{Python-Anwendung}
 Auf dem Webserver wird eine eigens programmierte Python-Anwendung betrieben. \\ \\
@@ -366,10 +302,9 @@ Die Datenbank wurde mit folgendem Skript initialisiert:
 Es wird eine neue Datenbank mit dem Namen \lstinline[breaklines]|mydb| angelegt. Zusätzlich wird ein neuer Nutzer \lstinline[breaklines]|admin| erstellt. Anschließend wird die Tabelle \lstinline[breaklines]|credentials| angelegt, in welcher die Daten später gespeichert werden. In diese wird ein Testnutzer eingetragen. Dem Nutzer \lstinline[breaklines]|admin| werden zuletzt alle Rechte für die neue Datenbank zugeteilt. \\ \\
 Es wurden keine weiteren spezifischen Konfigurationen durchgeführt, um MariaDB zu schützen.
 
-\subsection{Angriffe auf den Webserver}
-Im Folgenden werden zwei Angriffe auf den Webserver beschrieben: eine SQL-Injection und eine Cross-Site-Scripting-Attacke (XSS).
-
-\subsubsection{SQL Injection}
+\subsection{Durchführung einer SQL Injection Attacke}
+Im Folgenden wird ein SQL-Injection-Angriff auf den Webserver beschrieben.
+\\ \\
 Um die Anfälligkeit der Webanwendung für SQL Injection zu testen, wurde ein Angriff auf das Login-Formular simuliert. Zunächst wurde ein einfacher Test mit dem Benutzernamen \lstinline[breaklines]|';''| und einem beliebigen Passwort durchgeführt. Dies führte zu einem internen Serverfehler (HTTP 500), der wertvolle Informationen über die zugrunde liegende Datenbankabfrage preisgab.
 
 \begin{figure}[H]
@@ -423,7 +358,9 @@ Diese Injection wird ebenfalls als Benutzername eingegeben, während \lstinline|
 
 \FloatBarrier
 
-\subsubsection{Cross-Site Scripting}
+\subsection{Durchführung von Cross-Site Scripting}
+Im Folgenden wird die Durchführung eines Cross-Site-Scripting-Angriffs beschrieben.
+\\ \\
 Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstrieren, wurden verschiedene Methoden der Code-Injektion in das Message Board getestet, das nach erfolgreicher Anmeldung zugänglich ist.
 
 \noindent Zunächst wurde ein einfacher JavaScript-Code injiziert, der eine Alert-Box mit dem Text \lstinline|test| anzeigen sollte:
@@ -489,7 +426,7 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=17cm]{xss-keylogger-network-traffic-2.png}
+	\includegraphics[width=\textwidth]{xss-keylogger-network-traffic-2.png}
 	\caption{Netzwerkverkehr des XSS-Keyloggers, Zoom auf den Netzwerkverkehr}
 	\label{fig:xss-keylogger-network-traffic-2}
 \end{figure}
@@ -519,7 +456,7 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=17cm]{xss-phishing-page-injection.png}
+	\includegraphics[width=\textwidth]{xss-phishing-page-injection.png}
 	\caption{Darstellung der XSS-injizierten Phishing-Seite}
 	\label{fig:xss-phishing-page-injection}
 \end{figure}
@@ -532,7 +469,8 @@ Um die Cross-Site Scripting (XSS) Schwachstelle der Webanwendung zu demonstriere
 \section{Aufgabenblatt 3}
 Im Folgenden wird die Konfiguration des Intrusion Detection Systems (IDS) beschrieben. Es wurde Suricata als IDS gewählt, da bereits Vorerfahrungen damit bestanden.
 
-\subsection{Konfiguration des Intrusion Detection Systems}\label{config-ids}
+\subsection{Netzwerküberwachung einrichten}
+\subsubsection{Konfiguration des Intrusion Detection Systems}\label{config-ids}
 Bei der Installation wurde die Anleitung des Herstellers \cite{suricata-quickstart} befolgt. \\
 In der Konfigurationsdatei \lstinline[breaklines]|/etc/suricata/suricata.yaml| wurde das zu überwachende Interface auf \lstinline[breaklines]|eth0| gestellt. Es ergeben sich folgende Capture Settings:
 \begin{lstlisting}[breaklines]
@@ -558,7 +496,8 @@ Ob das IDS dies erkannt hat, wurde mit dem Befehl
 überprüft. Die \lstinline[breaklines]|fast.log| Datei enthält die Warnungen des IDS. 
 Die letzte Zeile der Datei war \lstinline[breaklines]|[1:2100498:7] GPL ATTACK_RESPONSE id check returned root [**] [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} <ip> -> 192.168.0.220:<port>|. Dies zeigt, dass der Datenverkehr als potenzieller Datenabfluss erkannt wurde.
 
-\subsection{ARP-Spoofing}
+\subsection{Datenverkehr verschleiern}
+\subsubsection{ARP-Spoofing}
 Beim ARP-Spoofing wird das ARP-Protokoll genutzt, um den Datenverkehr nicht zum eigentlichen Ziel, sondern zum Angreifer, zu schicken. Das ARP-Protokoll ist dafür zuständig IP-Adressen, welche an sich dynamisch sind, einer statischen MAC-Adresse zuzuordnen. Diese Zuordnung passiert im Local Area Network (LAN). \\
 Beim ARP-Spoofing weisen wir die IP-Adresse des Ziels der MAC-Adresse des Angreifers zu. Alle Pakete, die an die IP-Adresse des Ziels gesendet werden, werden also an den Angreifer gesendet. Der Angreifer kann die Pakete an das eigentliche Ziel weiterleiten, wodurch der Datenverkehr ununterbrochen funktioniert \cite{what-is-arp-spoofing}. \\ \\
 In unserem Fall ist es am sinnvollsten, sich zwischen der Firewall und dem Webserver zu platzieren und dort den Verkehr mitzuschneiden, da man dort alle Pakete erhält. \\ \\
@@ -569,42 +508,42 @@ Für das ARP-Spoofing wurde die CLI Version des Tools \lstinline[breaklines]|ett
 	\item \lstinline[breaklines]|/192.168.0.220//|: Nutze die Firewall als Ziel 1
 	\item \lstinline[breaklines]|/192.168.0.221//|: Nutze den Webserver als Ziel 2
 \end{enumerate}
-Folgende Screenshots zeigen die ARP-Tabellen der einzelnen Geräte, sowie die MAC-Adresse der Kali-Maschine: \\ \\
-\begin{figure}[!ht]
+Folgende Screenshots zeigen die ARP-Tabellen der einzelnen Geräte, sowie die MAC-Adresse der Kali-Maschine:
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=14cm]{arp-firewall.png}
 	\caption{ARP-Tabelle der Firewall}
 	\label{fig:arp-firewall}
 \end{figure}
-\begin{figure}[!ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=14cm]{arp-webserver.png}
 	\caption{ARP-Tabelle des Webservers}
 	\label{fig:arp-webserver}
 \end{figure}
-\begin{figure}[!ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=14cm]{arp-mac-kali.png}
 	\caption{MAC-Adresse der Kali-Maschine}
 	\label{fig:arp-mac-kali}
 \end{figure} 
-\\ \\
-Man kann sehen, dass die IP-Adressen der Firewall und des Webservers jeweils in den entsprechenden Screenshots die MAC-Adresse der Kali-Maschine haben. Dies bedeutet, dass Pakete, welche von der Firewall zum Webserver gesendet werden, an die Kali-Maschine gesendet werden. Dasselbe gilt auch für Pakete, die vom Webserver an die Firewall gesendet werden.
+\noindent Man kann sehen, dass die IP-Adressen der Firewall und des Webservers jeweils in den entsprechenden Screenshots die MAC-Adresse der Kali-Maschine haben. Dies bedeutet, dass Pakete, welche von der Firewall zum Webserver gesendet werden, an die Kali-Maschine gesendet werden. Dasselbe gilt auch für Pakete, die vom Webserver an die Firewall gesendet werden.
 \\ \\
 Es war möglich, eine Anmeldung auf dem Webserver zu lesen und das Passwort des Benutzers zu erhalten:
-\begin{figure}[!ht]
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=17cm]{arp-shark-packete.png}
+	\includegraphics[width=\textwidth]{arp-shark-packete.png}
 	\caption{Wireshark Traffic einer Anmeldung}
 	\label{fig:arp-shark-packete.png}
 \end{figure}
-\\ \\
-\begin{figure}[!ht]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=13cm]{arp-shark-packet-5.png}
 	\caption{Inhalt des 5. Pakets mit dem Passwort des Benutzers}
 	\label{fig:arp-shark-packet-5}
 \end{figure} 
+
+\subsection{Überprüfung}
 
 \subsubsection{IDS gegen ARP-Spoofing}
 Das eingesetzte IDS, Suricata, bietet keinen Schutz gegen ARP-Spoofing und ist nicht in der Lage, dieses zu erkennen. \\ \\
@@ -617,18 +556,21 @@ Um ARP-Spoofing zu erkennen, müsste man permanent die ARP-Tabelle überwachen u
 \subsection{Aufgabe 1}
 Darstellung forensisches Vorgehen, Datensammlung, Datenanalyse, Grenzen der Analyse
 \\ \\
-\textbf{Welche Methodik der Forensik würden Sie zum Sichern des RAMS nutzen?}
-Hier würde die Methode der Live-Forensik angewendet werden. Es wird ein Abbild des RAMs, des flüchtigen Speichers erstellt und später analysiert. \cite{ram-dump}
+\textbf{a) Welche Methodik der Forensik würden Sie zum Sichern des RAMS nutzen?}
+Hier würde die Methode der Live-Forensik angewendet werden. Es wird ein Abbild des RAMs, des flüchtigen Speichers erstellt und später analysiert \cite{ram-dump}.
+Dazu stehen verschiedene Software-Tools bereit, wie DumpIt \cite{dumpit} für Windows-Systeme und LiME \cite{lime} für Linux-basierte Systeme.
+
+Als aufwändigere Methode gibt es auch die Möglichkeit der Cold-Boot-Attacke oder des Cold Storage:
 \\ \\
-\textbf{Worauf mussten Sie bei dieser Sicherungsmethodik besonders achten?}
-Das System darf nach der Infizierung und vor der Sicherung der Daten, nicht heruntergefahren oder vom Strom getrennt werden. Da die Daten im RAM sonst verloren gehen. \\ \\
+\textbf{b) Worauf mussten Sie bei dieser Sicherungsmethodik besonders achten?}
+Das System darf nach der Infizierung und vor der Sicherung der Daten, nicht heruntergefahren oder vom Strom getrennt werden. Die flüchtige Daten im RAM können sonst verloren gehen. \\ \\
 Zudem muss darauf geachtet werden das die Malware zu dem Zeitpunkt der Sicherung aktiv ist, sich also weiterhin im RAM befindet.
 \\ \\
-\textbf{Welches Volatility-Profil sollte für das Image verwendet werden}
+\textbf{Welches Volatility-Profil sollte für das Image verwendet werden?}
 Das Plugin \lstinline[breaklines]|imageinfo| empfiehlt die Profile WinXPSP2x86 und WinXPSP3x86.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=18cm]{vol-imageinfo.png}
+	\includegraphics[width=\textwidth]{vol-imageinfo.png}
 	\caption{Volatility: Imageinfo}
 	\label{fig:vol-imageinfo}
 \end{figure} 
@@ -636,7 +578,7 @@ Das Plugin \lstinline[breaklines]|imageinfo| empfiehlt die Profile WinXPSP2x86 u
 Folgender Screenshot zeigt den Output des Plugins \lstinline[breaklines]|pslist|, welches laufende Prozesse zeigt:
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=18cm]{vol-prozesse.png}
+	\includegraphics[width=\textwidth]{vol-prozesse.png}
 	\caption{Volatility: Laufende Prozesse}
 	\label{fig:vol-prozesse}
 \end{figure} 
@@ -644,7 +586,7 @@ Folgender Screenshot zeigt den Output des Plugins \lstinline[breaklines]|pslist|
 Nein, das Plugin \lstinline[breaklines]|psscan|, welches auch versteckte und geschlossene Prozesse zeigen kann, zeigt keine zusätzliche Prozesse an.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=18cm]{vol-prozesse-verstekt.png}
+	\includegraphics[width=\textwidth]{vol-prozesse-verstekt.png}
 	\caption{Volatility: Versteckte Prozesse}
 	\label{fig:vol-prozesse-verstekt.png}
 \end{figure} 
@@ -652,13 +594,13 @@ Nein, das Plugin \lstinline[breaklines]|psscan|, welches auch versteckte und ges
 Die Plugins \lstinline[breaklines]|connscan| und \lstinline[breaklines]|sockscan| zeigen die existierenden Verbindungen. Auffällig ist, das eine Verbindung zu einer IP-Adresse \lstinline[breaklines]|172.16.98.1| existiert welche sich im lokalen Netzwerkbereich \lstinline[breaklines]|172.16.0.0.| befindet.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=18cm]{vol-verbindungen.png}
+	\includegraphics[width=\textwidth]{vol-verbindungen.png}
 	\caption{Volatility: bestehende Verbindungen}
 	\label{fig:vol-verbindungen.png}
 \end{figure} 
 \textbf{Welche Prozesse haben welche Verbindung gestartet?}
 Folgende Prozesse haben eine Verbindung auf dem jeweiligen Port gestartet:
-\begin{table}[h!]
+\begin{table}[H]
 	\begin{center}
 		\label{tab:process-port}
 		\begin{tabular}{l|l |l }
@@ -685,7 +627,7 @@ Folgende Prozesse haben eine Verbindung auf dem jeweiligen Port gestartet:
 Auffällig ist, das der Befehl \lstinline[breaklines]|sc query malware| ausgeführt wurde. Mit dem Befehl \lstinline[breaklines]|sc| kann man Services starten, stoppen und überprüfen. In diesem Fall wurde überprüft ob der Service mit dem Namen \lstinline[breaklines]|malware| läuft. Dies wurde scheinbar als Administrator ausgeführt.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=18cm]{vol-cmd-history.png}
+	\includegraphics[width=\textwidth]{vol-cmd-history.png}
 	\caption{Volatility: Eingaben in der Kommandozeile}
 	\label{fig:vol-cmd-history}
 \end{figure} 
@@ -710,7 +652,7 @@ Und der Service mit den Namen \lstinline[breaklines]|Null|:
 \subsection{Aufgabe 2}
 Vor-Ort-Unterstützung Analyse
 \\ \\
-\textbf{Bestimmen Sie alle Netzwerkteilnehmer (MAC, IPv4), die in den Netzwerkausschnitten auftauchen. Broadcast-Adressen können Sie ausschließen. Tipp: Betrachten Sie auch das Protokoll LLDP.}
+\textbf{a) Bestimmen Sie alle Netzwerkteilnehmer (MAC, IPv4), die in den Netzwerkausschnitten auftauchen. Broadcast-Adressen können Sie ausschließen. Tipp: Betrachten Sie auch das Protokoll LLDP.}
 \\
 \begin{table}[H]
     \centering
@@ -760,7 +702,7 @@ Vor-Ort-Unterstützung Analyse
     \label{tab:ws-lldp-info}
 \end{table}
 
-\textbf{Bestimmen Sie, welche Protokolle verwendet werden.}
+\textbf{b) Bestimmen Sie, welche Protokolle verwendet werden.}
 \\
 Folgende Tabelle zeigt die verwendeten Protokolle:
 \begin{table}[H]
@@ -806,7 +748,7 @@ Die MAC-Adressen 28:63:36:ad:91:96/97 und 28:63:36:ae:70:09/0b gehören jeweils 
 \subsubsection{Phase 1}
 Erstes infiziertes System (attack1.pcapng)
 \\ \\
-\textbf{Bei welchem System handelt es sich um das infizierte System und wieso ist dieses System verdächtig? Beachten Sie die Baseline (normal.pcapng), die Protokolle TCP und UDP sowie die verwendeten Ports.}
+\textbf{c) Bei welchem System handelt es sich um das infizierte System und wieso ist dieses System verdächtig? Beachten Sie die Baseline (normal.pcapng), die Protokolle TCP und UDP sowie die verwendeten Ports.}
 \\ 
 Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mit der IP-Adresse 10.3.5.5 (MAC: 00:1b:1b:f7:7c:4f). Dieses System zeigt auffälliges Verhalten, das von der Baseline abweicht:
 
@@ -821,16 +763,17 @@ Das verdächtige System ist das SIEMENS AG SIMATIC Field PG M5 des Technikers mi
     \caption{Auffälliger Netzwerkverkehr des infizierten Systems}
     \label{fig:ws-suspicious-traffic}
 \end{figure}
-\textbf{Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu verbinden?}
+\textbf{d) Wann hat der Rechner sich versucht mit einem Host außerhalb des Netzwerks zu verbinden?}
 \\
-Am 8. Juni 2018 um 13:46:47.788372000 CEST wurde beobachtet, dass das System versucht, UDP-Verbindungen zur Adresse 234.5.6.7 auf Port 8910 aufzubauen. Diese IP-Adresse gehört zum reservierten Bereich für Multicast-Adressen (224.0.0.0 bis 239.255.255.255) \cite{multicast-ip}. Obwohl es sich nicht um eine Kommunikation mit einem externen Host handelt, ist dieses Verhalten dennoch auffällig. In der normalen Baseline-Aktivität wurde Multicast-Verkehr hauptsächlich im Zusammenhang mit LLMNR (Link-Local Multicast Name Resolution) oder SSDP (Simple Service Discovery Protocol) beobachtet.
+Am 8. Juni 2018 um 13:46:47.788372000 CEST wurde ein UDP-Paket (Frame 96) vom System zur Adresse 234.5.6.7 auf Port 8910 gesendet. Kurz darauf folgten weitere Pakete (Frames 97, 103, 466, 467, 473, 644, 645). Diese IP-Adresse gehört zum reservierten Bereich für Multicast-Adressen (224.0.0.0 bis 239.255.255.255) \cite{multicast-ip}. Obwohl es sich nicht um eine Kommunikation mit einem externen Host handelt, ist dieses Verhalten dennoch auffällig. In der normalen Baseline-Aktivität wurde Multicast-Verkehr hauptsächlich im Zusammenhang mit LLMNR (Link-Local Multicast Name Resolution) oder SSDP (Simple Service Discovery Protocol) beobachtet.
 \\ \\
-Am 8. Juni 2018 um 13:46:52.993988000 CEST initiiert das System einen TCP-Verbindungsversuch (SYN-Paket) zu einem tatsächlich externen Host (23.95.230.107) auf Port 80. Dies ist der erste beobachtete Versuch, eine Verbindung außerhalb des lokalen Netzwerks herzustellen.
+Am 8. Juni 2018 um 13:46:52.993988000 CEST initiiert das System einen TCP-Verbindungsversuch 
+(Frame 207) zu einem tatsächlich externen Host (23.95.230.107) auf Port 80. Dies ist der erste beobachtete Versuch, eine Verbindung außerhalb des lokalen Netzwerks herzustellen. Diesem folgten kurz darauf weitere Pakete (Frames 296, 363, 493, 537).
 
 \subsubsection{Phase 2}
 Lateral Movement – Offline Modus (attack2.pcapng)
 \\ \\
-\textbf{Welche Auffälligkeiten sehen Sie in diesem Mitschnitt? Welches Protokoll wird häufig verwendet?}
+\textbf{e) Welche Auffälligkeiten sehen Sie in diesem Mitschnitt? Welches Protokoll wird häufig verwendet?}
 \\
 In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig dominant. Es macht 53,7\% aller Pakete aus, was auf einen intensiven Netzwerk-Scan hindeutet. Außerdem werden zahlreiche TCP-Verbindungsversuche zu verschiedenen Ports der Systeme 10.3.5.11 und 10.3.5.12 beobachtet.
 
@@ -848,14 +791,14 @@ In diesem Mitschnitt ist das Address Resolution Protocol (ARP) auffällig domina
     \label{fig:ws-arp-scan}
 \end{figure}
 
-\textbf{Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
+\textbf{f) Welches System scannt das Netzwerk nach Netzwerkteilnehmern?}
 \\
 Das System des Technikers (SIEMENS AG SIMATIC Field PG M5, IP: 10.3.5.5, MAC: 00:1b:1b:f7:7c:4f) führt den Netzwerk-Scan durch. Dies bestätigt den Verdacht aus den vorherigen Phasen, dass dieses System kompromittiert wurde.
 
 \subsubsection{Phase 3}
 Kritische Systemziele bestimmen (attack3.pcapng)
 \\ \\
-\textbf{Über welchen Port versucht das infizierte System Kontakt aufzunehmen?}
+\textbf{g) Über welchen Port versucht das infizierte System Kontakt aufzunehmen?}
 \\
 Das infizierte System versucht, Verbindungen über Port 102 zu den Systemen 10.3.5.11 und 10.3.5.12 aufzubauen. Port 102 ist bekannt für das S7comm-Protokoll, das in Siemens S7 SPS-Systemen verwendet wird  \cite{port-sps}.
 
@@ -869,13 +812,13 @@ Das infizierte System versucht, Verbindungen über Port 102 zu den Systemen 10.3
 \subsubsection{Phase 4}
 Rohe Gewalt (attack4.pcapng)
 \\ \\
-\textbf{Schauen Sie sich die einzelnen Verbindungsversuche näher an. Welches Protokoll wird neu verwendet?}
+\textbf{h) Schauen Sie sich die einzelnen Verbindungsversuche näher an. Welches Protokoll wird neu verwendet?}
 \\
 In dieser Phase wird das Virtual Network Computing (VNC) Protokoll neu eingesetzt. Dies deutet auf Versuche hin, Fernzugriff auf andere Systeme zu erlangen. Es gibt mehrere Verbindungsversuche vom infizierten System (10.3.5.5) zum Zielsystem (10.3.5.3) über den VNC-Standardport 5900.
 \\ \\
 Der erste Verbindungsversuch (Frame 27) zeigt ein TCP SYN-Paket, das den Beginn eines Verbindungsaufbaus darstellt. Allerdings scheitern diese Versuche, wie in Frame 42 zu sehen ist, wo eine Authentifizierungsfehlermeldung (Authentication failed) auftritt.
 \\ \\
-\textbf{Wurde die Verbindung erfolgreich hergestellt? Notieren Sie ggf. den Zeitstempel.}
+\textbf{i) Wurde die Verbindung erfolgreich hergestellt? Notieren Sie ggf. den Zeitstempel.}
 \\
 Eine erfolgreiche TCP-Verbindung wurde hergestellt, beginnend mit Frame 372. Der Verbindungsaufbau erfolgte zwischen dem infizierten System (10.3.5.5) und dem Zielsystem (10.3.5.3) über den VNC-Port 5900. Der initiale Verbindungsversuch (SYN-Paket) wird in Frame 372 gezeigt. Die erfolgreiche Authentifizierung wird in Frame 386 bestätigt, mit dem Zeitstempel 8. Juni 2018, 14:13:37.179082000 CEST.
 
@@ -889,7 +832,7 @@ Eine erfolgreiche TCP-Verbindung wurde hergestellt, beginnend mit Frame 372. Der
 \subsubsection{Phase 5}
 Feinarbeit (attack5.pcapng)
 \\ \\ 
-\textbf{Schauen Sie sich die einzelnen TCP-Sessions an. (Filter: tcp.stream == <n>) Sie suchen die Session, bei welcher die Teilnehmer 10.3.5.3 und 10.3.5.5 miteinander kommunizieren.}
+\textbf{j) Schauen Sie sich die einzelnen TCP-Sessions an. (Filter: tcp.stream == <n>) Sie suchen die Session, bei welcher die Teilnehmer 10.3.5.3 und 10.3.5.5 miteinander kommunizieren.}
 \\
 In der relevanten TCP-Session (tcp.stream == 1) zwischen 10.3.5.3 und 10.3.5.5 ist eine VNC-Sitzung zu beobachten, in der verschiedene Client-Pointer-Events ausgeführt werden. Dies deutet auf eine aktive Fernsteuerung hin.
 
@@ -900,12 +843,12 @@ In der relevanten TCP-Session (tcp.stream == 1) zwischen 10.3.5.3 und 10.3.5.5 i
     \label{fig:ws-vnc-session}
 \end{figure}
 
-\textbf{Gegeben sind folgende Richtlinien:
+\textbf{k) Gegeben sind folgende Richtlinien:
 \begin{itemize}
     \item Der SCADA-Arbeitsplatz ist ausschließlich für die Steuerung der PLCs verantwortlich.
     \item Der Techniker-Arbeitsplatz wartet den Programmcode der PLCs und die entsprechende Anwendung auf dem SCADA-Arbeitsplatz mittels normalem VNC (TCP-Port 5900).
 \end{itemize}
-Gegen welche Richtlinie wird verstoßen?}
+l) Gegen welche Richtlinie wird verstoßen?}
 \\
 Streng genommen wird gegen keine der genannten Richtlinien verstoßen. Die VNC-Verbindung vom Techniker-Arbeitsplatz zum SCADA-Arbeitsplatz über Port 5900 ist explizit erlaubt. Allerdings könnte man argumentieren, dass die Nutzung dieser Verbindung zur direkten Steuerung der PLCs problematisch sein könnte, da dies eigentlich die exklusive Aufgabe des SCADA-Arbeitsplatzes ist. Die Trennung dieser Verantwortlichkeiten ist in der Praxis schwer zu gewährleisten.
 
@@ -948,6 +891,74 @@ Mögliche Lösungen wären hier, den Computer des Technikers besser abzusichern 
 \newpage
 \section{Anhang}
 
+\subsection{Firewall}\label{firewall-info}
+Der Server der Firewall nutzt als Betriebssystem die 64-Bit-Variante des Raspberry Pi OS, welches auf Debian 12 (Codename 'Bookworm') basiert.
+\\ \\
+Es wurde keine vorinstallierte Software deinstalliert.
+\\
+Es wurden folgende Pakete zusätzlich installiert:
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table1}
+		\begin{tabular}{l|l }
+			\textbf{Name} & \textbf{Begründung} \\
+			\hline
+			iptables & Firewall, Alternative zur vorinstallierten Firewall nftables \\
+			suricata & Intrusion Detection System \\
+			nvim & Texteditor zum Bearbeiten von Konfigurationsdateien \\
+			zsh & Shell mit besserer Auto-Complete-Funktion \\
+			tmux & Terminal-Multiplexer zum einfachen Verwalten über SSH \\
+		\end{tabular}
+		\caption{Zusätzlich installierte Software auf der Firewall}
+	\end{center}
+\end{table}
+\\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert, um Konflikte mit iptables zu verhindern, siehe Kapitel \ref{config-firewall-fw} für die Konfiguration von iptables für den Firewall-Server. \\
+SSH wurde aktiviert. Es wurden keine weiteren Maßnahmen eingeleitet, um die Schnittstelle zu schützen. Es wird die Standardkonfiguration verwendet. \\
+Der Suricata-Dienst wurde aktiviert und wird automatisch beim Boot gestartet, siehe Kapitel \ref{config-ids} für die Konfiguration des Intrusion Detection Systems (IDS). \\ \\
+Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.220| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration der Firewall:
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=10cm]{interface-firewall.png}
+	\caption{Interface der Firewall}
+	\label{fig:interface-firewall}
+\end{figure}
+
+\subsection{Webserver}\label{webserver-info}
+Der Webserver nutzt als Betriebssystem die 64-Bit-Variante des Raspberry Pi OS, welches auf Debian 12 (Codename 'Bookworm') basiert.  \\ \\ 
+Es wurde keine vorinstallierte Software deinstalliert.\\
+Folgende Software wurde zusätzlich installiert: 
+\begin{table}[h!]
+	\begin{center}
+		\label{tab:table2}
+		\begin{tabular}{l|l }
+			\textbf{Name} & \textbf{Begründung} \\
+			\hline
+			iptables & Firewall, Alternative zur vorinstallierten Firewall nftables \\
+			nvim & Texteditor zum Bearbeiten von Konfigurationsdateien \\
+			zsh & Shell mit besserer Auto-Complete-Funktion \\
+			tmux & Terminal-Multiplexer zum einfachen Verwalten über SSH \\
+			python3-pip,\\ python3-venv, \\ python3-flask,\\ python3-flask-cors, \\ python3-pymysql & Als Abhängigkeiten der Python-Anwendung \\
+			mariadb-server & Datenbank für die Python-Anwendung \\
+			nginx & Als Webserver für die Python-Anwendung \\
+		\end{tabular}
+		\caption{Zusätzlich installierte Software auf dem Webserver}
+	\end{center}
+\end{table}
+\\
+Der standardmäßig aktivierte nftables-Dienst wurde deaktiviert, um Konflikte mit iptables zu verhinden, siehe Kapitel \ref{config-firewall-ws} für die Konfiguration von iptables auf dem Webserver. \\
+SSH wurde aktiviert. Es wurden keine weiteren Maßnahmen eingeleitet, um die Schnittstelle zu  schützen. Es wird die Standardkonfiguration verwendet. \\
+Der nginx-Dienst und mariadb-Dienst wurde aktiviert und wird beim Start automatisch gestartet. \\
+Die Python-Anwendung wird automatisch beim Start durch einen Cron-Job gestartet, siehe Kapitel \ref{cron-job}. \\ \\
+Dem Server wurde die statische IP-Adresse \lstinline[breaklines]|192.168.0.221| zugewiesen, siehe Kapitel \ref{static-ip}. Folgende Abbildung zeigt die Netzwerk-Konfiguration des Webservers:
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=10cm]{interface-webserver.png}
+	\caption{Interface des Webservers}
+	\label{fig:interface-webserver}
+\end{figure}
+
 \subsection{Netzwerk}
 Im folgenden wird das Netzwerk sowie die darin enthaltenen IP-Adressen dargelegt.
 \begin{itemize}
@@ -962,11 +973,11 @@ Im folgenden wird das Netzwerk sowie die darin enthaltenen IP-Adressen dargelegt
 \end{itemize}
 
 \subsection{Hinzufügen eines Cron-Jobs}\label{cron-job}
-Um einen Cron-Job anzulegen wurden folgende Schritte durchgeführt.
+Um einen Cron-Job anzulegen, wurden folgende Schritte durchgeführt.
 \begin{enumerate}
-	\item Der jeweils relevante Firewall-Skript wurde ausführbar gemacht: \\ \lstinline[breaklines]|$ sudo chmod +x <name des Skripts>|.
-	\item Das Interface zum bearbeiten der Crontabs wurde geöffnet: \\ \lstinline[breaklines]|sudo crontab -e|.
-	\item Am Ende wurde die Zeile \lstinline[breaklines]|@reboot sudo bash <pfad zum Skript>| eingefügt.
+	\item Das jeweils relevante Firewall-Skript wurde ausführbar gemacht: \\ \lstinline[breaklines]|$ sudo chmod +x <name des skripts>|.
+	\item Das Interface zum Bearbeiten der Crontabs wurde geöffnet: \\ \lstinline[breaklines]|sudo crontab -e|.
+	\item Am Ende wurde die Zeile \lstinline[breaklines]|@reboot sudo bash <pfad zum skript>| eingefügt.
 \end{enumerate}
 
 \subsection{Setzen einer statischen IP-Adresse}\label{static-ip}
